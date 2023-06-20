@@ -140,9 +140,8 @@ go
 -----sp_RegistrarLibroAutor '027.009S42',A0003;--Podemos registrar de igual forma con procedimiento
 -------------------------------------------------------------------------------- 
 INSERT INTO TipoPersona(Descripcion)--Es id es identity
-VALUES ('Lector'),
-       ('Empleado'),
-       ('Administrador');
+VALUES ('Administrador'),
+       ('Empleado');
 go 
 INSERT INTO Usuario(Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Calle, Telefono, Email, ID_TipoPersona,Contrasenia)--El ID usuario es identity
 VALUES('DAVID', 'NAVA','GARCIA',20,'ITSSNP','ANGEL WENCESLAO CABRERA','7641291840','david.nava.garcia4@gmail.com',3,'dav01gar01'),--La Ciudad por DEFAULT es Zacatlán

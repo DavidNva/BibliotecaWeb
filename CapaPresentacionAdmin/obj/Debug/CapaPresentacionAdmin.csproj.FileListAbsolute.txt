@@ -77,3 +77,9 @@ D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\o
 D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\obj\Debug\CapaPresentacionAdmin.csproj.CopyComplete
 D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\obj\Debug\CapaPresentacionAdmin.dll
 D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\obj\Debug\CapaPresentacionAdmin.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaEntidad.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaNegocio.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaDatos.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaEntidad.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaNegocio.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaDatos.pdb

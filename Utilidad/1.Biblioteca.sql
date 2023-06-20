@@ -12,17 +12,61 @@ USE BibliotecaWeb;
 go
 --Creacion de tablas y relaciones
 
--- CREATE TABLE Categoria(
+-- CREATE TABLE Categoria(*
 --     IDCategoria varchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Tiene un trigger para autogenerar codigo
 --     Categoria nvarchar(60) not null,--Tiene indice unico
 --     );--Esta referenciado con libro (No se permite eliminar)
 -- go
 CREATE TABLE Categoria(
-	IdCategoria  varchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
-	Descripcion varchar(100) not null,--Tiene un indice único
+	IdCategoria  nvarchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
+	Descripcion nvarchar(100) not null,--Tiene un indice único
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )
+go
+
+
+go
+CREATE TABLE Usuario(
+	IdUsuario int not null CONSTRAINT PK_Usuario PRIMARY KEY identity,
+  Nombres nvarchar(100) not null,
+  Apellidos varchar(100) not null,
+  Ciudad nvarchar(60) not null, --Default como --"Zacatlán"
+  Calle nvarchar(100) not null,
+  Telefono varchar(20) not null, 
+	Correo nvarchar(100) not null,
+	Clave nvarchar(150) not null, --Contrase�as encriptadas
+  Tipo int not null CONSTRAINT FK_TipoPersona FOREIGN KEY(Tipo)
+  REFERENCES TipoPersona(IdTipoPersona) DEFAULT 1,--El DEFAULT id 1, es para tipo lectores:
+	Reestablecer bit default 1, -- Por default 1
+	Activo bit default 1,
+	FechaRegistro datetime default getdate()
+)
+
+
+-- CREATE TABLE Usuario(*
+--     IDUsuario int identity (1,1)  not null CONSTRAINT PK_Usuario PRIMARY KEY,
+--     Nombre nvarchar(40) not null,
+--     A_Paterno varchar(30) not null,
+--     A_Materno varchar(30) not null,
+--     Edad tinyint not null,--Tiene un check (0-125)
+--     EscuelaProcedencia nvarchar(100) null, --Si usamos el SP: Su default es: NINGUNA
+--     --Grado varchar (10),
+--     Ciudad nvarchar(60) not null, --Default como --"Zacatlán"
+--     Calle nvarchar(100) not null,
+--     Telefono varchar(20) not null, 
+--     Email nvarchar(100) null,
+--     Observaciones varchar(500) null, --Estará definida como default, como "NINGUNA"
+--     ID_TipoPersona int not null CONSTRAINT FK_TipoPersona FOREIGN KEY(ID_TipoPersona) 
+--     REFERENCES TipoPersona(IdTipoPersona) DEFAULT 1,--El DEFAULT id 1, es para tipo lectores:
+--     Contrasenia varchar(30) DEFAULT '321',
+--     FechaCreacion date not null DEFAULT GETDATE()
+--     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
+-- go
+CREATE TABLE TipoPersona(
+    IdTipoPersona  int identity (1,1)  CONSTRAINT PK_TipoPersona PRIMARY KEY,
+    Descripcion varchar(50)--Solo hay tres tipos: Lector, Empleado y Administrador
+)--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
 go
 -- CREATE TABLE Sala(
 --     IDSala varchar(10)  not null  CONSTRAINT PK_Sala PRIMARY KEY,--Tiene un trigger para autogenerar codigo
@@ -83,30 +127,7 @@ go
 --       estando referenciando a un libro que no existe)
 --     */
 -- go
--- CREATE TABLE TipoPersona(
---     IdTipoPersona  int identity (1,1)  CONSTRAINT PK_TipoPersona PRIMARY KEY,
---     Descripcion varchar(50)--Solo hay tres tipos: Lector, Empleado y Administrador
--- )--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
--- go
--- CREATE TABLE Usuario(
---     IDUsuario int identity (1,1)  not null CONSTRAINT PK_Usuario PRIMARY KEY,
---     Nombre nvarchar(40) not null,
---     A_Paterno varchar(30) not null,
---     A_Materno varchar(30) not null,
---     Edad tinyint not null,--Tiene un check (0-125)
---     EscuelaProcedencia nvarchar(100) null, --Si usamos el SP: Su default es: NINGUNA
---     --Grado varchar (10),
---     Ciudad nvarchar(60) not null, --Default como --"Zacatlán"
---     Calle nvarchar(100) not null,
---     Telefono varchar(20) not null, 
---     Email nvarchar(100) null,
---     Observaciones varchar(500) null, --Estará definida como default, como "NINGUNA"
---     ID_TipoPersona int not null CONSTRAINT FK_TipoPersona FOREIGN KEY(ID_TipoPersona) 
---     REFERENCES TipoPersona(IdTipoPersona) DEFAULT 1,--El DEFAULT id 1, es para tipo lectores:
---     Contrasenia varchar(30) DEFAULT '321',
---     FechaCreacion date not null DEFAULT GETDATE()
---     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
--- go
+
 -- CREATE TABLE Ejemplar(
 --     IDEjemplar varchar(10)  not null CONSTRAINT PK_Ejemplar PRIMARY KEY,--Tiene un trigger para autogenerar codigo
 --     NumEjemplar int not null,

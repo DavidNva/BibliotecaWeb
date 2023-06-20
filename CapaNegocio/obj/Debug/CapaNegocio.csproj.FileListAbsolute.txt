@@ -1,0 +1,11 @@
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\bin\Debug\CapaNegocio.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\bin\Debug\CapaNegocio.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\bin\Debug\CapaDatos.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\bin\Debug\CapaEntidad.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\bin\Debug\CapaDatos.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\bin\Debug\CapaEntidad.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\obj\Debug\CapaNegocio.csproj.AssemblyReference.cache
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\obj\Debug\CapaNegocio.csproj.CoreCompileInputs.cache
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\obj\Debug\CapaNegocio.csproj.CopyComplete
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\obj\Debug\CapaNegocio.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaNegocio\obj\Debug\CapaNegocio.pdb
