@@ -145,13 +145,14 @@
                 { "data": "Apellidos" },
                 { "data": "Ciudad" },
                 { "data": "Calle" },
-                { "data": "Tipo" },
+
+               /* { "data": "Tipo" },*/
                 { "data": "Telefono" },
-                //{
-                //    "data": "oId_TipoPersona", "render": function (data) {
-                //        return data.Descripcion
-                //    }
-                //},
+                {
+                    "data": "oId_TipoPersona", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.Descripcion
+                    }
+                },
                 { "data": "Correo" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
                 {
                     "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
@@ -235,7 +236,7 @@
                 $("#txtCalle").val(json.Calle);
                 $("#txtTelefono").val(json.Telefono);
                 $("#txtCorreo").val(json.Correo);
-                $("#cmbTipoPersona").val(json.Tipo);
+                $("#cmbTipoPersona").val(json.oId_TipoPersona.IdTipoPersona);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
 

@@ -21,8 +21,14 @@ namespace CapaDatos
             {
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "select IDUsuario,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,Tipo,Reestablecer,Activo from USUARIO";
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("select u.IDUsuario,u.Nombres,u.Apellidos,u.Ciudad, u.Calle, u.Telefono, u.Correo,u.Clave,");
+                    sb.AppendLine("tp.IdTipoPersona,tp.Descripcion [Tipo], u.Reestablecer,u.Activo");
+                    sb.AppendLine("from USUARIO u ");
+                    sb.AppendLine("inner join TipoPersona tp on tp.IdTipoPersona = u.Tipo");
+                    //string query = "select IDUsuario,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,Tipo,Reestablecer,Activo from USUARIO";                    //string query = "select IDUsuario,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,tp.IdTipoPersona,tp.Descripcion[Tipo],Reestablecer,Activo from USUARIO inner join TipoPersona TP on tp.IdTipoPersona = Usuario.Tipo";
+                    
+                    SqlCommand cmd = new SqlCommand(sb.ToString(), oConexion);
                     cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
 
                     oConexion.Open();
@@ -41,8 +47,8 @@ namespace CapaDatos
                                     Telefono = dr["Telefono"].ToString(),
                                     Correo = dr["Correo"].ToString(),
                                     Clave = dr["Clave"].ToString(),
-                                    Tipo = Convert.ToInt32(dr["Tipo"]),
-                                    //oId_TipoPersona = new EN_TipoPersona() { IdTipoPersona = Convert.ToInt32(dr["IdTipoPersona"]), Descripcion = dr["Tipo"].ToString() },
+                                    //Tipo = Convert.ToInt32(dr["Tipo"]),
+                                    oId_TipoPersona = new EN_TipoPersona() {IdTipoPersona = Convert.ToInt32(dr["IdTipoPersona"]), Descripcion = dr["Tipo"].ToString() },
                                     Reestablecer = Convert.ToBoolean(dr["Reestablecer"]),/*Admite 1 y 0*/
                                     Activo = Convert.ToBoolean(dr["Activo"])
                                 }
