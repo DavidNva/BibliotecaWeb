@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using CapaEntidad;
+using CapaNegocio;
+//using Newtonsoft.Json;
 
 namespace CapaPresentacionAdmin.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class MantenedorController : Controller
     {
         // GET: Mantenedor
@@ -22,16 +25,25 @@ namespace CapaPresentacionAdmin.Controllers
         //{
         //    return View();
         //}
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarTipoPersona() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_TipoPersona> oLista = new List<EN_TipoPersona>();
+            oLista = new RN_TipoPersona().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+
         /*--------------CATEGORIA---------------------*/
         //#region CATEGORIA
-        //[HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
-        //public JsonResult ListarCategorias() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
-        //{
-        //    List<EN_Categoria> oLista = new List<EN_Categoria>();
-        //    oLista = new RN_Categoria().Listar();
-        //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
-        //    /*El json da los datos, jala los datos de esa lista, en data*/
-        //}
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarCategoria() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Categoria> oLista = new List<EN_Categoria>();
+            oLista = new RN_Categoria().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
 
         //[HttpPost]
         //public JsonResult GuardarCategoria(EN_Categoria objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/

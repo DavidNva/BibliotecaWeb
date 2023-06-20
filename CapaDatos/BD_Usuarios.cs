@@ -42,6 +42,7 @@ namespace CapaDatos
                                     Correo = dr["Correo"].ToString(),
                                     Clave = dr["Clave"].ToString(),
                                     Tipo = Convert.ToInt32(dr["Tipo"]),
+                                    //oId_TipoPersona = new EN_TipoPersona() { IdTipoPersona = Convert.ToInt32(dr["IdTipoPersona"]), Descripcion = dr["Tipo"].ToString() },
                                     Reestablecer = Convert.ToBoolean(dr["Reestablecer"]),/*Admite 1 y 0*/
                                     Activo = Convert.ToBoolean(dr["Activo"])
                                 }

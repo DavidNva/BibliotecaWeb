@@ -89,9 +89,14 @@
             <label for="txtCorreo" class="form-label">Correo</label>
             <input type="email" class="form-control" id="txtCorreo" autocomplete="off">
         </div>
-        <div class="col-sm-6">
+        @*<div class="col-sm-6">
             <label for="txtTipo" class="form-label">Tipo</label>
             <input type="text" class="form-control" id="txtTipo" autocomplete="off">
+        </div>*@
+        <div class="col-sm-6">
+            <label class="form-label">Tipo</label>
+            <select id="cmbTipoPersona" class="form-select">
+            </select>
         </div>
         <div class="col-sm-6">
             <label for="cmbActivo" class="form-label">Activo</label>
@@ -140,8 +145,13 @@
                 { "data": "Apellidos" },
                 { "data": "Ciudad" },
                 { "data": "Calle" },
-                { "data": "Telefono" },
                 { "data": "Tipo" },
+                { "data": "Telefono" },
+                //{
+                //    "data": "oId_TipoPersona", "render": function (data) {
+                //        return data.Descripcion
+                //    }
+                //},
                 { "data": "Correo" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
                 {
                     "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
@@ -183,6 +193,25 @@
             }
 
         });
+        /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
+          jQuery.ajax({
+            url: '@Url.Action("ListarTipoPersona", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cmbTipoPersona");
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdTipoPersona }).text(item.Descripcion).appendTo("#cmbTipoPersona");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
         function abrirModal(json) /*json es el data del siguiente*/ {
             $("#txtId").val(0);
             $("#txtNombres").val("");
@@ -190,7 +219,7 @@
             $("#txtCiudad").val("");
             $("#txtCalle").val("");
             $("#txtTelefono").val("");
-            $("#txtTipo").val("");
+            $("#cmbTipoPersona").val(1);
             $("#txtCorreo").val("");
             $("#cmbActivo").val(1);
 
@@ -206,7 +235,7 @@
                 $("#txtCalle").val(json.Calle);
                 $("#txtTelefono").val(json.Telefono);
                 $("#txtCorreo").val(json.Correo);
-                $("#txtTipo").val(json.Tipo);
+                $("#cmbTipoPersona").val(json.Tipo);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
 
@@ -236,6 +265,7 @@
 
         //    abrirModal(json)
         //});
+
 
         @*$("#tabla tbody").on("click", '.btn-eliminar', function () {
 

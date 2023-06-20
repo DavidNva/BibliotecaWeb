@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RN_Categoria.cs" />
+    <Compile Include="RN_TipoPersona.cs" />
     <Compile Include="RN_Usuarios.cs" />
   </ItemGroup>
   <ItemGroup>

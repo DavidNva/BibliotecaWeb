@@ -16,6 +16,7 @@ namespace CapaEntidad
 		public string Telefono { get; set; }
 		public string Correo { get; set; }
 		public int Tipo { get; set; }
+		//public EN_TipoPersona oId_TipoPersona { get; set; }
 		public string Clave { get; set; }
 		public bool Reestablecer { get; set; }
 		public bool Activo { get; set; }
