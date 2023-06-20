@@ -13,8 +13,8 @@ namespace CapaPresentacionAdmin
 
             bundles.Add(new Bundle("~/bundles/complementos").Include(
                         "~/Scripts/fontawesome/all.min.js", /*Nuevo elemento agregado para iconos*/
-                        "~/Scripts/DataTables/jquery.dataTables.js",/*Para las tablas incluida nueva*/
-                        "~/Scripts/DataTables/dataTables.responsive.js",
+                        "~/Scripts/DataTables/jquery.dataTables.min.js",/*Para las tablas incluida nueva*/
+                        "~/Scripts/DataTables/dataTables.responsive.min.js",
                         "~/Scripts/loadingoverlay/loadingoverlay.min.js",
                         "~/Scripts/sweetalert.min.js",
                          "~/Scripts/jquery.validate.js", /*Para aplicar validaciones, como de numeros, no insercion letras, simbolos, etc*/
@@ -38,8 +38,8 @@ namespace CapaPresentacionAdmin
             /*Aqui solo vamos a utilizar el site.css ubicada en la ruta especificada (dentro de la carpeta content)*/
             bundles.Add(new StyleBundle("~/Content/css").Include(/*"~/Content/bootstrap.css",*/
                 "~/Content/site.css",
-                "~/Content/DataTables/css/jquery.dataTables.css",
-                "~/Content/DataTables/css/responsive.dataTables.css",
+                "~/Content/DataTables/css/jquery.dataTables.min.css",
+                "~/Content/DataTables/css/responsive.dataTables.min.css",
                 "~/Content/sweetalert.css",
                 "~/Content/jquery-ui.css" /*Para el calendario*/
                 ));

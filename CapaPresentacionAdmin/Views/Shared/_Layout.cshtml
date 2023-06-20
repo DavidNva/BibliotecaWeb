@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - CuboRubikCode</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -43,7 +43,7 @@
 
                         <div class="sb-sidenav-menu-heading">Administrador</div>
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMantenedores" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            <div class="sb-nav-link-icon"><i class="fas fa-book-reader"></i></div>
                             Biblioteca
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
@@ -57,8 +57,8 @@
                                     <div class="sb-nav-link-icon"><i class="fas fa-bookmark"></i></div>
                                     Marcas
                                 </a>
-                                <a class="nav-link" href="@Url.Action("Producto","Mantenedor")">
-                                    <div class="sb-nav-link-icon"><i class="fas fa-book-reader"></i></div>
+                                <a class="nav-link" href="@Url.Action("Libro","Mantenedor")">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                                     Libros
                                 </a>
                                 @*<a class="nav-link" href="@Url.Action("Categoria","Mantenedor")">Categorias</a>

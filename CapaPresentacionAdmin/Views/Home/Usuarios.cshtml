@@ -153,14 +153,30 @@
                     }
 
                 },
-                {/*Crea una columna por defecto*/
-                    /*El btn-promary es el diseño, el btn-sm es el mamaño*/
-                    "defaultContent": ' <button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-                        ' <button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash btn-eliminar"></i></button>',
-                    "orderable": false,/*Que no sea ordenada, porque solo contiene botones*/
-                    "searchable": false, /*Para que no haga la busqueda por estos botones de editar y eliminar, solo de las demas columnas*/
+                {
+                    "data": "IdUsuario", "render": function (data, type, row, meta) {
+
+                        return $("<button>").addClass("btn btn-primary btn-editar btn-sm").append(
+                            $("<i>").addClass("fas fa-pen")
+                        ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                            +
+                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm ms-2").append(
+                                $("<i>").addClass("fas fa-trash")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+                    },
+                    "orderable": false,
+                    "searchable": false,
                     "width": "90px"
                 }
+                //{/*Crea una columna por defecto*/
+                //    /*El btn-promary es el diseño, el btn-sm es el mamaño*/
+                //    "defaultContent": ' <button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                //        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash btn-eliminar"></i></button>',
+                //    "orderable": false,/*Que no sea ordenada, porque solo contiene botones*/
+                //    "searchable": false, /*Para que no haga la busqueda por estos botones de editar y eliminar, solo de las demas columnas*/
+                //    "width": "90px"
+                //}
             ],/*Propiedad o atributos van dentro de las comillas ""*/
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
@@ -204,13 +220,22 @@
         $("#tabla tbody").on("click", '.btn-editar', function () {
             /*This es la misma tabla, se llama
              tr es el row o la fila seleccionado de la tabla */
-            filaSeleccionada = $(this).closest("tr");
-            var data = tabladata.row(filaSeleccionada).data();
+            //filaSeleccionada = $(this).closest("tr");
+            //var data = tabladata.row(filaSeleccionada).data();
 
-            console.log(data);/*Para visualizar en consola*/
-            abrirModal(data);
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            var json = $(this).data("informacion")
+            //console.log(json);
+            abrirModal(json)
 
         })
+        /*Tambien lo podemos hacer de esta forma*/
+        //$(document).on('click', '.btn-editar', function (event) {
+        //    var json = $(this).data("informacion")
+
+        //    abrirModal(json)
+        //});
 
         @*$("#tabla tbody").on("click", '.btn-eliminar', function () {
 
