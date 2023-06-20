@@ -148,6 +148,7 @@
 
                /* { "data": "Tipo" },*/
                 { "data": "Telefono" },
+               
                 {
                     "data": "oId_TipoPersona", "render": function (data) {/*El render permite obtener el valor de la columna*/
                         return data.Descripcion
@@ -212,7 +213,8 @@
             error: function (error) {
                 console.log(error)
             }
-        });
+          });
+
         function abrirModal(json) /*json es el data del siguiente*/ {
             $("#txtId").val(0);
             $("#txtNombres").val("");
@@ -220,8 +222,8 @@
             $("#txtCiudad").val("");
             $("#txtCalle").val("");
             $("#txtTelefono").val("");
-            $("#cmbTipoPersona").val(1);
             $("#txtCorreo").val("");
+            $("#cmbTipoPersona").val(1);
             $("#cmbActivo").val(1);
 
 
@@ -235,8 +237,8 @@
                 $("#txtCiudad").val(json.Ciudad);
                 $("#txtCalle").val(json.Calle);
                 $("#txtTelefono").val(json.Telefono);
-                $("#txtCorreo").val(json.Correo);
                 $("#cmbTipoPersona").val(json.oId_TipoPersona.IdTipoPersona);
+                $("#txtCorreo").val(json.Correo);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
 
@@ -250,7 +252,7 @@
         $("#tabla tbody").on("click", '.btn-editar', function () {
             /*This es la misma tabla, se llama
              tr es el row o la fila seleccionado de la tabla */
-            //filaSeleccionada = $(this).closest("tr");
+            filaSeleccionada = $(this).closest("tr");
             //var data = tabladata.row(filaSeleccionada).data();
 
             //console.log(data);/*Para visualizar en consola*/
@@ -319,18 +321,19 @@
                  el signo de interrogacion es un entonces
                  leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
                  pero si es diferentes es falso*/
-                Activo: $("#cmbActivo").val() == 1?true: false, /*Para saber si se esta seleccionado un Si (Si = 0)
-                 * o un no (No = 0*/
+                Nombres: $("#txtNombres").val(),
+                
                 Apellidos: $("#txtApellidos").val(),/*El punto val sirve para obtener un valor y para establecer un valor*/
-                Correo: $("#txtCorreo").val(),
+                Ciudad: $("#txtCiudad").val(),
+                Calle: $("#txtCalle").val(),
+                Telefono: $("#txtTelefono").val(),
                 oId_TipoPersona: {
                     IdTipoPersona: $("#cmbTipoPersona option:selected").val(),
                     Descripcion: $("#cmbTipoPersona option:selected").text()
                 },
-                Telefono: $("#txtTelefono").val(),
-                Calle: $("#txtCalle").val(),
-                Ciudad: $("#txtCiudad").val(),
-                Nombres:$("#txtNombres").val(),
+                Correo: $("#txtCorreo").val(),
+                Activo: $("#cmbActivo").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
+                 * o un no (No = 0*/
                 Reestablecer: true
             }
             jQuery.ajax({/*Llama al metodo de guardar usuario, que dependiendo de la accion va a crear nuevo
