@@ -31,38 +31,38 @@ namespace CapaPresentacionAdmin.Controllers
 
         }
 
-        //[HttpPost]
-        //public JsonResult GuardarUsuario(EN_Usuario objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
-        //{
-        //    object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
-        //    string mensaje = string.Empty;
+        [HttpPost]
+        public JsonResult GuardarUsuario(EN_Usuario objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+            string mensaje = string.Empty;
 
-        //    if (objeto.IdUsuario == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
-        //     un usuario nuevo, por lo que se ha dado dando clic con el boton de crear*/
-        //    {
-        //        resultado = new RN_Usuarios().Registrar(objeto, out mensaje);/*El metodo registrar
-        //         de tipo int, devuelve el id registrado*/
-        //    }
-        //    else
-        //    {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
-        //         a un usuario, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
-        //         con los alert comentados*/
-        //        resultado = new RN_Usuarios().Editar(objeto, out mensaje);
-        //    }
-        //    return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            if (objeto.IdUsuario == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+             un usuario nuevo, por lo que se ha dado dando clic con el boton de crear*/
+            {
+                resultado = new RN_Usuarios().Registrar(objeto, out mensaje);/*El metodo registrar
+                 de tipo int, devuelve el id registrado*/
+            }
+            else
+            {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                 a un usuario, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                 con los alert comentados*/
+                resultado = new RN_Usuarios().Editar(objeto, out mensaje);
+            }
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 
-        //}
+        }
 
-        //[HttpPost]
-        //public JsonResult EliminarUsuario(int id)
-        //{
-        //    bool respuesta = false;
-        //    string mensaje = string.Empty;
+        [HttpPost]
+        public JsonResult EliminarUsuario(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
 
-        //    respuesta = new RN_Usuarios().Eliminar(id, out mensaje);
-        //    return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            respuesta = new RN_Usuarios().Eliminar(id, out mensaje);
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 
-        //}
+        }
         ///*La consulta de busqueda por fecha o id transaccion*/
         //[HttpGet]
         //public JsonResult ListaReporte(string fechaInicio, string fechaFin, string idTransaccion)

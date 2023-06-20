@@ -268,7 +268,7 @@
         //});
 
 
-        @*$("#tabla tbody").on("click", '.btn-eliminar', function () {
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
             var usuarioSeleccionado = $(this).closest("tr");
             var data = tabladata.row(usuarioSeleccionado).data();
@@ -308,7 +308,7 @@
                 });
             });
 
-            console.log(data);
+            //console.log(data);
 
 
         })
@@ -323,7 +323,13 @@
                  * o un no (No = 0*/
                 Apellidos: $("#txtApellidos").val(),/*El punto val sirve para obtener un valor y para establecer un valor*/
                 Correo: $("#txtCorreo").val(),
-
+                oId_TipoPersona: {
+                    IdTipoPersona: $("#cmbTipoPersona option:selected").val(),
+                    Descripcion: $("#cmbTipoPersona option:selected").text()
+                },
+                Telefono: $("#txtTelefono").val(),
+                Calle: $("#txtCalle").val(),
+                Ciudad: $("#txtCiudad").val(),
                 Nombres:$("#txtNombres").val(),
                 Reestablecer: true
             }
@@ -388,6 +394,6 @@
 
 
 
-        }*@
+        }
     </script>
 }

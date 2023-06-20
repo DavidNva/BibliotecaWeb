@@ -65,105 +65,113 @@ namespace CapaDatos
             return lista;
         }
 
-        //public int Registrar(EN_Usuario obj, out string Mensaje)//out indica parametro de salida
-        //{
-        //    int IdAutogenerado = 0; /*Recibe el id autogenerado*/
+        public int Registrar(EN_Usuario obj, out string Mensaje)//out indica parametro de salida
+        {
+            int IdAutogenerado = 0; /*Recibe el id autogenerado*/
 
-        //    Mensaje = string.Empty;
-        //    try
-        //    {
-        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("sp_RegistrarUsuario", oConexion);
-        //            cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
-        //            cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
-        //            cmd.Parameters.AddWithValue("Correo", obj.Correo);
-        //            cmd.Parameters.AddWithValue("Clave", obj.Clave);
-        //            cmd.Parameters.AddWithValue("Activo", obj.Activo);
-        //            //Dos parametros de salida, un entero de resultaado y un string de mensaje
-        //            cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
-        //            cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
-        //            cmd.CommandType = CommandType.StoredProcedure;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_RegistrarUsuario", oConexion);
+                    cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
+                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("Ciudad", obj.Ciudad);
+                    cmd.Parameters.AddWithValue("Calle", obj.Calle);
+                    cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
+                    cmd.Parameters.AddWithValue("Correo", obj.Correo);
+                    cmd.Parameters.AddWithValue("Clave", obj.Clave);
+                    cmd.Parameters.AddWithValue("Tipo", obj.oId_TipoPersona.IdTipoPersona);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-        //            oConexion.Open();
-        //            cmd.ExecuteNonQuery();
-        //            IdAutogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
-        //            Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        IdAutogenerado = 0;
-        //        Mensaje = ex.Message;
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    IdAutogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
 
-        //    }
-        //    return IdAutogenerado;
+            }
+            return IdAutogenerado;
 
-        //}
-        //public bool Editar(EN_Usuario obj, out string Mensaje)//out indica parametro de salida
-        //{
-        //    bool resultado = false;
+        }
+        public bool Editar(EN_Usuario obj, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
 
-        //    Mensaje = string.Empty;
-        //    try
-        //    {
-        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("sp_EditarUsuario", oConexion);
-        //            cmd.Parameters.AddWithValue("IDUsuario", obj.IdUsuario);
-        //            cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
-        //            cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
-        //            cmd.Parameters.AddWithValue("Correo", obj.Correo);
-        //            cmd.Parameters.AddWithValue("Activo", obj.Activo);
-        //            //Dos parametros de salida, un entero de resultaado y un string de mensaje
-        //            cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
-        //            cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
-        //            cmd.CommandType = CommandType.StoredProcedure;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EditarUsuario", oConexion);
+                    cmd.Parameters.AddWithValue("IDUsuario", obj.IdUsuario);
+                    cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
+                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("Ciudad", obj.Ciudad);
+                    cmd.Parameters.AddWithValue("Calle", obj.Calle);
+                    cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
+                    cmd.Parameters.AddWithValue("Correo", obj.Correo);
+                    cmd.Parameters.AddWithValue("Tipo", obj.oId_TipoPersona.IdTipoPersona);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-        //            oConexion.Open();
-        //            cmd.ExecuteNonQuery();
-        //            resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
-        //            Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resultado = false;
-        //        Mensaje = ex.Message;
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
 
-        //    }
-        //    return resultado;
-        //}
-        //public bool Eliminar(int id, out string Mensaje)//out indica parametro de salida
-        //{
-        //    bool resultado = false;
+            }
+            return resultado;
+        }
+        public bool Eliminar(int id, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
 
-        //    Mensaje = string.Empty;
-        //    try
-        //    {
-        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("delete top(1) from usuario where IdUsuario = @Id", oConexion);
-        //            cmd.Parameters.AddWithValue("Id", id);
-        //            cmd.CommandType = CommandType.Text;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("delete top(1) from usuario where IdUsuario = @Id", oConexion);
+                    cmd.Parameters.AddWithValue("Id", id);
+                    cmd.CommandType = CommandType.Text;
 
-        //            oConexion.Open();
-        //            //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
-        //            //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
-        //            //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
-        //            //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
-        //            resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+                    oConexion.Open();
+                    //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
+                    //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
+                    //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
+                    //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
+                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
 
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resultado = false;
-        //        Mensaje = ex.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
 
-        //    }
-        //    return resultado;
-        //}
+            }
+            return resultado;
+        }
 
         //public bool CambiarClave(int idUsuario, string nuevaClave, out string Mensaje)//out indica parametro de salida
         //{
