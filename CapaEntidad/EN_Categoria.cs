@@ -15,6 +15,8 @@ namespace CapaEntidad
 	        FechaRegistro datetime default getdate()
          */
         public string IdCategoria { get; set; }
+        //public int IdCategoria { get; set; }
+        
         public string Descripcion { get; set; }
         public bool Activo { get; set; }
         //public string FechaRegistro { get; set; }

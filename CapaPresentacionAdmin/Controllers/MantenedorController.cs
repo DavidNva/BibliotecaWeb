@@ -45,27 +45,28 @@ namespace CapaPresentacionAdmin.Controllers
             /*El json da los datos, jala los datos de esa lista, en data*/
         }
 
-        //[HttpPost]
-        //public JsonResult GuardarCategoria(EN_Categoria objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
-        //{
-        //    object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
-        //    string mensaje = string.Empty;
+        [HttpPost]
+        public JsonResult GuardarCategoria(EN_Categoria objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+            string mensaje = string.Empty;
 
-        //    if (objeto.IdCategoria == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
-        //     una categoria nueva, por lo que se ha dado dando clic con el boton de crear*/
-        //    {
-        //        resultado = new RN_Categoria().Registrar(objeto, out mensaje);/*El metodo registrar
-        //         de tipo int, devuelve el id registrado*/
-        //    }
-        //    else
-        //    {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
-        //         a una categoria, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
-        //         con los alert comentados*/
-        //        resultado = new RN_Categoria().Editar(objeto, out mensaje);
-        //    }
-        //    return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+            if (objeto.IdCategoria == "0")/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+             una categoria nueva, por lo que se ha dado dando clic con el boton de crear*/
+            {
+                resultado = new RN_Categoria().Registrar(objeto, out mensaje);/*El metodo registrar
+                 de tipo int, devuelve el id registrado*/
+            }
+            else
+            {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                 a una categoria, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                 con los alert comentados*/
+                resultado = new RN_Categoria().Editar(objeto, out mensaje);
+            }
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 
-        //}
+        }
+
 
         //[HttpPost]
         //public JsonResult EliminarCategoria(int id)

@@ -24,7 +24,17 @@ CREATE TABLE Categoria(
 	FechaRegistro datetime default getdate()
 )
 go
-
+select * from usuario
+-- CREATE TABLE Sala(
+--     IDSala varchar(10)  not null  CONSTRAINT PK_Sala PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+--     Sala varchar(40) not null,--Tiene indica unico
+--     );--Esta referenciado con libro (No se permite eliminar)
+-- go
+-- CREATE TABLE Editorial(
+--     IDEditorial varchar(10)  not null CONSTRAINT PK_Editorial PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+--     Editorial nvarchar(60) not null, --Tiene indice unico
+--     );--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
+-- go
 
 go
 CREATE TABLE Usuario(
@@ -68,16 +78,7 @@ CREATE TABLE TipoPersona(
     Descripcion varchar(50)--Solo hay tres tipos: Lector, Empleado y Administrador
 )--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
 go
--- CREATE TABLE Sala(
---     IDSala varchar(10)  not null  CONSTRAINT PK_Sala PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     Sala varchar(40) not null,--Tiene indica unico
---     );--Esta referenciado con libro (No se permite eliminar)
--- go
--- CREATE TABLE Editorial(
---     IDEditorial varchar(10)  not null CONSTRAINT PK_Editorial PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     Editorial nvarchar(60) not null, --Tiene indice unico
---     );--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
--- go
+
 -- CREATE TABLE Libro(
 --     IDLibro varchar(25)  not null CONSTRAINT PK_Libro PRIMARY KEY,
 --     Titulo nvarchar(130) not null,

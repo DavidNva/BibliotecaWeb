@@ -45,26 +45,47 @@ Use Biblioteca;
 -- @IDSalaSP varchar(10)
 -- AS
 -- DELETE Sala WHERE IDSala = @IDSalaSP;
--- go
+ go
 -- ---------------------------------------------------CATEGORIA-------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Categoria*******************************
--- --EJemplo en categoria es C0001,C0002,C0003,C0004, sucesivamente
--- --Esta referenciado con libro  (No se permite eliminar)
--- --Categoria tiene un indice unico
--- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
--- CREATE PROCEDURE sp_RegistrarCategoria ( @NombreCategoria varchar(50)) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para categoria
--- AS
--- BEGIN
---   DECLARE @CodCategoria VARCHAR(10), @Cod int
---   SELECT @Cod = RIGHT(MAX(IDCategoria),4 ) + 1 FROM Categoria;--Estamos seleccionando los numeros
---     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
---       BEGIN  
---         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
---       END
---         SELECT @CodCategoria = CONCAT('C',RIGHT(CONCAT('0000',@Cod),4));
---         INSERT INTO Categoria VALUES (@CodCategoria,@NombreCategoria)
--- END
--- go
+--EJemplo en categoria es C0001,C0002,C0003,C0004, sucesivamente
+--Esta referenciado con libro  (No se permite eliminar)
+--Categoria tiene un indice unico
+--Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
+
+
+
+select * from categoria
+go
+create procedure sp_RegistrarCategoria ( 
+    @Descripcion varchar(100), 
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para categoria
+as
+begin
+    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Categoria WHERE Descripcion = @Descripcion)
+    begin 
+        DECLARE @CodCategoria VARCHAR(10), @Cod int
+        SELECT @Cod = RIGHT(MAX(IDCategoria),4 ) + 1 FROM Categoria;--Estamos seleccionando los numeros
+        
+        IF @Cod IS NULL --Pero si en inicio no hay ningun dato
+        BEGIN  
+            SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
+        END
+        
+        SELECT @CodCategoria = CONCAT('C',RIGHT(CONCAT('0000',@Cod),4));
+         insert into CATEGORIA(IDCategoria, Descripcion, Activo) values 
+        (@CodCategoria,@Descripcion, @Activo)
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = scope_identity()
+    end
+    else 
+        SET @Mensaje = 'La categoria ya existe'
+end
+go
 -- --*************************** Actualizar Categoria*********************************** 
 -- CREATE PROCEDURE sp_ActualizarCategoria
 -- @IDCategoriaSP varchar(10),
@@ -257,8 +278,6 @@ begin
         set @Mensaje = 'El correo del usuario ya existe'
 end
 GO
-select * from usuario;
--- go
 -- --************************* Registrar Usuario *******************************
 --Depende de tipo persona, pero no es necesario hacer un delete cascade, porque no tendria sentido eliminar un tipo de persona (solo tenemos 3)
 --Tiene indice compuesto UNICO con (Nombre, A_Paterno, A_Materno)
