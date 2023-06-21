@@ -51,23 +51,22 @@ namespace CapaNegocio
                  * estará la contraseña para que acceda al sistema, entonces:*/
                 string clave = RN_Recursos.GenerarClave();//Va a encripar este valor
                 //Aqui ira la logica de enviar un correo al usuario
-                //string asunto = "Creacion de Cuenta"; /*En los signos de excalamcion de la linea ed abajo, se trae la variable clave*/
-                //string mensajeCorreo = "<h3>Su cuenta fue creada correctamente</h3> <br> <p>Su contraseña para acceder es: !clave!</p>";
-                //mensajeCorreo = mensajeCorreo.Replace("!clave!", clave);/*Aqui solo trae la clave creada*/
+                string asunto = "Creacion de Cuenta"; /*En los signos de excalamcion de la linea ed abajo, se trae la variable clave*/
+                string mensajeCorreo = "<h3>Su cuenta fue creada correctamente</h3> <br> <p>Su contraseña para acceder es: !clave!</p>";
+                mensajeCorreo = mensajeCorreo.Replace("!clave!", clave);/*Aqui solo trae la clave creada*/
+                 
+                bool respuesta = RN_Recursos.EnviarCorreo(obj.Correo, asunto, mensajeCorreo);
 
-                obj.Clave = RN_Recursos.ConvertirSha256(clave);/*Encripta la clave generada*/
-                return objCapaDato.Registrar(obj, out Mensaje);
-                //bool respuesta = RN_Recursos.EnviarCorreo(obj.Correo, asunto, mensajeCorreo);
-                //if (respuesta)
-                //{
-                //    obj.Clave = RN_Recursos.ConvertirSha256(clave);/*Encripta la clave generada*/
-                //    return objCapaDato.Registrar(obj, out Mensaje);
-                //}
-                //else
-                //{
-                //    Mensaje = "No se puede enviar el correo";
-                //    return 0;
-                //}
+                if (respuesta)
+                {
+                    obj.Clave = RN_Recursos.ConvertirSha256(clave);/*Encripta la clave generada*/
+                    return objCapaDato.Registrar(obj, out Mensaje);
+                }
+                else
+                {
+                    Mensaje = "No se puede enviar el correo";
+                    return 0;
+                }
 
             }
             else
