@@ -17,14 +17,27 @@ go
 --     Categoria nvarchar(60) not null,--Tiene indice unico
 --     );--Esta referenciado con libro (No se permite eliminar)
 -- go
-CREATE TABLE Categoria(
+CREATE TABLE Categoria(--Tiene un trigger para autogenerar codigo
 	IdCategoria  nvarchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )
 go
-select * from usuario
+CREATE TABLE Sala(--Tiene un trigger para autogenerar codigo
+	IdSala  nvarchar(10)  not null CONSTRAINT PK_Sala PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
+	Descripcion nvarchar(100) not null,--Tiene un indice único
+	Activo bit default 1,--Esta referenciado con libro (No se permite eliminar)
+	FechaRegistro datetime default getdate()
+)
+go
+CREATE TABLE Editorial(--Tiene un trigger para autogenerar codigo
+	IdEditorial  nvarchar(10)  not null CONSTRAINT PK_Editorial PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
+	Descripcion nvarchar(100) not null,--Tiene un indice único
+	Activo bit default 1,--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
+	FechaRegistro datetime default getdate()
+)
+go
 -- CREATE TABLE Sala(
 --     IDSala varchar(10)  not null  CONSTRAINT PK_Sala PRIMARY KEY,--Tiene un trigger para autogenerar codigo
 --     Sala varchar(40) not null,--Tiene indica unico
@@ -79,24 +92,24 @@ CREATE TABLE TipoPersona(
 )--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
 go
 
--- CREATE TABLE Libro(
---     IDLibro varchar(25)  not null CONSTRAINT PK_Libro PRIMARY KEY,
---     Titulo nvarchar(130) not null,
---     Ubicacion varchar(10) not null,
---     NumEdicion varchar(60) not null,
---     AñoEdicion varchar(5) not null,
---     Volumen tinyint not null DEFAULT 1,
---     NumPaginas int not null,
---     Observaciones varchar(500) not null,--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
---     --Llaves foraneas
---     ID_Sala varchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
---     REFERENCES Sala(IDSala) DEFAULT 'S0001',--sALA GENERAL
---     ID_Categoria nvarchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
---     REFERENCES Categoria(IDCategoria),
---     ID_Editorial varchar(10) not null CONSTRAINT FK_Editorial FOREIGN KEY(ID_Editorial) 
---     REFERENCES Editorial(IDEditorial)
---     );--Esta referenciado con ejemplar y libroLutor (si se puede eliminar ya que estos como foreign key son delete y update cascade)
--- go
+CREATE TABLE Libro(
+    IDLibro varchar(25)  not null CONSTRAINT PK_Libro PRIMARY KEY,
+    Titulo nvarchar(130) not null,
+    Ubicacion varchar(10) not null,
+    NumEdicion varchar(60) not null,
+    AñoEdicion varchar(5) not null,
+    Volumen tinyint not null DEFAULT 1,
+    NumPaginas int not null,
+    Observaciones varchar(500) not null,--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
+    --Llaves foraneas
+    ID_Sala nvarchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
+    REFERENCES Sala(IDSala) DEFAULT 'S0001',--sALA GENERAL
+    ID_Categoria nvarchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
+    REFERENCES Categoria(IDCategoria),
+    ID_Editorial nvarchar(10) not null CONSTRAINT FK_Editorial FOREIGN KEY(ID_Editorial) 
+    REFERENCES Editorial(IDEditorial)
+    );--Esta referenciado con ejemplar y libroLutor (si se puede eliminar ya que estos como foreign key son delete y update cascade)
+go
 -- /*ALTER TABLE libro
 -- ADD 
 --     RutaPortada nvarchar(200)  null,

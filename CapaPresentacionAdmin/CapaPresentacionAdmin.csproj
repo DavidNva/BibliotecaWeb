@@ -483,7 +483,7 @@
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Views\Home\Usuarios.cshtml" />
     <Content Include="Views\Mantenedor\Categoria.cshtml" />
-    <Content Include="Views\Mantenedor\Marca.cshtml" />
+    <Content Include="Views\Mantenedor\Sala.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -7,45 +7,11 @@ Use Biblioteca;
   4. Inserciones  
 */
 -- --Para cada procedimiento se debe
--- --Sala: Procedimiento para generar codigo al insertar
+-- --Categoria: Procedimiento para generar codigo al insertar
 -- --      Procedimiento para actualizar
 -- --      Procedimiento para eliminar - (para el que lo requiera)
 -- go
--- ----------------------------------------------------SALA------------------------------------------------------------------------
--- --************************* Autogenerar Codigo Sala***********************************
--- --EJemplo EN SALA es S0001,S0002,S0003,S0004, sucesivamente
--- --Sala tiene un indice unico para no repetirlas 
--- --Esta referenciado con libro (No se permite eliminar)
--- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
--- CREATE PROCEDURE sp_RegistrarSala ( @NombreSala varchar(30)) --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para sala
--- AS
--- BEGIN
---   DECLARE @CodSala VARCHAR(10), @Cod int
---   SELECT @Cod = RIGHT(MAX(IDSala),4 ) + 1 FROM Sala;--Estamos seleccionando los numeros
---     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
---       BEGIN  
---         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
---       END
---         SELECT @CodSala = CONCAT('S',RIGHT(CONCAT('0000',@Cod),4));
---         INSERT INTO Sala VALUES (@CodSala,@NombreSala)
--- END
--- go
--- --*************************** Actualizar Sala *********************************** 
--- CREATE PROCEDURE sp_ActualizarSala
--- @IDSalaSP varchar(10),
--- @SalaSP varchar(30)--Tiene indice unico
--- AS
--- BEGIN
--- IF NOT EXISTS (SELECT * FROM Sala WHERE Sala =@SalaSP and IdSala != @IdSalaSP)
--- 	UPDATE Sala SET Sala = @SalaSP WHERE IDSala = @IDSalaSP;
--- END;
--- go
--- --*************************** Eliminar Sala *********************************** 
--- CREATE PROCEDURE sp_EliminarSala
--- @IDSalaSP varchar(10)
--- AS
--- DELETE Sala WHERE IDSala = @IDSalaSP;
- go
+go
 -- ---------------------------------------------------CATEGORIA-------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Categoria*******************************
 --EJemplo en categoria es C0001,C0002,C0003,C0004, sucesivamente
@@ -81,17 +47,6 @@ begin
         SET @Mensaje = 'La categoria ya existe'
 end
 go
--- --*************************** Actualizar Categoria*********************************** 
--- CREATE PROCEDURE sp_ActualizarCategoria
--- @IDCategoriaSP varchar(10),
--- @CategoriaSP varchar(50)--Tiene indice unico
--- AS
--- BEGIN
--- IF NOT EXISTS (SELECT * FROM Categoria WHERE Categoria =@CategoriaSP and IdCategoria != @IdCategoriaSP)
--- 	UPDATE Categoria SET Categoria = @CategoriaSP WHERE IDCategoria = @IDCategoriaSP;
--- END;
--- go
-go
 
 create  proc sp_EditarCategoria( --Trabajo como un booleano
     @IdCategoria nvarchar(10),
@@ -117,13 +72,6 @@ begin
 end
 go
 
--- --*************************** Eliminar Categoria *********************************** 
--- CREATE PROCEDURE sp_EliminarCategoria
--- @IDCategoriaSP varchar(10)
--- AS
--- DELETE Categoria WHERE IDCategoria = @IDCategoriaSP;
--- go
-
 create proc sp_EliminarCategoria( --Trabajo como un booleano
     @IdCategoria nvarchar(10),
     @Mensaje varchar(500) output,
@@ -139,9 +87,119 @@ begin
         set @Resultado = 1 --true
     end 
     else 
-        set @Mensaje = 'La categoria se encuentra relacionada con un producto'
+        set @Mensaje = 'La categoria se encuentra relacionada con un libro'
+end
+go
+-- ----------------------------------------------------SALA------------------------------------------------------------------------
+-- --************************* Autogenerar Codigo Sala***********************************
+-- --EJemplo EN SALA es S0001,S0002,S0003,S0004, sucesivamente
+-- --Sala tiene un indice unico para no repetirlas 
+-- --Esta referenciado con libro (No se permite eliminar)
+-- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
+
+create procedure sp_RegistrarSala ( 
+    @Descripcion varchar(100), 
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para Sala
+as
+begin
+    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Sala WHERE Descripcion = @Descripcion)
+    begin 
+        DECLARE @CodSala VARCHAR(10), @Cod int
+        SELECT @Cod = RIGHT(MAX(IDSala),4 ) + 1 FROM Sala;--Estamos seleccionando los numeros
+        
+        IF @Cod IS NULL --Pero si en inicio no hay ningun dato
+        BEGIN  
+            SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
+        END
+        
+        SELECT @CodSala = CONCAT('S',RIGHT(CONCAT('0000',@Cod),4));
+         insert into Sala(IDSala, Descripcion, Activo) values 
+        (@CodSala,@Descripcion, @Activo)
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = scope_identity()
+    end
+    else 
+        SET @Mensaje = 'La sala ya existe'
+end
+go
+
+create  proc sp_EditarSala( --Trabajo como un booleano
+    @IdSala nvarchar(10),
+    @Descripcion varchar(100),
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM Sala WHERE Descripcion = @Descripcion and IDSala != @IdSala)
+    begin 
+        update top(1) Sala set 
+        Descripcion = @Descripcion,
+        Activo = @Activo
+        where IDSala = @IdSala
+
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La sala ya existe'
+end
+go
+
+create proc sp_EliminarSala( --Trabajo como un booleano
+    @IdSala nvarchar(10),
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM Libro p --validacion de que la Sala no este relacionada con un producto
+    inner join Sala c on c.IDSala = p.Id_Sala WHERE p.Id_Sala= @IdSala)
+    begin 
+        delete top(1) from Sala where IDSala = @IdSala
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La sala se encuentra relacionada con un libro'
 end
 GO
+
+
+-- CREATE PROCEDURE sp_RegistrarSala ( @NombreSala varchar(30)) --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para sala
+-- AS
+-- BEGIN
+--   DECLARE @CodSala VARCHAR(10), @Cod int
+--   SELECT @Cod = RIGHT(MAX(IDSala),4 ) + 1 FROM Sala;--Estamos seleccionando los numeros
+--     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
+--       BEGIN  
+--         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
+--       END
+--         SELECT @CodSala = CONCAT('S',RIGHT(CONCAT('0000',@Cod),4));
+--         INSERT INTO Sala VALUES (@CodSala,@NombreSala)
+-- END
+-- go
+-- --*************************** Actualizar Sala *********************************** 
+-- CREATE PROCEDURE sp_ActualizarSala
+-- @IDSalaSP varchar(10),
+-- @SalaSP varchar(30)--Tiene indice unico
+-- AS
+-- BEGIN
+-- IF NOT EXISTS (SELECT * FROM Sala WHERE Sala =@SalaSP and IdSala != @IdSalaSP)
+-- 	UPDATE Sala SET Sala = @SalaSP WHERE IDSala = @IDSalaSP;
+-- END;
+-- go
+-- --*************************** Eliminar Sala *********************************** 
+-- CREATE PROCEDURE sp_EliminarSala
+-- @IDSalaSP varchar(10)
+-- AS
+-- DELETE Sala WHERE IDSala = @IDSalaSP;
+ go
 -- ---------------------------------------------------Editorial-------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Editorial*******************************
 -- --EJemplo EN editorial es ED0001,ED0002,ED0003,ED0004, sucesivamente
@@ -318,6 +376,8 @@ begin
         set @Mensaje = 'El correo del usuario ya existe'
 end
 GO
+select * from usuario
+go
 create proc sp_EliminarUsuario( --Trabajo como un booleano
     @IdUsuario int,
     @Mensaje varchar(500) output,

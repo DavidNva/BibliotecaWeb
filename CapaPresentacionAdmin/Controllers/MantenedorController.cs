@@ -17,7 +17,7 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View(); /*Retorna la vista con el nombre de Categoria (Dentro de la carpeta vista,, dentro de Mantenedor hay un "Categoria"*/
         }
-        public ActionResult Marca()
+        public ActionResult Sala()
         {
             return View();
         }
@@ -28,14 +28,14 @@ namespace CapaPresentacionAdmin.Controllers
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarTipoPersona() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
-            List<EN_TipoPersona> oLista = new List<EN_TipoPersona>();
+            List<EN_TipoPersona> oLista = new List<EN_TipoPersona>();/*Para la parte de usuarios en el comboBox*/
             oLista = new RN_TipoPersona().Listar();
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
             /*El json da los datos, jala los datos de esa lista, en data*/
         }
 
         /*--------------CATEGORIA---------------------*/
-        //#region CATEGORIA
+        #region CATEGORIA
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarCategoria() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
@@ -78,9 +78,55 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
-        //#endregion
-        ///*-----------------------MARCA----------------*/
-        //#region MARCA
+        #endregion
+
+        /*--------------SALA---------------------*/
+        #region SALA
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarSala() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Sala> oLista = new List<EN_Sala>();
+            oLista = new RN_Sala().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+
+        [HttpPost]
+        public JsonResult GuardarSala(EN_Sala objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+            string mensaje = string.Empty;
+
+            if (objeto.IdSala == "0")/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+             una categoria nueva, por lo que se ha dado dando clic con el boton de crear*/
+            {
+                resultado = new RN_Sala().Registrar(objeto, out mensaje);/*El metodo registrar
+                 de tipo int, devuelve el id registrado*/
+            }
+            else
+            {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                 a una categoria, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                 con los alert comentados*/
+                resultado = new RN_Sala().Editar(objeto, out mensaje);
+            }
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [HttpPost]
+        public JsonResult EliminarSala(string id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new RN_Sala().Eliminar(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        ///*-----------------------Sala----------------*/
+        //#region SALA
         //[HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         //public JsonResult ListarMarcas() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         //{
