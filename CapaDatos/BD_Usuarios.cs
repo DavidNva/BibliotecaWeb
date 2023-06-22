@@ -151,16 +151,19 @@ namespace CapaDatos
             {
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("delete top(1) from usuario where IdUsuario = @Id", oConexion);
-                    cmd.Parameters.AddWithValue("Id", id);
-                    cmd.CommandType = CommandType.Text;
+                    SqlCommand cmd = new SqlCommand("sp_EliminarUsuario", oConexion);
+                    cmd.Parameters.AddWithValue("IdUsuario", id);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
                     oConexion.Open();
-                    //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
-                    //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
-                    //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
-                    //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
-                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+
+                    cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
 
                 }
             }

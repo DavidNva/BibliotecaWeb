@@ -52,11 +52,6 @@ Use Biblioteca;
 --Esta referenciado con libro  (No se permite eliminar)
 --Categoria tiene un indice unico
 --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
-
-
-
-select * from categoria
-go
 create procedure sp_RegistrarCategoria ( 
     @Descripcion varchar(100), 
     @Activo bit,
@@ -96,12 +91,57 @@ go
 -- 	UPDATE Categoria SET Categoria = @CategoriaSP WHERE IDCategoria = @IDCategoriaSP;
 -- END;
 -- go
+go
+
+create  proc sp_EditarCategoria( --Trabajo como un booleano
+    @IdCategoria nvarchar(10),
+    @Descripcion varchar(100),
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM CATEGORIA WHERE Descripcion = @Descripcion and IDCategoria != @IdCategoria)
+    begin 
+        update top(1) CATEGORIA set 
+        Descripcion = @Descripcion,
+        Activo = @Activo
+        where IDCategoria = @IdCategoria
+
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La categoria ya existe'
+end
+go
+
 -- --*************************** Eliminar Categoria *********************************** 
 -- CREATE PROCEDURE sp_EliminarCategoria
 -- @IDCategoriaSP varchar(10)
 -- AS
 -- DELETE Categoria WHERE IDCategoria = @IDCategoriaSP;
 -- go
+
+create proc sp_EliminarCategoria( --Trabajo como un booleano
+    @IdCategoria nvarchar(10),
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM Libro p --validacion de que la categoria no este relacionada con un producto
+    inner join CATEGORIA c on c.IDCategoria = p.Id_Categoria WHERE p.Id_Categoria= @IdCategoria)
+    begin 
+        delete top(1) from CATEGORIA where IDCategoria = @IdCategoria
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La categoria se encuentra relacionada con un producto'
+end
+GO
 -- ---------------------------------------------------Editorial-------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Editorial*******************************
 -- --EJemplo EN editorial es ED0001,ED0002,ED0003,ED0004, sucesivamente
@@ -276,6 +316,22 @@ begin
     end 
     else 
         set @Mensaje = 'El correo del usuario ya existe'
+end
+GO
+create proc sp_EliminarUsuario( --Trabajo como un booleano
+    @IdUsuario int,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    begin
+        delete top(1) from Usuario where IDUsuario = @IdUsuario
+        set @Resultado = 1 --true
+    end 
+    if(@Resultado != 1)
+        set @Mensaje = 'Error: No se pudo elimnar el usuario. Intentelo de nuevo'
 end
 GO
 -- --************************* Registrar Usuario *******************************

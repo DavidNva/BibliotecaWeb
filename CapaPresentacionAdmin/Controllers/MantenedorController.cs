@@ -68,16 +68,16 @@ namespace CapaPresentacionAdmin.Controllers
         }
 
 
-        //[HttpPost]
-        //public JsonResult EliminarCategoria(int id)
-        //{
-        //    bool respuesta = false;
-        //    string mensaje = string.Empty;
+        [HttpPost]
+        public JsonResult EliminarCategoria(string id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
 
-        //    respuesta = new RN_Categoria().Eliminar(id, out mensaje);
+            respuesta = new RN_Categoria().Eliminar(id, out mensaje);
 
-        //    return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
         //#endregion
         ///*-----------------------MARCA----------------*/
         //#region MARCA

@@ -91,7 +91,7 @@ go
 --     --Llaves foraneas
 --     ID_Sala varchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
 --     REFERENCES Sala(IDSala) DEFAULT 'S0001',--sALA GENERAL
---     ID_Categoria varchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
+--     ID_Categoria nvarchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
 --     REFERENCES Categoria(IDCategoria),
 --     ID_Editorial varchar(10) not null CONSTRAINT FK_Editorial FOREIGN KEY(ID_Editorial) 
 --     REFERENCES Editorial(IDEditorial)

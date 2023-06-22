@@ -168,7 +168,7 @@
             /*This es la misma tabla, se llama
              tr es el row o la fila seleccionado de la tabla */
             filaSeleccionada = $(this).closest("tr");
-            //var data = tabladata.row(filaSeleccionada).data();
+            var data = tabladata.row(filaSeleccionada).data();
 
             //console.log(data);/*Para visualizar en consola*/
             //abrirModal(data);
@@ -202,7 +202,7 @@
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar usuario
                      * hecho en homeController*/
-                        //ELIMINAR USUARIO
+                        //ELIMINAR CATEGORIA
 
                         if (data.resultado) { /*si el resultado es verdadera)*/
                             tabladata.row(categoriaSeleccionado).remove().draw();
@@ -265,7 +265,8 @@
                          con los alert comentados*/
 
                         if (data.resultado) {
-                            tabladata.row(filaSeleccionada).data(Categoria).draw(false);
+                            tabladata.ajax.reload();
+                           /* tabladata.row(filaSeleccionada).data(Categoria).draw(false);*/
                             filaSeleccionada = null;
                             $("#FormModal").modal("hide");
 
