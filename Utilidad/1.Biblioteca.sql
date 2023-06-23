@@ -93,7 +93,23 @@ CREATE TABLE Usuario(
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )
-
+CREATE TABLE Lector(
+	IdLector int not null CONSTRAINT PK_Lector PRIMARY KEY identity,
+  Nombres nvarchar(100) not null,
+  Apellidos varchar(100) not null,
+  Edad tinyint not null,--Tiene un check (0-125),
+  Genero Char not null, --H o M
+  Escuela nvarchar(100) null, --Si usamos el SP: Su default es: NINGUNA
+  GradoGrupo nvarchar(100) null, --3ro de secundaria
+  Ciudad nvarchar(60) not null, --Default como --"Zacatlán"
+  Calle nvarchar(100) not null,
+  Telefono varchar(20) not null, 
+	Correo nvarchar(100) not null,--No puede ser null porque es con el que se van a registrar
+	Clave nvarchar(150) not null, --Contrase�as encriptadas
+	Reestablecer bit default 1, -- Por default 1
+	Activo bit default 1,
+	FechaRegistro datetime default getdate()
+)--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
 
 -- CREATE TABLE Usuario(*
 --     IDUsuario int identity (1,1)  not null CONSTRAINT PK_Usuario PRIMARY KEY,
