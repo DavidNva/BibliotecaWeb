@@ -26,7 +26,7 @@ create procedure sp_RegistrarCategoria (
 ) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para categoria
 as
 begin
-    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    SET @Resultado = 0 --No permite repetir una misma descripcion, ni al insertar ni al actualizar
     IF NOT EXISTS (SELECT * FROM Categoria WHERE Descripcion = @Descripcion)
     begin 
         DECLARE @CodCategoria VARCHAR(10), @Cod int
@@ -50,7 +50,7 @@ go
 
 create  proc sp_EditarCategoria( --Trabajo como un booleano
     @IdCategoria nvarchar(10),
-    @Descripcion varchar(100),
+    @Descripcion varchar(100),--Tiene índice único
     @Activo bit,
     @Mensaje varchar(500) output,
     @Resultado bit output
@@ -105,7 +105,7 @@ create procedure sp_RegistrarSala (
 ) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para Sala
 as
 begin
-    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    SET @Resultado = 0 --No permite repetir una misma descripcion, ni al insertar ni al actualizar
     IF NOT EXISTS (SELECT * FROM Sala WHERE Descripcion = @Descripcion)
     begin 
         DECLARE @CodSala VARCHAR(10), @Cod int
@@ -129,7 +129,7 @@ go
 
 create  proc sp_EditarSala( --Trabajo como un booleano
     @IdSala nvarchar(10),
-    @Descripcion varchar(100),
+    @Descripcion varchar(100),--Tiene índice único
     @Activo bit,
     @Mensaje varchar(500) output,
     @Resultado bit output
@@ -206,6 +206,82 @@ GO
 -- --Editorial tiene un índice único
 -- --Esta referenciado con libro  (No se permite eliminar)
 -- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
+create procedure sp_RegistrarEditorial ( 
+    @Descripcion varchar(100),
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para Editorial
+as
+begin
+    SET @Resultado = 0 --No permite repetir una misma descripcion, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Editorial WHERE Descripcion = @Descripcion)
+    begin 
+        DECLARE @CodEditorial VARCHAR(10), @Cod int
+        SELECT @Cod = RIGHT(MAX(IDEditorial),4 ) + 1 FROM Editorial;--Estamos seleccionando los numeros
+        
+        IF @Cod IS NULL --Pero si en inicio no hay ningun dato
+        BEGIN  
+            SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
+        END
+        
+        SELECT @CodEditorial = CONCAT('ED',RIGHT(CONCAT('0000',@Cod),4));
+         insert into Editorial(IDEditorial, Descripcion, Activo) values 
+        (@CodEditorial,@Descripcion, @Activo)
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = scope_identity()
+    end
+    else 
+        SET @Mensaje = 'La editorial ya existe'
+end
+go
+
+create  proc sp_EditarEditorial( --Trabajo como un booleano
+    @IdEditorial nvarchar(10),
+    @Descripcion varchar(100),--Tiene índice único
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM Editorial WHERE Descripcion = @Descripcion and IDEditorial != @IdEditorial)
+    begin 
+        update top(1) Editorial set 
+        Descripcion = @Descripcion,
+        Activo = @Activo
+        where IDEditorial = @IdEditorial
+
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La editorial ya existe'
+end
+go
+
+create proc sp_EliminarEditorial( --Trabajo como un booleano
+    @IdEditorial nvarchar(10),
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM Libro p --validacion de que la Editorial no este relacionada con un producto
+    inner join Editorial c on c.IDEditorial = p.Id_Editorial WHERE p.Id_Editorial= @IdEditorial)
+    begin 
+        delete top(1) from Editorial where IDEditorial = @IdEditorial
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La editorial se encuentra relacionada con un libro'
+end
+go
+
+
+
+
 -- CREATE PROCEDURE sp_RegistrarEditorial ( @NombreEditorial varchar(60)) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para editorial
 -- AS
 -- BEGIN
