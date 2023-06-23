@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BD_Autor.cs" />
     <Compile Include="BD_Categoria.cs" />
     <Compile Include="BD_Editorial.cs" />
     <Compile Include="BD_Sala.cs" />

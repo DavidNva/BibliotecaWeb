@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EN_Autor.cs" />
     <Compile Include="EN_Categoria.cs" />
     <Compile Include="EN_Editorial.cs" />
     <Compile Include="EN_Sala.cs" />

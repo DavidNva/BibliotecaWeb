@@ -159,8 +159,8 @@ create proc sp_EliminarSala( --Trabajo como un booleano
 as
 begin 
     SET @Resultado = 0 --false
-    IF NOT EXISTS (SELECT * FROM Libro p --validacion de que la Sala no este relacionada con un producto
-    inner join Sala c on c.IDSala = p.Id_Sala WHERE p.Id_Sala= @IdSala)
+    IF NOT EXISTS (SELECT * FROM Libro l --validacion de que la Sala no este relacionada con un producto
+    inner join Sala s on s.IDSala = l.Id_Sala WHERE l.Id_Sala= @IdSala)
     begin 
         delete top(1) from Sala where IDSala = @IdSala
         set @Resultado = 1 --true
@@ -268,8 +268,8 @@ create proc sp_EliminarEditorial( --Trabajo como un booleano
 as
 begin 
     SET @Resultado = 0 --false
-    IF NOT EXISTS (SELECT * FROM Libro p --validacion de que la Editorial no este relacionada con un producto
-    inner join Editorial c on c.IDEditorial = p.Id_Editorial WHERE p.Id_Editorial= @IdEditorial)
+    IF NOT EXISTS (SELECT * FROM Libro l --validacion de que la Editorial no este relacionada con un producto
+    inner join Editorial e on e.IDEditorial = l.Id_Editorial WHERE l.Id_Editorial= @IdEditorial)
     begin 
         delete top(1) from Editorial where IDEditorial = @IdEditorial
         set @Resultado = 1 --true
@@ -313,10 +313,95 @@ go
 -- go
 -- ---------------------------------------------------Autor------------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Autor *******************************
--- --EJemplo EN autor es  A0001,A0002,A0003,A0004, sucesivamente
+-- --Ejemplo EN autor es  A0001,A0002,A0003,A0004, sucesivamente
 -- --Autor tiene un índice compuesto unico con (Nombre, Apellidos)
 -- ----Esta referenciado con LibroAutor (No se puede eliminar, o afectará a todos)
 -- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
+use BibliotecaWeb
+go
+create procedure sp_RegistrarAutor ( 
+    @Nombres nvarchar(100),
+    @Apellidos nvarchar(100),
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para Autor
+as
+begin
+    SET @Resultado = 0 --No permite repetir una misma descripcion, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Autor WHERE CONCAT(Nombres,Apellidos) = CONCAT(@Nombres,@Apellidos))
+    begin 
+        DECLARE @CodAutor VARCHAR(10), @Cod int
+        SELECT @Cod = RIGHT(MAX(IdAutor),4 ) + 1 FROM Autor;--Estamos seleccionando los numeros
+        
+        IF @Cod IS NULL --Pero si en inicio no hay ningun dato
+        BEGIN  
+            SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
+        END
+        
+        SELECT @CodAutor = CONCAT('A',RIGHT(CONCAT('0000',@Cod),4));
+        insert into Autor(IDAutor, Nombres, Apellidos, Activo) values 
+        (@CodAutor,@Nombres, @Apellidos, @Activo)
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = scope_identity()
+    end
+    else 
+        SET @Mensaje = 'La autor ya existe'
+end
+go
+
+create  proc sp_EditarAutor( --Trabajo como un booleano
+    @IdAutor nvarchar(10),
+    @Nombres nvarchar(100),--Tiene indice compuesto con Apellidos
+    @Apellidos nvarchar(100),--Tiene indice compuesto con Nombre
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM Autor WHERE CONCAT(Nombres,Apellidos) = CONCAT(@Nombres,@Apellidos) and IDAutor != @IdAutor)
+    begin 
+        update top(1) Autor set 
+        Nombres = @Nombres,
+        Apellidos = @Apellidos,
+        Activo = @Activo
+        where IDAutor = @IdAutor
+
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La autor ya existe'
+end
+go
+
+create proc sp_EliminarAutor( --Trabajo como un booleano
+    @IdAutor nvarchar(10),
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM LibroAutor la --validacion de que la Autor no este relacionada con un producto
+    inner join Autor a on a.IdAutor = la.Id_Autor WHERE la.Id_Autor = @IdAutor)
+    begin 
+        delete top(1) from Autor where IDAutor = @IdAutor
+        set @Resultado = 1 --true
+    end 
+    else 
+        set @Mensaje = 'La autor se encuentra relacionada con un libro'
+end
+go
+
+
+
+
+
+
+
+
 -- CREATE PROCEDURE sp_RegistrarAutor ( @NombreAutor varchar(40), @ApellidosAutor varchar(40)) --Hay un indice unico para el nombre completo de autor
 -- AS
 -- BEGIN

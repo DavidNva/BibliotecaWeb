@@ -48,8 +48,36 @@ go
 --     Editorial nvarchar(60) not null, --Tiene indice unico
 --     );--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
 -- go
-
+CREATE TABLE Autor(--Tiene un trigger para autogenerar codigo
+	IdAutor  nvarchar(10)  not null CONSTRAINT PK_Autor PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
+	Nombres nvarchar(100) not null,--Tiene indice compuesto con Apellidos
+  Apellidos varchar(100) not null,--Tiene indice compuesto con Nombre
+	Activo bit default 1,
+	FechaRegistro datetime default getdate()
+)----Esta referenciado con Libro autor (No se puede eliminar, o afectará a todos)
+ --LA UNICA FORMA DE ELIMINAR A UN AUTOR, UNA SALA, UNA CATEGORIA, UN EDITORIAL ES QUE NO ESTEN REFERENCIADAS A NINGUNA TABLA
+ --Por ejemplo si solo creamos una autor como prueba, pues mientras no lo referenciemos, si se puede eliminar
 go
+CREATE TABLE LibroAutor(
+    IDLibroAutor varchar(10)  not null CONSTRAINT PK_LibroAutor PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+    --Llaves foraneas
+    ID_Libro varchar(25) not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
+    REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE,
+    ID_Autor nvarchar(10) not null CONSTRAINT FK_Autor FOREIGN KEY(ID_Autor) 
+    REFERENCES Autor(IDAutor),
+    Activo bit default 1,
+	  FechaRegistro datetime default getdate() 
+    );--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
+    /*
+      La tabla LibroAutor 
+      Tiene como foreig key a ID_Libro: 
+      En este caso como a libro si lo podemos eliminar y actualizar, pues esta
+      foreign key va a ser de tipo delete cascade y update cascade por si se
+      hace algun cambio en libro o se elimina (ya que no tendria sentido tener un LibroAutor,
+      estando referenciando a un libro que no existe)
+    */
+go
+
 CREATE TABLE Usuario(
 	IdUsuario int not null CONSTRAINT PK_Usuario PRIMARY KEY identity,
   Nombres nvarchar(100) not null,

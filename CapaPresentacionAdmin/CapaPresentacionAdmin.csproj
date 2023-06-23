@@ -485,6 +485,7 @@
     <Content Include="Views\Mantenedor\Categoria.cshtml" />
     <Content Include="Views\Mantenedor\Sala.cshtml" />
     <Content Include="Views\Mantenedor\Editorial.cshtml" />
+    <Content Include="Views\Mantenedor\Autor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

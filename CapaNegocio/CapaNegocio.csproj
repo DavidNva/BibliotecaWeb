@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RN_Autor.cs" />
     <Compile Include="RN_Categoria.cs" />
     <Compile Include="RN_Editorial.cs" />
     <Compile Include="RN_Recursos.cs" />

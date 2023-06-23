@@ -25,6 +25,10 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();
         }
+        public ActionResult Autor()
+        {
+            return View();
+        }
         //public ActionResult Libros()  
         //{
         //    return View();
@@ -162,7 +166,6 @@ namespace CapaPresentacionAdmin.Controllers
 
         }
 
-
         [HttpPost]
         public JsonResult EliminarEditorial(string id)
         {
@@ -174,7 +177,51 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
         #endregion
-        
+        /*--------------AUTOR---------------------*/
+        #region AUTOR
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarAutor() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Autor> oLista = new List<EN_Autor>();
+            oLista = new RN_Autor().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+
+        [HttpPost]
+        public JsonResult GuardarAutor(EN_Autor objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+            string mensaje = string.Empty;
+
+            if (objeto.IdAutor == "0")/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+             una Autor nueva, por lo que se ha dado dando clic con el boton de crear*/
+            {
+                resultado = new RN_Autor().Registrar(objeto, out mensaje);/*El metodo registrar
+                 de tipo int, devuelve el id registrado*/
+            }
+            else
+            {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                 a una Autor, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                 con los alert comentados*/
+                resultado = new RN_Autor().Editar(objeto, out mensaje);
+            }
+            return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [HttpPost]
+        public JsonResult EliminarAutor(string id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new RN_Autor().Eliminar(id, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
         ///*-----------------------PRODUCTO----------------*/
         //#region PRODUCTO
         //[HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
