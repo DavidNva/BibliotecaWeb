@@ -487,6 +487,7 @@
     <Content Include="Views\Mantenedor\Editorial.cshtml" />
     <Content Include="Views\Mantenedor\Autor.cshtml" />
     <Content Include="Views\Home\Lectores.cshtml" />
+    <Content Include="Views\Mantenedor\Libros.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

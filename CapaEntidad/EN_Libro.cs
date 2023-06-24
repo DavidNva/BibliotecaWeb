@@ -11,7 +11,7 @@ namespace CapaEntidad
 		public string IdLibro { get; set; }
 		public string Titulo { get; set; }
 		public string Ubicacion { get; set; }
-		public int Paginas { get; set; }
+		public decimal Paginas { get; set; }
 		public EN_Categoria oId_Categoria { get; set; }
 		public EN_Editorial oId_Editorial { get; set; }
 		public EN_Sala oId_Sala { get; set; }

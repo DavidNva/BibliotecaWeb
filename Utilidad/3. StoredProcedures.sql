@@ -941,7 +941,98 @@ GO
 --               Libro esta referenciado a ejemplar, y ejemplar esta referenciado a prestamo
 --               Por eso para poder eliminar libro, las foreign key de estos debe ser cascade
 -- */
+--PROCEDIMIENTOS PARA LIBRO
+create procedure sp_RegistrarLibro(
+    @IDLibro varchar(25),--Es asignado por administrador al insertar
+    @Titulo nvarchar(130),
+    @Paginas int,
+    --Llaves foraneas
+    @IDCategoria nvarchar(10),
+    @IDEditorial nvarchar(10),
+    @IDSala nvarchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)
+    @Ejemplares int,
+    @AñoEdicion varchar(5),
+    @Volumen int,
+    @Observaciones varchar(500), --Definido como default: EN BUEN ESTADO
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+    )
+as
+begin
+    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Libro WHERE IdLibro = @IdLibro)
+    begin 
+        insert into Libro(IdLibro,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
+        (@IdLibro, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = scope_identity() 
+    end 
+    else 
+     SET @Mensaje = 'El codigo del libro ya existe'
+end 
+go
 
+create procedure sp_EditarLibro(
+    @IDLibro varchar(25),--Es asignado por administrador al insertar
+    @Titulo nvarchar(130),
+    @Paginas int,
+    --Llaves foraneas
+    @IDCategoria nvarchar(10),
+    @IDEditorial nvarchar(10),
+    @IDSala nvarchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)
+    @Ejemplares int,
+    @AñoEdicion varchar(5),
+    @Volumen int,
+    @Observaciones varchar(500), --Definido como default: EN BUEN ESTADO
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+    )
+as
+begin
+    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Libro WHERE Titulo = @Titulo and IdLibro != @IdLibro)
+    begin 
+        update Libro set
+        Titulo = @Titulo,
+        Paginas = @Paginas, 
+        ID_Categoria = @IDCategoria, 
+        ID_Editorial = @IDEditorial, 
+        ID_Sala = @IDSala, 
+        Ejemplares = @Ejemplares, 
+        AñoEdicion = @AñoEdicion, 
+        Volumen = @Volumen, 
+        Observaciones = @Observaciones, 
+        Activo = @Activo 
+        where IdLibro = @IdLibro
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = 1 --true
+    end 
+    else 
+     SET @Mensaje = 'El libro ya existe'
+end 
+go
+create procedure sp_EliminarLibro(
+    @IdLibro varchar(25),
+    @Mensaje varchar(500) output,
+    @Resultado int output
+    )
+as
+begin
+    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    IF NOT EXISTS (select * from DetallePrestamo dp
+    inner join Libro l on l.IdLibro = dp.IdLibro 
+    where l.IdLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
+    begin 
+        delete top(1) from Libro where IdLibro = @IdLibro
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = 1 --true
+    end 
+    else 
+     SET @Mensaje = 'El libro se encuentra relacionado a una préstamo'
+end 
+go
 -- CREATE PROCEDURE sp_RegistrarLibro (
 --     @IDLibro varchar(25),--Es asignado por administrador al insertar
 --     @Titulo nvarchar(130),

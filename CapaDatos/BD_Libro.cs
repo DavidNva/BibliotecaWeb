@@ -65,9 +65,9 @@ namespace CapaDatos
             return lista;
         }
 
-        public int Registrar(EN_Libro obj, out string Mensaje)//out indica parametro de salida
+        public string Registrar(EN_Libro obj, out string Mensaje)//out indica parametro de salida
         {
-            int IdAutogenerado = 0; /*Recibe el id autogenerado*/
+            string IdAutogenerado = "0"; /*Recibe el id autogenerado*/
 
             Mensaje = string.Empty;
             try
@@ -94,13 +94,13 @@ namespace CapaDatos
 
                     oConexion.Open();
                     cmd.ExecuteNonQuery();
-                    IdAutogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
+                    IdAutogenerado = cmd.Parameters["Resultado"].Value.ToString();
                     Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
                 }
             }
             catch (Exception ex)
             {
-                IdAutogenerado = 0;/*Regresa a 0*/
+                IdAutogenerado = "0";/*Regresa a 0*/
                 Mensaje = ex.Message;
 
             }

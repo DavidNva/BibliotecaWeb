@@ -16,7 +16,7 @@ namespace CapaNegocio
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
 
-        public int Registrar(EN_Libro obj, out string Mensaje)
+        public string Registrar(EN_Libro obj, out string Mensaje)
         {
             Mensaje = string.Empty;
             //Validaciones para que la caja de texto no este vacio o con espacios
@@ -24,13 +24,17 @@ namespace CapaNegocio
             {
                 Mensaje = "La código del Libro no puede ser vacio";
             }
-            else if (string.IsNullOrEmpty(obj.Titulo) || string.IsNullOrWhiteSpace(obj.Titulo))
-            {
-                Mensaje = "El titulo del Libro no puede ser vacio";
-            }
+            //else if (string.IsNullOrEmpty(obj.Titulo) || string.IsNullOrWhiteSpace(obj.Titulo))
+            //{
+            //    Mensaje = "El titulo del Libro no puede ser vacio";
+            //}
             else if (string.IsNullOrEmpty(obj.Ubicacion) || string.IsNullOrWhiteSpace(obj.Ubicacion))
             {
                 Mensaje = "La ubicacion del Libro no puede ser vacio";
+            }
+            else if (obj.Paginas == 0)/*Si no ha seleccionado ninguna marca*/
+            {
+                Mensaje = "Debe ingresar el número de páginas del Libro";
             }
             else if (obj.oId_Categoria.IdCategoria == "0")/*Si no ha seleccionado ninguna marca*/
             {
@@ -68,7 +72,7 @@ namespace CapaNegocio
             }
             else
             {
-                return 0;/*No se ha creado la categoria*/
+                return "0";/*No se ha creado la categoria*/
             }
 
         }
@@ -88,6 +92,10 @@ namespace CapaNegocio
             else if (string.IsNullOrEmpty(obj.Ubicacion) || string.IsNullOrWhiteSpace(obj.Ubicacion))
             {
                 Mensaje = "La ubicacion del Libro no puede ser vacio";
+            }
+            else if (obj.Paginas == 0)/*Si no ha seleccionado ninguna marca*/
+            {
+                Mensaje = "Debe ingresar el número de páginas del Libro";
             }
             else if (obj.oId_Categoria.IdCategoria == "0")/*Si no ha seleccionado ninguna marca*/
             {

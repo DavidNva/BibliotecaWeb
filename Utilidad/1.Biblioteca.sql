@@ -67,7 +67,8 @@ CREATE TABLE LibroAutor(
     REFERENCES Autor(IDAutor),
     Activo bit default 1,
 	  FechaRegistro datetime default getdate() 
-    );--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
+);--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
+    go
     /*
       La tabla LibroAutor 
       Tiene como foreig key a ID_Libro: 
@@ -149,7 +150,7 @@ go
 CREATE TABLE Libro(
     IDLibro varchar(25)  not null CONSTRAINT PK_Libro PRIMARY KEY,
     Titulo nvarchar(130) not null,
-    Ubicacion varchar(10) not null,--Ejemplo EN
+    -- Ubicacion varchar(10) not null,--Ejemplo EN
     Paginas int not null,
     --Llaves foraneas
     ID_Categoria nvarchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
@@ -164,10 +165,33 @@ CREATE TABLE Libro(
     Volumen tinyint not null DEFAULT 1,
 	  RutaImagen varchar(100),
   	NombreImagen varchar(100),
-    Observaciones varchar(500) not null,--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
+    Observaciones varchar(500) not null default 'NINGUNA',--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
 	  Activo bit default 1,
 	  FechaRegistro datetime default getdate()
     );--Esta referenciado con ejemplar y libroLutor (si se puede eliminar ya que estos como foreign key son delete y update cascade)
+go
+
+CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso anterior)*/
+	IdPrestamo int primary key identity,
+	IdLector int references Lector(IdLector),
+	TotalProducto int, --El cliente pudo haber comprado 3 productos
+	MontoTotal decimal(10,2),--La suma total del precio de todos los productos
+	Contacto varchar(50), --alguien de contacto que pueda usar de referencia como contacto con una persona
+	IdDistrito varchar(10),
+	Telefono varchar(50),
+	Direccion varchar(500),
+	IdTransaccion varchar(50),
+	FechaPrestamo datetime default getdate()
+)
+go
+
+CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
+	IdDetallePrestamo int primary key identity,
+	IdPrestamo int references Prestamo(IdPrestamo),
+	IdLibro varchar(25) references Libro(IdLibro),
+	Cantidad int,
+	Total decimal(10,2)--total del precio del producto
+)
 go
 -- /*ALTER TABLE libro
 -- ADD 
