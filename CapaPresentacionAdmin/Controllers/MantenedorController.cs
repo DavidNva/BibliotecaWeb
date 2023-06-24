@@ -239,37 +239,53 @@ namespace CapaPresentacionAdmin.Controllers
         [HttpPost]
         public JsonResult GuardarLibro(string objeto, HttpPostedFileBase archivoImagen) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
         {
-
-            /*Resultado = Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+            //object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
             string mensaje = string.Empty;
 
             bool operacionExitosa = true;
             bool guardarImagenExito = true;
 
             EN_Libro oLibro = new EN_Libro();
-            //Se referencia a "using Newtonsoft.Json;" para convertir el string objeto(de parametros)
-            //a tipo objeto con JsonConvert
-            //oLibro = JsonConvert.DeserializeObject<EN_Libro>(objeto);
+            //Se referencia a "using Newtonsoft.Json;" para convertir el string objeto(de parametros) //a tipo objeto con JsonConvert
+            oLibro = JsonConvert.DeserializeObject<EN_Libro>(objeto);
 
-            //decimal precio;
+            //decimal paginas;
+            //decimal ejemplares;
+            ////decimal volumen;
             ///*Tratar de convertir el precio con un decimal con formato regional que necesitamos (Se referencia el using globalizatio para Culture Info
             // Al convertir el formato de texto en decimal va a decirle que los decimales son puntos, y que la cultura regional es de MX, el resultado de la convercion lo guarda en la variable precio (que es decimal*/
-            //if (decimal.TryParse(oLibro.Paginas, System.Globalization.NumberStyles.AllowDecimalPoint, new CultureInfo("es-MX"), out precio))
+            //if (decimal.TryParse(oLibro.EjemplaresTexto, System.Globalization.NumberStyles.AllowDecimalPoint, new CultureInfo("es-MX"), out ejemplares))
             //{
             //    /*Si esta todo correcto
             //     * Ahora si pasa el valor convertido a Precio de la entidad EN_Productos
             //     */
-            //    oLibro.Precio = precio;
+            //    oLibro.Ejemplares = ejemplares;
             //}
+            ////else if (decimal.TryParse(oLibro.PaginasTexto, System.Globalization.NumberStyles.AllowDecimalPoint, new CultureInfo("es-MX"), out paginas))
+            ////{
+            ////    /*Si esta todo correcto
+            ////     * Ahora si pasa el valor convertido a Precio de la entidad EN_Productos
+            ////     */
+            ////    oLibro.Paginas = paginas;
+            ////}
+            ////else if (decimal.TryParse(oLibro.VolumenTexto, System.Globalization.NumberStyles.AllowDecimalPoint, new CultureInfo("es-MX"), out volumen))
+            ////{
+            ////    /*Si esta todo correcto
+            ////     * Ahora si pasa el valor convertido a Precio de la entidad EN_Productos
+            ////     */
+            ////    oLibro.Volumen = volumen;
+            ////}
             //else /*Si hay algun problemas*/
             //{
-            //    return Json(new { operacionExitosa = false, mensaje = "El formato del precio debe ser ##.##" }, JsonRequestBehavior.AllowGet);
+            //    return Json(new { operacionExitosa = false, mensaje = "El formato ejemplares debe ser en número" }, JsonRequestBehavior.AllowGet);
             //}
+
+
             if (oLibro.IdLibro == "0")/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
-             una categoria nueva, por lo que se ha dado dando clic con el boton de crear*/
+             una Libro nuevo, por lo que se ha dado dando clic con el boton de crear*/
             {
                 string idLibroGenerado = new RN_Libro().Registrar(oLibro, out mensaje);/*El metodo registrar
-                 de tipo int, devuelve el id registrado*/
+        //         de tipo string, devuelve el id registrado*/
                 if (idLibroGenerado != "0")/*Si se pudo registrar correctamente el Libro*/
                 {
                     oLibro.IdLibro = idLibroGenerado;/*Toma el id*/
@@ -278,10 +294,11 @@ namespace CapaPresentacionAdmin.Controllers
                 {
                     operacionExitosa = false;
                 }
+
             }
             else
             {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
-                 a una categoria, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                 a una Libro, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
                  con los alert comentados*/
                 operacionExitosa = new RN_Libro().Editar(oLibro, out mensaje);
             }
@@ -326,8 +343,8 @@ namespace CapaPresentacionAdmin.Controllers
             }
             return Json(new { operacionExitosa = operacionExitosa, idGenerado = oLibro.IdLibro, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
             //return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        }
 
+        }
 
         /*Metodo para ver imagen de Libro en venta, x64*/
         [HttpPost]
@@ -349,8 +366,9 @@ namespace CapaPresentacionAdmin.Controllers
                 JsonRequestBehavior.AllowGet
             );
         }
+
         [HttpPost]
-        public JsonResult EliminarLibro(int id)
+        public JsonResult EliminarLibro(string id)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
@@ -360,6 +378,140 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
         #endregion
+        //#region Libro
+        //[HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        //public JsonResult ListarLibro() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        //{
+        //    List<EN_Libro> oLista = new List<EN_Libro>();
+        //    oLista = new RN_Libro().Listar();
+        //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+        //    /*El json da los datos, jala los datos de esa lista, en data*/
+        //}
+
+        //[HttpPost]
+        //public JsonResult GuardarLibro(string objeto, HttpPostedFileBase archivoImagen) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        //{
+
+        //    /*Resultado = Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+        //    string mensaje = string.Empty;
+
+        //    bool operacionExitosa = true;
+        //    bool guardarImagenExito = true;
+
+        //    EN_Libro oLibro = new EN_Libro();
+        //    //Se referencia a "using Newtonsoft.Json;" para convertir el string objeto(de parametros)
+        //    //a tipo objeto con JsonConvert
+        //    //oLibro = JsonConvert.DeserializeObject<EN_Libro>(objeto);
+
+        //    //decimal precio;
+        //    ///*Tratar de convertir el precio con un decimal con formato regional que necesitamos (Se referencia el using globalizatio para Culture Info
+        //    // Al convertir el formato de texto en decimal va a decirle que los decimales son puntos, y que la cultura regional es de MX, el resultado de la convercion lo guarda en la variable precio (que es decimal*/
+        //    //if (decimal.TryParse(oLibro.Paginas, System.Globalization.NumberStyles.AllowDecimalPoint, new CultureInfo("es-MX"), out precio))
+        //    //{
+        //    //    /*Si esta todo correcto
+        //    //     * Ahora si pasa el valor convertido a Precio de la entidad EN_Productos
+        //    //     */
+        //    //    oLibro.Precio = precio;
+        //    //}
+        //    //else /*Si hay algun problemas*/
+        //    //{
+        //    //    return Json(new { operacionExitosa = false, mensaje = "El formato del precio debe ser ##.##" }, JsonRequestBehavior.AllowGet);
+        //    //}
+        //    if (oLibro.IdLibro == "0")/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+        //     una categoria nueva, por lo que se ha dado dando clic con el boton de crear*/
+        //    {
+        //        string idLibroGenerado = new RN_Libro().Registrar(oLibro, out mensaje);/*El metodo registrar
+        //         de tipo int, devuelve el id registrado*/
+        //        if (idLibroGenerado != "0")/*Si se pudo registrar correctamente el Libro*/
+        //        {
+        //            oLibro.IdLibro = idLibroGenerado;/*Toma el id*/
+        //        }
+        //        else
+        //        {
+        //            operacionExitosa = false;
+        //        }
+        //    }
+        //    else
+        //    {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+        //         a una categoria, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+        //         con los alert comentados*/
+        //        operacionExitosa = new RN_Libro().Editar(oLibro, out mensaje);
+        //    }
+
+        //    if (operacionExitosa)/*Si la operacion es true  pasamos  actualizar una ruta de imagen, guardar una imagen*/
+        //    {
+        //        if (archivoImagen != null)
+        //        {
+        //            /*Toda la logica para guardar en la carpeta y actualizar la tablas*/
+        //            /*Ruta de imagen con ConfiguracionManager, haciendo referencia using a system.Configuration para acceder a webConfig*/
+        //            string rutaGuardar = ConfigurationManager.AppSettings["ServidorFotos"]; /*Guarda las imagenes en esa ruta especificada*/
+        //            /*Se referencia a .io para path*/
+        //            string extensionImagen = Path.GetExtension(archivoImagen.FileName);
+        //            /*Creamos un nombre de imagen personalizado, el codigo del Libro mas extension*/
+        //            string nombreImagen = string.Concat(oLibro.IdLibro.ToString(), extensionImagen);
+
+        //            try
+        //            {
+        //                /*Guarda en la ruta con un respectivo nombres*/
+        //                archivoImagen.SaveAs(Path.Combine(rutaGuardar, nombreImagen));
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                /*Si existe un error*/
+        //                string msg = ex.Message;
+        //                guardarImagenExito = false;
+        //            }
+        //            if (guardarImagenExito)/*Si es true*/
+        //            {
+        //                /*Para guardar en la base de datos*/
+        //                oLibro.RutaImagen = rutaGuardar;
+        //                oLibro.NombreImagen = nombreImagen;
+        //                bool respuesta = new RN_Libro().GuardarDatosImagen(oLibro, out mensaje);
+        //            }
+        //            else /*En el caso de que la imagen no haya sido guardada con exitos*/
+        //            {
+        //                /*Como el registro del Libro y el registro de la imagen son operaciones distintas
+        //                 puede que se ejecute una de manera correcta y otra no*/
+        //                mensaje = "Se guardo el Libro pero hubo problemas con la imagen";
+        //            }
+        //        }
+        //    }
+        //    return Json(new { operacionExitosa = operacionExitosa, idGenerado = oLibro.IdLibro, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        //    //return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        //}
+
+
+        ///*Metodo para ver imagen de Libro en venta, x64*/
+        //[HttpPost]
+        //public JsonResult ImagenLibro(string id)
+        //{
+        //    bool conversion;
+        //    /*Seleccionamos un Libro en especifico con where*/
+        //    EN_Libro oLibro = new RN_Libro().Listar().Where(p => p.IdLibro == id).FirstOrDefault();
+
+        //    /*Obtenemos la ruta de imagen convertida a base64*/
+        //    string textoBase64 = RN_Recursos.ConvertirBase64(Path.Combine(oLibro.RutaImagen, oLibro.NombreImagen), out conversion);
+
+        //    return Json(new
+        //    {
+        //        conversion = conversion,
+        //        textobase64 = textoBase64,
+        //        extension = Path.GetExtension(oLibro.NombreImagen) /*El nombre de la imagen ya tiene concatenada la extension*/
+        //    },
+        //        JsonRequestBehavior.AllowGet
+        //    );
+        //}
+        //[HttpPost]
+        //public JsonResult EliminarLibro(int id)
+        //{
+        //    bool respuesta = false;
+        //    string mensaje = string.Empty;
+
+        //    respuesta = new RN_Libro().Eliminar(id, out mensaje);
+
+        //    return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        //}
+        //#endregion
 
     }
 }

@@ -40,7 +40,7 @@ namespace CapaDatos
                                 {
                                     IdLibro = dr["IdLibro"].ToString(),
                                     Titulo = dr["Titulo"].ToString(),
-                                    Ubicacion = dr["Ubicacion"].ToString(),
+                                    //Ubicacion = dr["Ubicacion"].ToString(),
                                     Paginas = Convert.ToInt32(dr["Paginas"]),
                                     oId_Categoria = new EN_Categoria() { IdCategoria = dr["IDCategoria"].ToString(), Descripcion = dr["DesCategoria"].ToString() },
                                     oId_Editorial = new EN_Editorial() { IdEditorial = dr["IdEditorial"].ToString(), Descripcion = dr["DesEditorial"].ToString() },
@@ -78,7 +78,8 @@ namespace CapaDatos
                     /*Los primeros valores de estos parametros, es la del procedimiento del sql y el segundo de donde toma el valor (las propieaddes de la clase EN_Libro*/
                     cmd.Parameters.AddWithValue("IdLibro", obj.IdLibro);
                     cmd.Parameters.AddWithValue("Titulo", obj.Titulo);
-                    cmd.Parameters.AddWithValue("Ubicacion", obj.Ubicacion);
+                    cmd.Parameters.AddWithValue("Paginas", obj.Paginas);
+                    //cmd.Parameters.AddWithValue("Ubicacion", obj.Ubicacion);
                     cmd.Parameters.AddWithValue("IDCategoria", obj.oId_Categoria.IdCategoria);
                     cmd.Parameters.AddWithValue("IDEditorial", obj.oId_Editorial.IdEditorial);
                     cmd.Parameters.AddWithValue("IDSala", obj.oId_Sala.IdSala);
@@ -120,7 +121,8 @@ namespace CapaDatos
                     SqlCommand cmd = new SqlCommand("sp_EditarLibro", oConexion);
                     cmd.Parameters.AddWithValue("IdLibro", obj.IdLibro);
                     cmd.Parameters.AddWithValue("Titulo", obj.Titulo);
-                    cmd.Parameters.AddWithValue("Ubicacion", obj.Ubicacion);
+                    cmd.Parameters.AddWithValue("Paginas", obj.Paginas);
+                    //cmd.Parameters.AddWithValue("Ubicacion", obj.Ubicacion);
                     cmd.Parameters.AddWithValue("IDCategoria", obj.oId_Categoria.IdCategoria);
                     cmd.Parameters.AddWithValue("IDEditorial", obj.oId_Editorial.IdEditorial);
                     cmd.Parameters.AddWithValue("IDSala", obj.oId_Sala.IdSala);
@@ -187,7 +189,7 @@ namespace CapaDatos
             return resultado;
         }
 
-        public bool Eliminar(int id, out string Mensaje)//out indica parametro de salida
+        public bool Eliminar(string id, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = false;
 

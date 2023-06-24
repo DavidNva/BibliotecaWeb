@@ -147,8 +147,9 @@ CREATE TABLE TipoPersona(
 )--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
 go
 
-CREATE TABLE Libro(
-    IDLibro varchar(25)  not null CONSTRAINT PK_Libro PRIMARY KEY,
+CREATE drop TABLE LibroAutor(
+    IDLibro int  not null CONSTRAINT PK_Libro PRIMARY KEY,
+    Codigo varchar(25)  not null CONSTRAINT PK_CodigoLibro PRIMARY KEY,
     Titulo nvarchar(130) not null,
     -- Ubicacion varchar(10) not null,--Ejemplo EN
     Paginas int not null,
