@@ -93,10 +93,11 @@ CREATE TABLE Usuario(
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )
+select * from lector  
 select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer from Lector
 
-insert into Lector(Nombres, Apellidos, Edad, Genero, GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave)
-values ('David','Nava Lector', 21, 1,'Sexto Semestre','Zacatlan', 'Josefa Ortiz', '768273817','david@gmail.com','test123')
+insert into Lector(Nombres, Apellidos, Edad, Genero,Escuela,GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave, Activo)
+values ('Angel David','Nava Garcia Lector', 21, 1,'Instituto Tecnologico Superior de la Sierra Norte de Puebla','Sexto Semestre','Zacatlan', 'Josefa Ortiz', '768273817','david@gmail.com','test123',0)
 
 insert into Lector(Nombres, Apellidos, Edad, Genero,Escuela,GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave)
 values ('Guadalupe','Garcia Lector', 21, 0,'Secundaria Benito Juarez','3ro de Secundaria','Puebla', 'Josefa Ortiz', '2229879873','guadalupe@gmail.com','test123')
@@ -148,19 +149,24 @@ go
 CREATE TABLE Libro(
     IDLibro varchar(25)  not null CONSTRAINT PK_Libro PRIMARY KEY,
     Titulo nvarchar(130) not null,
-    Ubicacion varchar(10) not null,
-    NumEdicion varchar(60) not null,
-    AñoEdicion varchar(5) not null,
-    Volumen tinyint not null DEFAULT 1,
-    NumPaginas int not null,
-    Observaciones varchar(500) not null,--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
+    Ubicacion varchar(10) not null,--Ejemplo EN
+    Paginas int not null,
     --Llaves foraneas
-    ID_Sala nvarchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
-    REFERENCES Sala(IDSala) DEFAULT 'S0001',--sALA GENERAL
     ID_Categoria nvarchar(10) not null CONSTRAINT FK_Categoria FOREIGN KEY(ID_Categoria) 
     REFERENCES Categoria(IDCategoria),
     ID_Editorial nvarchar(10) not null CONSTRAINT FK_Editorial FOREIGN KEY(ID_Editorial) 
-    REFERENCES Editorial(IDEditorial)
+    REFERENCES Editorial(IDEditorial),
+    ID_Sala nvarchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
+    REFERENCES Sala(IDSala) DEFAULT 'S0001',--Sala 
+    Ejemplares int,--En producto seria el stock
+    -- NumEdicion varchar(60) not null,
+    AñoEdicion varchar(5) not null,
+    Volumen tinyint not null DEFAULT 1,
+	  RutaImagen varchar(100),
+  	NombreImagen varchar(100),
+    Observaciones varchar(500) not null,--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
+	  Activo bit default 1,
+	  FechaRegistro datetime default getdate()
     );--Esta referenciado con ejemplar y libroLutor (si se puede eliminar ya que estos como foreign key son delete y update cascade)
 go
 -- /*ALTER TABLE libro
