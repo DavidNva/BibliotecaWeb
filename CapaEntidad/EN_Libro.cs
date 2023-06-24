@@ -8,8 +8,8 @@ namespace CapaEntidad
 {
     public class EN_Libro
     {
-		public string IdLibroReferencia { get; set; }
-		public string IdLibro { get; set; }
+		public int IdLibro { get; set; }
+		public string Codigo { get; set; }
 		public string Titulo { get; set; }
 		//public string Ubicacion { get; set; }
 		public decimal Paginas { get; set; }

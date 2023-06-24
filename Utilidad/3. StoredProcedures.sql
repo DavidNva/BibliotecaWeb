@@ -943,7 +943,7 @@ GO
 -- */
 --PROCEDIMIENTOS PARA LIBRO
 create procedure sp_RegistrarLibro(
-    @IDLibro varchar(25),--Es asignado por administrador al insertar
+    @Codigo varchar(25),--Es asignado por administrador al insertar
     @Titulo nvarchar(130),
     @Paginas int,
     --Llaves foraneas
@@ -961,10 +961,10 @@ create procedure sp_RegistrarLibro(
 as
 begin
     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
-    IF NOT EXISTS (SELECT * FROM Libro WHERE IdLibro = @IdLibro)
+    IF NOT EXISTS (SELECT * FROM Libro WHERE Codigo = @Codigo)
     begin 
-        insert into Libro(IdLibro,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
-        (@IdLibro, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
+        insert into Libro(Codigo,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
+        (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
         SET @Resultado = scope_identity() 
     end 
@@ -973,8 +973,9 @@ begin
 end 
 go
 
-create procedure sp_EditarLibro(
-    @IDLibro varchar(25),--Es asignado por administrador al insertar
+create  procedure sp_EditarLibro(
+    @IDLibro int,
+    @Codigo varchar(25),--Es asignado por administrador al insertar
     @Titulo nvarchar(130),
     @Paginas int,
     --Llaves foraneas
@@ -995,6 +996,7 @@ begin
     IF NOT EXISTS (SELECT * FROM Libro WHERE Titulo = @Titulo and IdLibro != @IdLibro)
     begin 
         update Libro set
+        Codigo = @Codigo,
         Titulo = @Titulo,
         Paginas = @Paginas, 
         ID_Categoria = @IDCategoria, 
@@ -1014,7 +1016,7 @@ begin
 end 
 go
 create procedure sp_EliminarLibro(
-    @IdLibro varchar(25),
+    @IdLibro int,
     @Mensaje varchar(500) output,
     @Resultado int output
     )
@@ -1022,7 +1024,7 @@ as
 begin
     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
     IF NOT EXISTS (select * from DetallePrestamo dp
-    inner join Libro l on l.IdLibro = dp.IdLibro 
+    inner join Libro l on l.Codigo = dp.Codigo
     where l.IdLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
     begin 
         delete top(1) from Libro where IdLibro = @IdLibro

@@ -16,14 +16,14 @@ namespace CapaNegocio
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
 
-        public string Registrar(EN_Libro obj, out string Mensaje)
+        public int Registrar(EN_Libro obj, out string Mensaje)
         {
             Mensaje = string.Empty;
             //Validaciones para que la caja de texto no este vacio o con espacios
-            //if (string.IsNullOrEmpty(obj.IdLibro) || string.IsNullOrWhiteSpace(obj.IdLibro))
-            //{
-            //    Mensaje = "El código del Libro no puede ser vacio";
-            //}
+            if (string.IsNullOrEmpty(obj.Codigo) || string.IsNullOrWhiteSpace(obj.Codigo))
+            {
+                Mensaje = "El código del Libro no puede ser vacio";
+            }
             if (string.IsNullOrEmpty(obj.Titulo) || string.IsNullOrWhiteSpace(obj.Titulo))
             {
                 Mensaje = "El título del Libro no puede ser vacio";
@@ -70,7 +70,7 @@ namespace CapaNegocio
             }
             else
             {
-                return "0";/*No se ha creado la Libro*/
+                return 0;/*No se ha creado la Libro*/
             }
 
         }
@@ -80,10 +80,10 @@ namespace CapaNegocio
         {
             Mensaje = string.Empty;
             //Validaciones para que la caja de texto no este vacio o con espacios
-            //if (string.IsNullOrEmpty(obj.IdLibro) || string.IsNullOrWhiteSpace(obj.IdLibro))
-            //{
-            //    Mensaje = "El código del Libro no puede ser vacio";
-            //}
+            if (string.IsNullOrEmpty(obj.Codigo) || string.IsNullOrWhiteSpace(obj.Codigo))
+            {
+                Mensaje = "El código del Libro no puede ser vacio";
+            }
             if (string.IsNullOrEmpty(obj.Titulo) || string.IsNullOrWhiteSpace(obj.Titulo))
             {
                 Mensaje = "El título del Libro no puede ser vacio";
@@ -140,7 +140,7 @@ namespace CapaNegocio
         {
             return objCapaDato.GuardarDatosImagen(obj, out mensaje);
         }
-        public bool Eliminar(string id, out string Mensaje)
+        public bool Eliminar(int id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }

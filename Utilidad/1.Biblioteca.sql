@@ -147,8 +147,8 @@ CREATE TABLE TipoPersona(
 )--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
 go
 
-CREATE drop TABLE LibroAutor(
-    IDLibro int  not null CONSTRAINT PK_Libro PRIMARY KEY,
+CREATE TABLE Libro(
+    IDLibro int not null identity,
     Codigo varchar(25)  not null CONSTRAINT PK_CodigoLibro PRIMARY KEY,
     Titulo nvarchar(130) not null,
     -- Ubicacion varchar(10) not null,--Ejemplo EN
@@ -189,7 +189,7 @@ go
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
 	IdDetallePrestamo int primary key identity,
 	IdPrestamo int references Prestamo(IdPrestamo),
-	IdLibro varchar(25) references Libro(IdLibro),
+	Codigo varchar(25) references Libro(Codigo),
 	Cantidad int,
 	Total decimal(10,2)--total del precio del producto
 )

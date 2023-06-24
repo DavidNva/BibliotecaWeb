@@ -281,12 +281,12 @@ namespace CapaPresentacionAdmin.Controllers
             //}
 
 
-            if (oLibro.IdLibro == "0")/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+            if (oLibro.IdLibro == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
              una Libro nuevo, por lo que se ha dado dando clic con el boton de crear*/
             {
-                string idLibroGenerado = new RN_Libro().Registrar(oLibro, out mensaje);/*El metodo registrar
+                int idLibroGenerado = new RN_Libro().Registrar(oLibro, out mensaje);/*El metodo registrar
         //         de tipo string, devuelve el id registrado*/
-                if (idLibroGenerado != "0")/*Si se pudo registrar correctamente el Libro*/
+                if (idLibroGenerado != 0)/*Si se pudo registrar correctamente el Libro*/
                 {
                     oLibro.IdLibro = idLibroGenerado;/*Toma el id*/
                 }
@@ -348,7 +348,7 @@ namespace CapaPresentacionAdmin.Controllers
 
         /*Metodo para ver imagen de Libro en venta, x64*/
         [HttpPost]
-        public JsonResult ImagenLibro(string id)
+        public JsonResult ImagenLibro(int id)
         {
             bool conversion;
             /*Seleccionamos un Libro en especifico con where*/
@@ -368,7 +368,7 @@ namespace CapaPresentacionAdmin.Controllers
         }
 
         [HttpPost]
-        public JsonResult EliminarLibro(string id)
+        public JsonResult EliminarLibro(int id)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
