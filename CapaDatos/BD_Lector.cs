@@ -58,7 +58,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer from Lector";
+                    string query = "select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer, Activo from Lector";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
 
@@ -74,7 +74,7 @@ namespace CapaDatos
                                     Nombres = dr["Nombres"].ToString(),
                                     Apellidos = dr["Apellidos"].ToString(),
                                     Edad = Convert.ToInt32(dr["Edad"]),
-                                    Genero = dr["Genero"].ToString(),
+                                    Genero = Convert.ToBoolean(dr["Genero"]),
                                     Escuela = dr["Escuela"].ToString(),
                                     GradoGrupo = dr["GradoGrupo"].ToString(),
                                     Ciudad = dr["Ciudad"].ToString(),
@@ -83,7 +83,7 @@ namespace CapaDatos
                                     Correo = dr["Correo"].ToString(),
                                     Clave = dr["Clave"].ToString(),
                                     Reestablecer = Convert.ToBoolean(dr["Reestablecer"]),/*Admite 1 y 0*/
-
+                                    Activo = Convert.ToBoolean(dr["Activo"])
                                 }
                                 );
                         }

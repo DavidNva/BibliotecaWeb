@@ -44,6 +44,7 @@
     <Compile Include="EN_Autor.cs" />
     <Compile Include="EN_Categoria.cs" />
     <Compile Include="EN_Editorial.cs" />
+    <Compile Include="EN_Lector.cs" />
     <Compile Include="EN_Sala.cs" />
     <Compile Include="EN_TipoPersona.cs" />
     <Compile Include="EN_Usuario.cs" />

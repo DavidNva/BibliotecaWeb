@@ -93,12 +93,21 @@ CREATE TABLE Usuario(
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )
+select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer from Lector
+
+insert into Lector(Nombres, Apellidos, Edad, Genero, GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave)
+values ('David','Nava Lector', 21, 1,'Sexto Semestre','Zacatlan', 'Josefa Ortiz', '768273817','david@gmail.com','test123')
+
+insert into Lector(Nombres, Apellidos, Edad, Genero,Escuela,GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave)
+values ('Guadalupe','Garcia Lector', 21, 0,'Secundaria Benito Juarez','3ro de Secundaria','Puebla', 'Josefa Ortiz', '2229879873','guadalupe@gmail.com','test123')
+
+
 CREATE TABLE Lector(
 	IdLector int not null CONSTRAINT PK_Lector PRIMARY KEY identity,
   Nombres nvarchar(100) not null,
   Apellidos varchar(100) not null,
   Edad tinyint not null,--Tiene un check (0-125),
-  Genero Char not null, --H o M
+  Genero bit not null, --H = 0 o M = 1
   Escuela nvarchar(100) null, --Si usamos el SP: Su default es: NINGUNA
   GradoGrupo nvarchar(100) null, --3ro de secundaria
   Ciudad nvarchar(60) not null, --Default como --"Zacatlán"

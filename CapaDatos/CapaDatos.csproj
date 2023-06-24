@@ -45,6 +45,7 @@
     <Compile Include="BD_Autor.cs" />
     <Compile Include="BD_Categoria.cs" />
     <Compile Include="BD_Editorial.cs" />
+    <Compile Include="BD_Lector.cs" />
     <Compile Include="BD_Sala.cs" />
     <Compile Include="BD_TipoPersona.cs" />
     <Compile Include="BD_Usuarios.cs" />

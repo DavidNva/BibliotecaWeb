@@ -12,7 +12,7 @@ namespace CapaEntidad
 		public string Nombres { get; set; }
 		public string Apellidos { get; set; }
 		public int  Edad { get; set; }
-		public string Genero { get; set; }
+		public bool Genero { get; set; }
 		public string Escuela { get; set; }
 		public string GradoGrupo { get; set; }
 		public string Ciudad { get; set; }
@@ -20,6 +20,7 @@ namespace CapaEntidad
 		public string Telefono { get; set; }
 		public string Correo { get; set; }
 		public string Clave { get; set; }
+		public string ConfirmarClave { get; set; }
 		public bool Reestablecer { get; set; }
 		public bool Activo { get; set; }
 		/*

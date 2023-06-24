@@ -20,6 +20,10 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
+        public ActionResult Lectores()
+        {
+            return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
+        }
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarUsuarios() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
@@ -124,5 +128,42 @@ namespace CapaPresentacionAdmin.Controllers
         //    }
         //}
 
+        //-------------------------------------------------- LECTOR ---------------------------------------------------------
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarLectores() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Lector> oLista = new List<EN_Lector>();
+            oLista = new RN_Lector().Listar();/*Esta declarado en RN_Lector, capa negocio*/
+
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+
+        }
+        [HttpPost]
+        public ActionResult Registrar(EN_Lector objeto) //Para mostrar vista de login
+        {
+            int resultado;
+            string mensaje = string.Empty;
+            ViewData["Nombres"] = string.IsNullOrEmpty(objeto.Nombres) ? "" : objeto.Nombres;
+            ViewData["Apellidos"] = string.IsNullOrEmpty(objeto.Apellidos) ? "" : objeto.Apellidos;
+            ViewData["Correo"] = string.IsNullOrEmpty(objeto.Correo) ? "" : objeto.Correo;
+
+            if (objeto.Clave != objeto.ConfirmarClave)
+            {
+                ViewBag.Error = "Las contraseñas no coinciden";
+                return View();
+            }
+            resultado = new RN_Lector().Registrar(objeto, out mensaje);
+            if (resultado > 0)
+            {
+                ViewBag.Error = null;/*No hay error*/
+                return RedirectToAction("Index", "Acceso");
+            }
+            else
+            {
+                ViewBag.Error = mensaje;
+                return View();
+            }
+        }
     }
 }

@@ -45,6 +45,7 @@
     <Compile Include="RN_Autor.cs" />
     <Compile Include="RN_Categoria.cs" />
     <Compile Include="RN_Editorial.cs" />
+    <Compile Include="RN_Lector.cs" />
     <Compile Include="RN_Recursos.cs" />
     <Compile Include="RN_Sala.cs" />
     <Compile Include="RN_TipoPersona.cs" />

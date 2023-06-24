@@ -10,7 +10,11 @@ namespace CapaNegocio
     public class RN_Lector
     {
         private BD_Lector objCapaDato = new BD_Lector(); /*Instancia una clase de la capa datos */
-
+        
+        public List<EN_Lector> Listar() /*Usa una clase de la capa entidad*/
+        {
+            return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
+        }
         public int Registrar(EN_Lector obj, out string Mensaje)
         {
             Mensaje = string.Empty;
@@ -63,10 +67,7 @@ namespace CapaNegocio
             }
 
         }
-        public List<EN_Lector> Listar() /*Usa una clase de la capa entidad*/
-        {
-            return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
-        }
+
 
         public bool CambiarClave(int idLector, string nuevaClave, out string Mensaje)
         {
