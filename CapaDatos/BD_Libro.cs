@@ -25,7 +25,7 @@ namespace CapaDatos
                     sb.AppendLine("from Libro l");
                     sb.AppendLine("inner join Categoria c on c.IDCategoria = l.Id_Categoria");
                     sb.AppendLine("inner join Editorial e on e.IDEditorial = l.ID_Editorial");
-                    sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala");
+                    sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala order by l.IDLibro desc");
                     //string query = "select IDLibro,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,Tipo,Reestablecer,Activo from Libro";                    //string query = "select IDLibro,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,tp.IdTipoPersona,tp.Descripcion[Tipo],Reestablecer,Activo from Libro inner join TipoPersona TP on tp.IdTipoPersona = Libro.Tipo";
 
                     SqlCommand cmd = new SqlCommand(sb.ToString(), oConexion);

@@ -12,14 +12,14 @@ namespace CapaEntidad
 		public string Codigo { get; set; }
 		public string Titulo { get; set; }
 		//public string Ubicacion { get; set; }
-		public decimal Paginas { get; set; }
+		public int Paginas { get; set; }
 		public EN_Categoria oId_Categoria { get; set; }
 		public EN_Editorial oId_Editorial { get; set; }
 		public EN_Sala oId_Sala { get; set; }
-		public decimal Ejemplares { get; set; }
+		public int Ejemplares { get; set; }
 		//public string NumEdicion { get; set; }
 		public string AñoEdicion { get; set; }
-		public decimal Volumen { get; set; }
+		public int Volumen { get; set; }
 		public string RutaImagen { get; set; }
 		public string NombreImagen { get; set; }
 		public string Observaciones { get; set; }

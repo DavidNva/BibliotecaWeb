@@ -25,6 +25,7 @@
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
+                    <th>Num</th>
                     <th>Código</th>
                     <th>Título</th>
                     @*<th>Ubicación</th>*@
@@ -81,21 +82,25 @@
                     <div class="col-sm-3">
                         <div class="mb-3">
                             <label for="txtCodigo" class="form-label">Código</label>
-                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off"/>
+                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off" />
                             @*<input id="txtid" class="form-control" type="text" value="0" />*@
                         </div>
 
-                        <div class="mb-3">
+                        @*<div class="mb-3">
                             <label for="txtTitulo" class="form-label">Título</label>
                             <input type="text" class="form-control" id="txtTitulo" name="titulo" autocomplete="off" />
+                        </div>*@
+                        <div class="mb-3">
+                            <label for="txtTitulo" class="form-label">Título</label>
+                            <textarea type="text" class="form-control" id="txtTitulo" name="titulo" style="height:125px;resize:none"></textarea>
                         </div>
                         @*<div class="mb-3">
-                    <label for="txtUbicacion" class="form-label">Ubicación</label>
-                    <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
-                </div>*@
+            <label for="txtUbicacion" class="form-label">Ubicación</label>
+            <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
+        </div>*@
                         <div class="mb-3">
                             <label for="txtPaginas" class="form-label">Páginas</label>
-                            <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off"/>
+                            <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off" />
                         </div>
                     </div>
 
@@ -187,27 +192,32 @@
             responsive: true,/*Para que sea resposiva*/
             ordering: false,
             "ajax": {/*Como pinta la tabla, ajax solo trae todos los valores*/
-                url: '@Url.Action("ListarUsuarios","Home")',
+                url: '@Url.Action("ListarLibro","Mantenedor")',
                 type: "GET",
                 dataType: "json"
             },
             "columns": [/*Todas las columnas que vamos a usar*/
                 /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
                  y el seguno valor es como se llama la columna*/
-                { "data": "Nombres" },
-                { "data": "Apellidos" },
-                { "data": "Ciudad" },
-                { "data": "Calle" },
-
-               /* { "data": "Tipo" },*/
-                { "data": "Telefono" },
-
+                { "data": "IdLibro" },
+                { "data": "Codigo" },
+                { "data": "Titulo" },
+                { "data": "Paginas" },
                 {
-                    "data": "oId_TipoPersona", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                    "data": "oId_Categoria", "render": function (data) {
                         return data.Descripcion
                     }
                 },
-                { "data": "Correo" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
+                {
+                    "data": "oId_Editorial", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "oId_Sala", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
                 {
                     "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
                         if (valor) {/*Si el valor es verdadero*/
@@ -218,6 +228,12 @@
                     }
 
                 },
+                { "data": "Ejemplares" },
+                { "data": "Volumen" },
+                { "data": "AñoEdicion" },
+
+                { "data": "Observaciones" },
+                
                 {
                     "data": "IdLibro", "render": function (data, type, row, meta) {
 
