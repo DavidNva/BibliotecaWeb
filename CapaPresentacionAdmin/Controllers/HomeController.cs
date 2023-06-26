@@ -77,13 +77,13 @@ namespace CapaPresentacionAdmin.Controllers
         //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet); /*Obtenemos el objeto del reporte*/
         //}
 
-        //[HttpGet]
-        //public JsonResult VistaDashBoard()
-        //{
-        //    EN_DashBoard objeto = new RN_Reporte().VerDashBoard();
+        [HttpGet]
+        public JsonResult VistaDashBoard()
+        {
+            EN_DashBoard objeto = new RN_Reporte().VerDashBoard();
 
-        //    return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet); /*Obtenemos el objeto del reporte*/
-        //}
+            return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet); /*Obtenemos el objeto del reporte*/
+        }
 
 
 

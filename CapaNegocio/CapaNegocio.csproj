@@ -48,6 +48,7 @@
     <Compile Include="RN_Lector.cs" />
     <Compile Include="RN_Libro.cs" />
     <Compile Include="RN_Recursos.cs" />
+    <Compile Include="RN_Reporte.cs" />
     <Compile Include="RN_Sala.cs" />
     <Compile Include="RN_TipoPersona.cs" />
     <Compile Include="RN_Usuarios.cs" />

@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col-sm-9">
                         <h6>Cantidad Lectores</h6>
-                        <h6 id="totalCliente">0</h6>
+                        <h6 id="totalLector">0</h6>
                     </div>
                     <div class="col-sm-3">
                         <i class="fas fa-user fa-2x"></i>
@@ -25,12 +25,12 @@
         </div>
     </div>
     <div class="col-xl-3 col-md-6">
-        <div class="card bg-light-subtle mb-4">
+        <div class="card bg-warning text-white mb-4">
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-9">
                         <h6>Cantidad Préstamos</h6>
-                        <h6 id="totalVenta">0</h6>
+                        <h6 id="totalPrestamo">0</h6>
                     </div>
                     <div class="col-sm-3">
                         <i class="fas fa-landmark fa-2x"></i>
@@ -46,10 +46,27 @@
                 <div class="row">
                     <div class="col-sm-9">
                         <h6>Cantidad Libros</h6>
-                        <h6 id="totalProducto">0</h6>
+                        <h6 id="totalLibro">0</h6>
+                       
                     </div>
                     <div class="col-sm-3">
                         <i class="fas fa-book fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <h6>Cantidad Ejemplares</h6>
+                        <h6 id="totalEjemplares">0</h6>
+                    </div>
+                    <div class="col-sm-3">
+                        <i class="fas fa-edit fa-2x"></i>
                     </div>
                 </div>
             </div>
@@ -65,7 +82,7 @@
     </div>
 
     <div class="card-body">
-        <form action="@Url.Action("ExportarVenta","Home")" method="post">
+        <form action="@Url.Action("ExportarPrestamo","Home")" method="post">
             <div class="row align-items-end">
                 <div class="col-sm-2">
                     <div class="mb-2">
@@ -128,7 +145,21 @@
 
 @section scripts{
     <script>
-        var tabladata;
+        jQuery.ajax({
+                url: '@Url.Action("VistaDashBoard", "Home")',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {/*Ese data esta almacenando la respuesta del metodo vistadashboard hecho en homeController*/
+                    var objeto = data.resultado;
+
+                    $("#totalLector").text(objeto.TotalLector)
+                    $("#totalPrestamo").text(objeto.TotalPrestamo)
+                    $("#totalLibro").text(objeto.TotalLibro)
+                    $("#totalEjemplares").text(objeto.TotalEjemplares)
+                }
+            });
+        @*var tabladata;
 
         $(document).ready(function () {/* asi como entra a la pagina de dashboard se automatiza la tabla con las fechas de hoy ya que son las que estan en los input*/
 
@@ -144,9 +175,10 @@
                 success: function (data) {/*Ese data esta almacenando la respuesta del metodo vistadashboard hecho en homeController*/
                     var objeto = data.resultado;
 
-                    $("#totalCliente").text(objeto.TotalCliente),
-                    $("#totalVenta").text(objeto.TotalVenta),
-                    $("#totalProducto").text(objeto.TotalProducto)
+                    $("#totalLector").text(objeto.TotalLector),
+                    $("#totalPrestamo").text(objeto.TotalPrestamo),
+                    $("#totalLibro").text(objeto.TotalLibro)
+                    $("#totalEjemplares").text(objeto.TotalEjemplares)
                 }
             });
 
@@ -188,7 +220,7 @@
                 "&idTransaccion=" + $("#txtIdTransaccion").val()
 
             tabladata.ajax.url(nueva_url).load();
-        })
+        })*@
 
 
 

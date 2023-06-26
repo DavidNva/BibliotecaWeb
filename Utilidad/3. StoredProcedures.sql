@@ -1406,3 +1406,17 @@ go
 -- go
 -- sp_ReportePrestamos '2022-11-01','2022-12-04';
 -- GO
+
+
+--PROCEDIMIENTOS ALMACENADOS PARA EL DASHBOARD
+go
+create proc sp_ReporteDashboard --Para el reporte de dashboard
+as 
+begin
+select
+    (select count(*) from Lector) [TotalLector],
+    (select isnull(sum(cantidad),0) from DetallePrestamo) [TotalPrestamo],
+    (select count(*) from Libro)[TotalLibro],
+    (select isnull(sum(Ejemplares), 0) from libro)[TotalEjemplares]
+end
+go
