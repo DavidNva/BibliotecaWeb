@@ -155,7 +155,7 @@
                 <div class="row mt-2">
                     <div class="col-12">
                         <div id="mensajeError" class="alert alert-danger" role="alert">
-                            A simple danger alert—check it out!
+                            @*A simple danger alert—check it out!*@
                         </div>
                     </div>
                 </div>
@@ -330,6 +330,60 @@
             }
         });
 
+        /*Validaciones*/
+        /*El metodo se llama precioDecimal*/
+
+        jQuery.validator.addMethod("preciodecimal", function (value, element) {
+            return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
+        }, "El formato correcto es solo números");
+
+
+        $("#contenedor").validate({
+            rules: {
+                codigo: {/*Indica que el campo nombre es requerido*/
+                    required: true
+                },
+                titulo: {
+                    required: true
+                },
+                paginas: {
+                    required: true,
+                    preciodecimal: true
+                   /* number: true*/
+                },
+                ejemplares: {
+                    required: true,
+                    preciodecimal: true
+                },
+                añoedicion: {
+                    required: true
+                },
+                volumen: {
+                    required: true,
+                    /*number: true*/
+                    preciodecimal: true
+                },
+                observaciones: {
+                    required: true
+                }
+            },
+            messages: {
+                codigo: "- El campo código es obligatorio",
+                titulo: "- El campo título es obligatorio",
+                ubicacion: "- El campo ubicación es obligatorio",
+                paginas: { required: "- El campo paginas es obligario", preciodecimal: "- - Debe ingresar solo numeros en el campo páginas" },
+                ejemplares: { required: "- El campo ejemplares es obligario", preciodecimal: "- Debe ingresar solo numeros en el campo de ejemplares" },
+                añoedicion: "- El campo año de edición es obligatorio",
+                volumen: { required: "- El campo volumen es obligario", preciodecimal: "- Debe ingresar solo numeros en el campo volumen" },
+                observaciones: "- El campo observaciones es obligatorio"
+            },
+            errorElement: "div",
+            errorLabelContainer: ".alert-danger"
+        })
+
+
+
+
 
         function abrirModal(json) /*json es el data del siguiente*/ {
             $("#txtId").val(0); /*Con el # llama con el id del elemento chtml*/
@@ -353,8 +407,7 @@
             /*Llamamos al form modal*/
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
-
-                $("#txtid").val(json.IdLibro);
+                $("#txtId").val(json.IdLibro);
                 $("#txtCodigo").val(json.Codigo);
                 $("#txtTitulo").val(json.Titulo);
                 /* $("#txtUbicacion").val(json.Ubicacion);*/
@@ -368,6 +421,34 @@
                 $("#txtObservaciones").val(json.Observaciones);
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
+
+
+                 jQuery.ajax({/*Para visualizar la imagen al dar editar*/
+                    url: '@Url.Action("ImagenLibro", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id: json.IdLibro }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        $("#img_Libro").LoadingOverlay("hide");
+
+                        if (data.conversion) {/*Si es verdadero, si la conversion fue exitosa*/
+                            $("#img_Libro").attr({ "src": "data:image/" + data.extension + ";base64," + data.textobase64 });
+                        }
+                    },
+                    error: function (error) {
+                        $("#img_Libro").LoadingOverlay("hide");
+
+                        $("#mensajeError").show();
+                        $("#mensajeError").text("Error al mostrar imagen");
+
+                    },
+                    beforeSend: function () {
+                        $("#img_Libro").LoadingOverlay("show");
+                    },
+                });
+
             }
 
             $("#FormModal").modal("show");
@@ -383,8 +464,9 @@
 
             //console.log(data);/*Para visualizar en consola*/
             //abrirModal(data);
-            var json = $(this).data("informacion")
+            //var json = $(this).data("informacion")
             //console.log(json);
+            var json = $(this).data("informacion")
             abrirModal(json)
 
         })
@@ -422,7 +504,7 @@
             },
             function () {
                 jQuery.ajax({
-                    url: '@Url.Action("EliminarLibro", "Home")',
+                    url: '@Url.Action("EliminarLibro", "Mantenedor")',
                     type: "POST",
                     data: JSON.stringify({ id:json.IdLibro }),/*Paso de valores*/
                     /*el stringfy lo convierte a texto*/
@@ -452,52 +534,13 @@
 
         })
 
-        @*$("#tabla tbody").on("click", '.btn-eliminar', function () {
-
-            var Libroseleccionado = $(this).closest("tr");
-            var data = tabladata.row(Libroseleccionado).data();
-            swal({
-                title: "¿Esta Seguro?",
-                text: "¿Desea eliminar el Libro?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-primary",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                closeOnConfirm: true
-            },
-            function () {
-                jQuery.ajax({
-                    url: '@Url.Action("EliminarLibro", "Home")',
-                    type: "POST",
-                    data: JSON.stringify({ id: data.IdLibro }),/*Paso de valores*/
-                    /*el stringfy lo convierte a texto*/
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Libro
-                     * hecho en homeController*/
-                        //ELIMINAR Libro
-
-                        if (data.resultado) { /*si el resultado es verdadera)*/
-                            tabladata.row(Libroseleccionado).remove().draw();
-                        }else {
-                            swal("No se pudo eliminar", data.mensaje, "error")
-                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
-
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-
-                });
-            });
-
-            //console.log(data);
-
-
-        })*@
 
         function Guardar() {
+            /* Si no se han completado los campos */
+            if (!$("#contenedor").valid()) {
+                return;//Termina el metodo de guardar, ya no continua
+            }
+
             var ImagenSeleccionada = $("#fileLibro")[0].files[0];/*Al primer archivo de la lista que pueda tener el control de fileLibro*/
 
 
@@ -552,7 +595,8 @@
 
                         if (data.idGenerado != 0) {
                             Libro.IdLibro = data.idGenerado;
-                            tabladata.row.add(Libro).draw(false);
+                            tabladata.ajax.reload();
+                            //tabladata.row.add(Libro).draw(false);
 
                             $("#FormModal").modal("hide");
                         } else {

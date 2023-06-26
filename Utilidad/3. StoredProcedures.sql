@@ -973,7 +973,7 @@ begin
 end 
 go
 
-create  procedure sp_EditarLibro(
+create alter  procedure sp_EditarLibro(
     @IDLibro int,
     @Codigo varchar(25),--Es asignado por administrador al insertar
     @Titulo nvarchar(130),
@@ -993,7 +993,7 @@ create  procedure sp_EditarLibro(
 as
 begin
     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
-    IF NOT EXISTS (SELECT * FROM Libro WHERE Titulo = @Titulo and IdLibro != @IdLibro)
+    IF NOT EXISTS (SELECT * FROM Libro WHERE Codigo = @Codigo  and IdLibro != @IdLibro)
     begin 
         update Libro set
         Codigo = @Codigo,
@@ -1012,7 +1012,7 @@ begin
         SET @Resultado = 1 --true
     end 
     else 
-     SET @Mensaje = 'El libro ya existe'
+     SET @Mensaje = 'El código del libro ya existe'
 end 
 go
 create procedure sp_EliminarLibro(
