@@ -175,7 +175,7 @@ go
 CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso anterior)*/
 	IdPrestamo int primary key identity,
 	IdLector int references Lector(IdLector),
-	TotalProducto int, --El cliente pudo haber comprado 3 productos
+	TotalLibro int, --El lector pudo haber solicitado el prestamo de 3 libros
 	MontoTotal decimal(10,2),--La suma total del precio de todos los productos
 	Contacto varchar(50), --alguien de contacto que pueda usar de referencia como contacto con una persona
 	IdDistrito varchar(10),

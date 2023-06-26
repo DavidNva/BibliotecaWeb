@@ -108,17 +108,17 @@
 
                         <div class="mb-3">
                             <label for="cbocategoria" class="form-label">Categoria</label>
-                            <select id="cbocategoria" class="form-select">
+                            <select id="cbocategoria" class="form-select" name="categoria">
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="cboeditorial" class="form-label">Editorial</label>
-                            <select id="cboeditorial" class="form-select">
+                            <select id="cboeditorial" class="form-select" name="editorial">
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="cbosala" class="form-label">Sala</label>
-                            <select id="cbosala" class="form-select">
+                            <select id="cbosala" class="form-select" name="sala">
                             </select>
                         </div>
                         <div class="mb-3">
@@ -351,6 +351,15 @@
                     preciodecimal: true
                    /* number: true*/
                 },
+                categoria: {
+                    required: true
+                },
+                editorial: {
+                    required: true
+                },
+                sala: {
+                    required: true
+                },
                 ejemplares: {
                     required: true,
                     preciodecimal: true
@@ -370,11 +379,14 @@
             messages: {
                 codigo: "- El campo código es obligatorio",
                 titulo: "- El campo título es obligatorio",
-                ubicacion: "- El campo ubicación es obligatorio",
-                paginas: { required: "- El campo paginas es obligario", preciodecimal: "- - Debe ingresar solo numeros en el campo páginas" },
-                ejemplares: { required: "- El campo ejemplares es obligario", preciodecimal: "- Debe ingresar solo numeros en el campo de ejemplares" },
+                /*ubicacion: "- El campo ubicación es obligatorio",*/
+                paginas: { required: "- El campo paginas es obligario -> El valor debe ser mayor a 0 ", preciodecimal: "- - Debe ingresar solo numeros positivos en el campo páginas" },
+                categoria: "- Seleccionar una categoria es obligatorio",
+                editorial: "- Seleccionar una editorial es obligatorio",
+                sala: "- Seleccionar una sala es obligatorio",
+                ejemplares: { required: "- El campo ejemplares es obligario -> El valor debe ser mayor a 0", preciodecimal: "- Debe ingresar solo numeros positivos en el campo de ejemplares" },
                 añoedicion: "- El campo año de edición es obligatorio",
-                volumen: { required: "- El campo volumen es obligario", preciodecimal: "- Debe ingresar solo numeros en el campo volumen" },
+                volumen: { required: "- El campo volumen es obligario -> El valor debe ser mayor a 0", preciodecimal: "- Debe ingresar solo numeros positivos en el campo volumen" },
                 observaciones: "- El campo observaciones es obligatorio"
             },
             errorElement: "div",

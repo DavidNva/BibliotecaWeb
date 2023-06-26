@@ -35,7 +35,7 @@ namespace CapaNegocio
             //}
             else if (obj.Paginas == 0)
             {
-                Mensaje = "Debe ingresar las paginas del libro";
+                Mensaje = "Debe ingresar las paginas del libro -> El valor debe ser mayor a 0";
             }
             else if (obj.oId_Categoria.IdCategoria == "0")/*Si no ha seleccionado ninguna marca*/
             {
@@ -51,7 +51,7 @@ namespace CapaNegocio
             }
             else if (obj.Ejemplares == 0)
             {
-                Mensaje = "Debe ingresar los ejemplares del libro";
+                Mensaje = "Debe ingresar los ejemplares del libro -> El valor debe ser mayor a 0";
             }
             else if (string.IsNullOrEmpty(obj.AñoEdicion) || string.IsNullOrWhiteSpace(obj.AñoEdicion))
             {
@@ -60,7 +60,7 @@ namespace CapaNegocio
             }
             else if (obj.Volumen == 0)
             {
-                Mensaje = "Debe ingresar el volúmen del libro en número";
+                Mensaje = "Debe ingresar el volúmen del libro en número -> El valor debe ser mayor a 0";
             }
 
             if (string.IsNullOrEmpty(Mensaje))
