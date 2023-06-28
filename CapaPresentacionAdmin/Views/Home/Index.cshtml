@@ -4,10 +4,11 @@
 
 <h1 class="mt-4">Principal</h1>
 <ol class="breadcrumb mb-4">
-    <li class="breadcrumb-item active">Resumen</li>
+    <li class="breadcrumb-item active">Dashboard</li>
 </ol>
 
 <div class="row">
+
     <div class="col-xl-3 col-md-6">
         <div class="card bg-success text-white mb-4">
             <div class="card-body">
@@ -47,7 +48,7 @@
                     <div class="col-sm-9">
                         <h6>Cantidad Libros</h6>
                         <h6 id="totalLibro">0</h6>
-                       
+
                     </div>
                     <div class="col-sm-3">
                         <i class="fas fa-book fa-2x"></i>
@@ -78,7 +79,7 @@
 <div class="card mb-4">
     <div class="card-header">
         <i class="fas fa-tags me-1"></i>
-        Historial de Préstamos
+        Historial de Prestamos
     </div>
 
     <div class="card-body">
@@ -86,20 +87,20 @@
             <div class="row align-items-end">
                 <div class="col-sm-2">
                     <div class="mb-2">
-                        <label class="form-label">Fecha de Inicio:</label>
+                        <label class="form-label" for="txtFechaInicio">Fecha de Inicio:</label>
                         <input class="form-control" type="text" id="txtFechaInicio" name="fechainicio" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
-                        <label class="form-label">Fecha Fin:</label>
+                        <label class="form-label" for="txtFechaFin">Fecha Fin:</label>
                         <input class="form-control" type="text" id="txtFechaFin" name="fechafin" />
                     </div>
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
-                        <label class="form-label">ID Libro:</label>
-                        <input class="form-control" type="text" id="txtIdTransaccion" name="idtransaccion" />
+                        <label class="form-label" for="txtIdLibro">Código del Libro:</label>
+                        <input class="form-control" type="text" id="txtIdLibro" name="idlibro" />
                     </div>
                 </div>
 
@@ -108,7 +109,6 @@
                         <button class="btn btn-primary" id="btnBuscar" type="button"><i class="fas fa-search"></i> Buscar</button>
                     </div>
                 </div>
-
                 <div class="col-sm-2">
                     <div class="d-grid mb-2">
                         <button class="btn btn-success" type="submit"><i class="fas fa-file-excel"></i> Exportar</button>
@@ -122,15 +122,13 @@
                 <table id="tabla" class="display cell-border" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Fecha Préstamo</th>
+                            <th>Fecha Prestamo</th>
                             <th>Lector</th>
-                            <th>Libro Ejemplar</th>
-                            @*<th>Precio</th>*@
+                            <th>Libro</th>
                             <th>Cantidad</th>
-                            <th>Devuelto</th> @*es como el activo, funcionará como ese solo al reves cuando activo fuera si, devuelto es no*@
+                            <th>Devuelto</th>
                             @*<th>Total</th>*@
-                            <th>ID Libro</th>
-                            @*<th>Activo</th>*@
+                            <th>Código</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,21 +143,7 @@
 
 @section scripts{
     <script>
-        jQuery.ajax({
-                url: '@Url.Action("VistaDashBoard", "Home")',
-                type: "GET",
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                success: function (data) {/*Ese data esta almacenando la respuesta del metodo vistadashboard hecho en homeController*/
-                    var objeto = data.resultado;
-
-                    $("#totalLector").text(objeto.TotalLector)
-                    $("#totalPrestamo").text(objeto.TotalPrestamo)
-                    $("#totalLibro").text(objeto.TotalLibro)
-                    $("#totalEjemplares").text(objeto.TotalEjemplares)
-                }
-            });
-        @*var tabladata;
+        var tabladata;
 
         $(document).ready(function () {/* asi como entra a la pagina de dashboard se automatiza la tabla con las fechas de hoy ya que son las que estan en los input*/
 
@@ -177,16 +161,18 @@
 
                     $("#totalLector").text(objeto.TotalLector),
                     $("#totalPrestamo").text(objeto.TotalPrestamo),
-                    $("#totalLibro").text(objeto.TotalLibro)
+                    $("#totalLibro").text(objeto.TotalLibro),
                     $("#totalEjemplares").text(objeto.TotalEjemplares)
+
                 }
             });
 
             /* Para dar uso al metodo de buscar y lo muestre en una tabla resultante*/
                 var Url = '@Url.Action("ListaReporte", "Home")' +
                 "?fechaInicio=" + $("#txtFechaInicio").val() +
-                "&fechaFin=" + $("#txtFechaFin").val() +
-                "&idTransaccion=" + $("#txtIdTransaccion").val()
+                 "&fechaFin=" + $("#txtFechaFin").val() +
+                 "&codigo=" + $("#txtIdLibro").val()
+
 
                 tabladata = $("#tabla").DataTable({
                     responsive: true,/*Para que sea resposiva*/
@@ -197,13 +183,20 @@
                         dataType: "json"
                     },
                     "columns": [/*Todas las columnas que vamos a usar*/
-                        { "data": "FechaVenta" },
-                        { "data": "Cliente" },
-                        { "data": "Producto" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
-                        { "data": "Precio" },
-                        { "data": "Cantidad" },
-                        { "data": "Total" },
-                        { "data": "IdTransaccion" }
+                        { "data": "FechaPrestamo" },
+                        { "data": "Lector" },
+                        { "data": "Libro" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
+                        { "data": "CantidadEjemplares" },
+                        {
+                            "data": "Estado", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                                if (valor) {/*Si el valor es verdadero*/
+                                    return '<span class="badge bg-success">Si</span>'
+                                } else {
+                                    return '<span class="badge bg-danger">No</span>'
+                                }
+                            }
+                        },
+                        { "data": "Codigo" }
 
                     ],/*Propiedad o atributos van dentro de las comillas ""*/
                     "language": {
@@ -213,14 +206,16 @@
               });
         })
 
-        $("#btnBuscar").on("click", function (){
+       $("#btnBuscar").on("click", function (){
             var nueva_url = '@Url.Action("ListaReporte", "Home")' +
                 "?fechaInicio=" + $("#txtFechaInicio").val() +
                 "&fechaFin=" + $("#txtFechaFin").val() +
-                "&idTransaccion=" + $("#txtIdTransaccion").val()
-
+                "&codigo=" + $("#txtIdLibro").val()
+                
+            //console.log(nueva_url);
             tabladata.ajax.url(nueva_url).load();
-        })*@
+        })
+
 
 
 

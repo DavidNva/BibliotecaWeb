@@ -1410,13 +1410,50 @@ go
 
 --PROCEDIMIENTOS ALMACENADOS PARA EL DASHBOARD
 go
+select * from detallePrestamo
+go
 create proc sp_ReporteDashboard --Para el reporte de dashboard
 as 
 begin
 select
     (select count(*) from Lector) [TotalLector],
-    (select isnull(sum(cantidad),0) from DetallePrestamo) [TotalPrestamo],
+    (select count(*) from DetallePrestamo) [TotalPrestamo],
     (select count(*) from Libro)[TotalLibro],
     (select isnull(sum(Ejemplares), 0) from libro)[TotalEjemplares]
 end
 go
+
+
+select * from Detalleprestamo
+
+select * from prestamo
+--
+go
+SELECT * FROM LIBRO
+GO
+sp_ReportePrestamos '01/06/2023', '27/06/2023','LOBVA'
+GO  
+create proc sp_ReportePrestamos(
+    @fechaInicio varchar(40),
+    @fechaFin varchar(40),
+    @codigo varchar(50)
+)
+as
+begin
+    set dateformat dmy; /*Indicamos el formato que queremos si o si*/
+    --el formato 103, muestra solo la fecha
+    select CONVERT(char(10), p.FechaPrestamo,103) [FechaPrestamo] , CONCAT(lc.Nombres,' ', lc.Apellidos)[Lector],
+    l.Titulo[Libro], dp.CantidadEjemplares, p.Estado, dp.Total,l.Codigo
+    from DetallePrestamo dp
+    inner join Libro l on l.Codigo = dp.IDLibro
+    inner join Prestamo p on p.IdPrestamo = dp.IdPrestamo
+    inner join Lector lc on lc.IdLector = p.Id_Lector
+    where CONVERT(date, p.FechaPrestamo) BETWEEN @fechaInicio and @fechaFin 
+    and l.Codigo = iif(@codigo = '', l.Codigo, @codigo)
+    /*Si el usuario no esta indicando ningun id de transaccion, le decimos que use ese mismo id transaccion del where, pero
+    si lo esta indicando, lo use con el @idTransaccion*/
+end
+
+select * from Prestamo
+
+update prestamo set estado =  1

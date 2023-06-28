@@ -173,24 +173,26 @@ CREATE TABLE Libro(
 go
 
 CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso anterior)*/
-	IdPrestamo int primary key identity,
-	IdLector int references Lector(IdLector),
-	TotalLibro int, --El lector pudo haber solicitado el prestamo de 3 libros
-	MontoTotal decimal(10,2),--La suma total del precio de todos los productos
-	Contacto varchar(50), --alguien de contacto que pueda usar de referencia como contacto con una persona
-	IdDistrito varchar(10),
-	Telefono varchar(50),
-	Direccion varchar(500),
-	IdTransaccion varchar(50),
-	FechaPrestamo datetime default getdate()
-)
+	IdPrestamo int identity (1,1)  not null CONSTRAINT PK_Prestamo primary key, --Es  IDENTITY
+	ID_Lector int not null CONSTRAINT FK_Lector FOREIGN KEY(ID_Lector) 
+  REFERENCES Lector(IDLector) ON DELETE CASCADE,
+  -- ID_Ejemplar varchar(10) not null CONSTRAINT FK_Ejemplar FOREIGN KEY(ID_Ejemplar) 
+  -- REFERENCES Ejemplar(IDEjemplar) ON DELETE CASCADE,
+  TotalLibro int,--Total de libros, o total de ejemplares de ese libro --El lector pudo haber solicitado el prestamo de 3 libros
+	-- MontoTotal decimal(10,2),--La suma total del precio de todos los productos
+  Estado bit default 0,--Devuelto o no devuelto --1 es igual a si, y 0 es igual a no . Asigando por default = 0, 
+	FechaPrestamo datetime default getdate(),
+  FechaDevolucion datetime null,--No especificaremos nada para que por default sea null (tiene un default null)
+  DiasDePrestamo int not null default 7,--Regularmente una semana 7 dias
+  Observaciones varchar(500) not null
+)--No tiene referencia (Se puede eliminar)
 go
-
+select * from prestamo
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
 	IdDetallePrestamo int primary key identity,
 	IdPrestamo int references Prestamo(IdPrestamo),
-	Codigo varchar(25) references Libro(Codigo),
-	Cantidad int,
+	IDLibro varchar(25) references Libro(Codigo),--Posiblemente sea mejor el ejemplar id de ejemplar
+	CantidadEjemplares int,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
 	Total decimal(10,2)--total del precio del producto
 )
 go
@@ -226,14 +228,14 @@ go
 --     */
 -- go
 
--- CREATE TABLE Ejemplar(
---     IDEjemplar varchar(10)  not null CONSTRAINT PK_Ejemplar PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     NumEjemplar int not null,
---     --Llave foranea
---     ID_Libro varchar(25) not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
---     REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE --Tiene un indice unico: ID_Libro
---     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
---     /*
+CREATE TABLE Ejemplar(
+    IDEjemplar varchar(10)  not null CONSTRAINT PK_Ejemplar PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+    -- NumEjemplar int not null,
+    --Llave foranea
+    ID_Libro varchar(25) not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
+    REFERENCES Libro(Codigo) ON DELETE CASCADE ON UPDATE CASCADE --Tiene un indice unico: ID_Libro
+    );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
+    -- /*
 --       Ocurre lo mismo con Ejemplar
 --       La tabla Ejemplar
 --       Tiene como foreig key a ID_Libro: 
