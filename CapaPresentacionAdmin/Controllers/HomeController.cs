@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using CapaEntidad;
 using CapaNegocio;
+using ClosedXML.Excel;
 //using ClosedXML.Excel;
 
 namespace CapaPresentacionAdmin.Controllers
@@ -87,46 +90,44 @@ namespace CapaPresentacionAdmin.Controllers
 
 
 
-        //[HttpPost]
-        //public FileResult ExportarVenta(string fechaInicio, string fechaFin, string idTransaccion)
-        //{
-        //    List<EN_Reporte> oLista = new List<EN_Reporte>();
-        //    oLista = new RN_Reporte().Ventas(fechaInicio, fechaFin, idTransaccion);
+        [HttpPost]
+        public FileResult ExportarPrestamo(string fechaInicio, string fechaFin, string codigo)
+        {
+            List<EN_Reporte> oLista = new List<EN_Reporte>();
+            oLista = new RN_Reporte().Prestamos(fechaInicio, fechaFin, codigo);
 
-        //    DataTable dt = new DataTable();
-        //    dt.Locale = new System.Globalization.CultureInfo("es-MX"); /*Configuracion con mexico*/
-        //    dt.Columns.Add("Fecha Venta", typeof(string));
-        //    dt.Columns.Add("Cliente", typeof(string));
-        //    dt.Columns.Add("Producto", typeof(string));
-        //    dt.Columns.Add("Precio", typeof(decimal));
-        //    dt.Columns.Add("Cantidad", typeof(int));
-        //    dt.Columns.Add("Total", typeof(decimal));
-        //    dt.Columns.Add("IdTransaccion", typeof(string));
+            DataTable dt = new DataTable();
+            dt.Locale = new System.Globalization.CultureInfo("es-MX"); /*Configuracion con mexico*/
+            dt.Columns.Add("Fecha Prestamo", typeof(string));
+            dt.Columns.Add("Lector", typeof(string));
+            dt.Columns.Add("Libro", typeof(string));
+            dt.Columns.Add("Cantidad", typeof(int));
+            dt.Columns.Add("Estado", typeof(bool));
+            dt.Columns.Add("Codigo      -", typeof(string));
 
-        //    foreach (EN_Reporte rp in oLista)
-        //    {
-        //        dt.Rows.Add(new object[]{
-        //            rp.FechaVenta,
-        //            rp.Cliente,
-        //            rp.Producto,
-        //            rp.Precio,
-        //            rp.Cantidad,
-        //            rp.Total,
-        //            rp.IdTransaccion
-        //        });
-        //    }
-        //    dt.TableName = "Datos";
+            foreach (EN_Reporte rp in oLista)
+            {
+                dt.Rows.Add(new object[]{
+                    rp.FechaPrestamo,
+                    rp.Lector,
+                    rp.Libro,
+                    rp.CantidadEjemplares,
+                    rp.Estado,
+                    rp.Codigo
+                });
+            }
+            dt.TableName = "Datos";
 
-        //    using (XLWorkbook wb = new XLWorkbook())
-        //    {
-        //        wb.Worksheets.Add(dt);
-        //        using (MemoryStream stream = new MemoryStream())
-        //        {
-        //            wb.SaveAs(stream);
-        //            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteVenta" + DateTime.Now.ToString() + ".xlsx");
-        //        }
-        //    }
-        //}
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                wb.Worksheets.Add(dt);
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    wb.SaveAs(stream);
+                    return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReportePrestamos" + DateTime.Now.ToString() + ".xlsx");
+                }
+            }
+        }
 
         //-------------------------------------------------- LECTOR ---------------------------------------------------------
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */

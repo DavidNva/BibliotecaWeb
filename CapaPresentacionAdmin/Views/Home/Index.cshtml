@@ -99,8 +99,8 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="mb-2">
-                        <label class="form-label" for="txtIdLibro">Código del Libro:</label>
-                        <input class="form-control" type="text" id="txtIdLibro" name="idlibro" />
+                        <label class="form-label" for="txtCodigo">Código del Libro:</label>
+                        <input class="form-control" type="text" id="txtCodigo" name="codigo" />
                     </div>
                 </div>
 
@@ -126,9 +126,9 @@
                             <th>Lector</th>
                             <th>Libro</th>
                             <th>Cantidad</th>
-                            <th>Devuelto</th>
+                            <th>Estado</th>
                             @*<th>Total</th>*@
-                            <th>Código</th>
+                            <th>Codigo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -170,8 +170,8 @@
             /* Para dar uso al metodo de buscar y lo muestre en una tabla resultante*/
                 var Url = '@Url.Action("ListaReporte", "Home")' +
                 "?fechaInicio=" + $("#txtFechaInicio").val() +
-                 "&fechaFin=" + $("#txtFechaFin").val() +
-                 "&codigo=" + $("#txtIdLibro").val()
+                "&fechaFin=" + $("#txtFechaFin").val() +
+                "&codigo=" + $("#txtCodigo").val()
 
 
                 tabladata = $("#tabla").DataTable({
@@ -210,7 +210,7 @@
             var nueva_url = '@Url.Action("ListaReporte", "Home")' +
                 "?fechaInicio=" + $("#txtFechaInicio").val() +
                 "&fechaFin=" + $("#txtFechaFin").val() +
-                "&codigo=" + $("#txtIdLibro").val()
+                "&codigo=" + $("#txtCodigo").val()
                 
             //console.log(nueva_url);
             tabladata.ajax.url(nueva_url).load();

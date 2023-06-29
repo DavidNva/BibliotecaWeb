@@ -83,3 +83,11 @@ D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\b
 D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaEntidad.pdb
 D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaNegocio.pdb
 D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\CapaDatos.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\ClosedXML.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\DocumentFormat.OpenXml.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\ExcelNumberFormat.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\System.IO.Packaging.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\ClosedXML.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\ClosedXML.xml
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\DocumentFormat.OpenXml.xml
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaPresentacionAdmin\bin\ExcelNumberFormat.xml

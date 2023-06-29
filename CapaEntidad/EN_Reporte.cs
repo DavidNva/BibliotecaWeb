@@ -19,7 +19,7 @@ namespace CapaEntidad
         public int CantidadEjemplares { get; set; }
         public bool Estado { get; set; }
 
-        public decimal Total { get; set; }
+        //public decimal Total { get; set; }
 
         public string Codigo { get; set; } //El IdLibro
     }
