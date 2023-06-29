@@ -1457,3 +1457,5 @@ end
 select * from Prestamo
 
 update prestamo set estado =  1
+
+SELECT * FROM USUARIO

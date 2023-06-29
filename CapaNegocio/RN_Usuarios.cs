@@ -117,43 +117,40 @@ namespace CapaNegocio
             return objCapaDato.Eliminar(id, out Mensaje);
         }
 
-        //public bool CambiarClave(int idUsuario, string nuevaClave, out string Mensaje)
-        //{
-        //    return objCapaDato.CambiarClave(idUsuario, nuevaClave, out Mensaje);
-        //}
+        public bool CambiarClave(int idUsuario, string nuevaClave, out string Mensaje)
+        {
+            return objCapaDato.CambiarClave(idUsuario, nuevaClave, out Mensaje);
+        }
 
-        //public bool ReestablecerClave(int idUsuario, string correo, out string Mensaje)
-        //{
-        //    Mensaje = string.Empty;
-        //    string nuevaClave = RN_Recursos.GenerarClave();//Va a encripar este valor
+        public bool ReestablecerClave(int idUsuario, string correo, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+            string nuevaClave = RN_Recursos.GenerarClave();//Va a encripar este valor
 
-        //    bool resultado = objCapaDato.ReestablecerClave(idUsuario, RN_Recursos.ConvertirSha256(nuevaClave), out Mensaje);
+            bool resultado = objCapaDato.ReestablecerClave(idUsuario, RN_Recursos.ConvertirSha256(nuevaClave), out Mensaje);
 
+            if (resultado)//si resultado es verdadero
+            {
+                string asunto = "Contraseña reestablecida"; /*En los signos de excalamcion de la linea ed abajo, se trae la variable clave*/
+                string mensajeCorreo = "<h3>Su cuenta fue reestablecida correctamente</h3> <br> <p>Su contraseña para acceder ahora es: !clave!</p>";
+                mensajeCorreo = mensajeCorreo.Replace("!clave!", nuevaClave);/*Aqui solo trae la clave creada*/
+                bool respuesta = RN_Recursos.EnviarCorreo(correo, asunto, mensajeCorreo);
+                if (respuesta)
+                {
+                    return true;
+                }
+                else
+                {
+                    Mensaje = "No se pudo enviar el correo";
+                    return false;
+                }
 
-        //    if (resultado)//si resultado es verdadero
-        //    {
-        //        string asunto = "Contraseña reestablecida"; /*En los signos de excalamcion de la linea ed abajo, se trae la variable clave*/
-        //        string mensajeCorreo = "<h3>Su cuenta fue reestablecida correctamente</h3> <br> <p>Su contraseña para acceder ahora es: !clave!</p>";
-        //        mensajeCorreo = mensajeCorreo.Replace("!clave!", nuevaClave);/*Aqui solo trae la clave creada*/
-        //        bool respuesta = RN_Recursos.EnviarCorreo(correo, asunto, mensajeCorreo);
-        //        if (respuesta)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            Mensaje = "No se pudo enviar el correo";
-        //            return false;
-        //        }
-
-        //    }
-        //    else
-        //    {
-        //        Mensaje = "No se pudo reestablecer la contraseña";
-        //        return false;
-        //    }
-
-
-        //}
+            }
+            else
+            {
+                Mensaje = "No se pudo reestablecer la contraseña";
+                return false;
+            }
+        }
     }
 }

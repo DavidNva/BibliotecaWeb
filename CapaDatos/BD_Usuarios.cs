@@ -176,67 +176,67 @@ namespace CapaDatos
             return resultado;
         }
 
-        //public bool CambiarClave(int idUsuario, string nuevaClave, out string Mensaje)//out indica parametro de salida
-        //{
-        //    bool resultado = false;
+        public bool CambiarClave(int idUsuario, string nuevaClave, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
 
-        //    Mensaje = string.Empty;
-        //    try
-        //    {
-        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("update usuario set clave = @nuevaClave, reestablecer = 0 where IdUsuario = @Id", oConexion);
-        //            cmd.Parameters.AddWithValue("@Id", idUsuario);
-        //            cmd.Parameters.AddWithValue("nuevaClave", nuevaClave);
-        //            cmd.CommandType = CommandType.Text;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("update usuario set clave = @nuevaClave, reestablecer = 0 where IdUsuario = @Id", oConexion);
+                    cmd.Parameters.AddWithValue("@Id", idUsuario);
+                    cmd.Parameters.AddWithValue("nuevaClave", nuevaClave);
+                    cmd.CommandType = CommandType.Text;
 
-        //            oConexion.Open();
-        //            //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
-        //            //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
-        //            //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
-        //            //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
-        //            resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+                    oConexion.Open();
+                    //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
+                    //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
+                    //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
+                    //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
+                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
 
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resultado = false;
-        //        Mensaje = ex.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
 
-        //    }
-        //    return resultado;
-        //}
-        //public bool ReestablecerClave(int idUsuario, string clave, out string Mensaje)//out indica parametro de salida
-        //{
-        //    bool resultado = false;
+            }
+            return resultado;
+        }
+        public bool ReestablecerClave(int idUsuario, string clave, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
 
-        //    Mensaje = string.Empty;
-        //    try
-        //    {
-        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-        //        {
-        //            SqlCommand cmd = new SqlCommand("update usuario set clave = @clave, reestablecer = 1 where IdUsuario = @Id", oConexion);
-        //            cmd.Parameters.AddWithValue("@Id", idUsuario);
-        //            cmd.Parameters.AddWithValue("@clave", clave);
-        //            cmd.CommandType = CommandType.Text;
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("update usuario set clave = @clave, reestablecer = 1 where IdUsuario = @Id", oConexion);
+                    cmd.Parameters.AddWithValue("@Id", idUsuario);
+                    cmd.Parameters.AddWithValue("@clave", clave);
+                    cmd.CommandType = CommandType.Text;
 
-        //            oConexion.Open();
-        //            //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
-        //            //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
-        //            //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
-        //            //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
-        //            resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+                    oConexion.Open();
+                    //El ExecuteNonQuery ejecuta una accion y devuelve el numero de filas afectadas
+                    //Cuando eliminamos un registro de la tabla, entonces si el total de filas afectadas
+                    //es mayor a 0 entonces será verdadero, pero si no es mayor a 0, entonces significa
+                    //que hubo un problema al eliminar por lo que enviara un false, eso lo almacenamos en resultado
+                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
 
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        resultado = false;
-        //        Mensaje = ex.Message;
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
 
-        //    }
-        //    return resultado;
-        //}
+            }
+            return resultado;
+        }
     }
 }
