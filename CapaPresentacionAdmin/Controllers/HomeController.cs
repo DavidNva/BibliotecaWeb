@@ -12,9 +12,10 @@ using ClosedXML.Excel;
 
 namespace CapaPresentacionAdmin.Controllers
 {
+    [Authorize] //No va a poder ingresar a ninguna de estas vistas si no se encuentra autorizado
+
     public class HomeController : Controller
     {
-        //[Authorize] --colocarlo despues (ACORDARSE)
         public ActionResult Index()
         {
             return View();/*Retorna la vista con el nombre de Index (Dentro de la carpeta vista, hay un Index*/
@@ -27,6 +28,8 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
+        /*--------------USUARIOS---------------------*/
+        #region USUARIOS
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarUsuarios() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
@@ -70,6 +73,10 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 
         }
+        #endregion
+
+        /*--------------REPORTE Y DASHBOARD---------------------*/
+        #region REPORTE Y DASHBOARD
         /*La consulta de busqueda por fecha o id transaccion*/
         [HttpGet]
         public JsonResult ListaReporte(string fechaInicio, string fechaFin, string codigo)
@@ -87,7 +94,6 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet); /*Obtenemos el objeto del reporte*/
         }
-
 
 
         [HttpPost]
@@ -128,7 +134,10 @@ namespace CapaPresentacionAdmin.Controllers
                 }
             }
         }
+        #endregion
 
+        /*--------------LECTOR---------------------*/
+        #region LECTOR
         //-------------------------------------------------- LECTOR ---------------------------------------------------------
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarLectores() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
@@ -140,31 +149,32 @@ namespace CapaPresentacionAdmin.Controllers
             /*El json da los datos, jala los datos de esa lista, en data*/
 
         }
-        [HttpPost]
-        public ActionResult Registrar(EN_Lector objeto) //Para mostrar vista de login
-        {
-            int resultado;
-            string mensaje = string.Empty;
-            ViewData["Nombres"] = string.IsNullOrEmpty(objeto.Nombres) ? "" : objeto.Nombres;
-            ViewData["Apellidos"] = string.IsNullOrEmpty(objeto.Apellidos) ? "" : objeto.Apellidos;
-            ViewData["Correo"] = string.IsNullOrEmpty(objeto.Correo) ? "" : objeto.Correo;
+        //[HttpPost]
+        //public ActionResult Registrar(EN_Lector objeto) //Para mostrar vista de login
+        //{
+        //    int resultado;
+        //    string mensaje = string.Empty;
+        //    ViewData["Nombres"] = string.IsNullOrEmpty(objeto.Nombres) ? "" : objeto.Nombres;
+        //    ViewData["Apellidos"] = string.IsNullOrEmpty(objeto.Apellidos) ? "" : objeto.Apellidos;
+        //    ViewData["Correo"] = string.IsNullOrEmpty(objeto.Correo) ? "" : objeto.Correo;
 
-            if (objeto.Clave != objeto.ConfirmarClave)
-            {
-                ViewBag.Error = "Las contraseñas no coinciden";
-                return View();
-            }
-            resultado = new RN_Lector().Registrar(objeto, out mensaje);
-            if (resultado > 0)
-            {
-                ViewBag.Error = null;/*No hay error*/
-                return RedirectToAction("Index", "Acceso");
-            }
-            else
-            {
-                ViewBag.Error = mensaje;
-                return View();
-            }
-        }
+        //    if (objeto.Clave != objeto.ConfirmarClave)
+        //    {
+        //        ViewBag.Error = "Las contraseñas no coinciden";
+        //        return View();
+        //    }
+        //    resultado = new RN_Lector().Registrar(objeto, out mensaje);
+        //    if (resultado > 0)
+        //    {
+        //        ViewBag.Error = null;/*No hay error*/
+        //        return RedirectToAction("Index", "Acceso");
+        //    }
+        //    else
+        //    {
+        //        ViewBag.Error = mensaje;
+        //        return View();
+        //    }
+        //}
+        #endregion
     }
 }
