@@ -481,7 +481,7 @@ create procedure sp_RegistrarUsuario(--Hay un indice unico para el nombre comple
     @Telefono varchar(20),
     @Correo varchar(100),--Puede ser null
     @Clave varchar(150),
-    @Tipo int,
+    @Tipo int,--Tipo Persona
     @Activo bit,
     @Mensaje varchar(500) output,
     @Resultado int output
@@ -697,6 +697,53 @@ GO
 -- AS
 -- DELETE Usuario WHERE IDUsuario = @IDUsuarioSP;
 -- go
+-- --************************* Registrar LECTOR *******************************
+
+--Tiene indice compuesto UNICO con (Nombre, A_Paterno, A_Materno)
+--Tiene un Check para la edad
+--Tiene un DEFAULT en Ciudad = ZACATLÁN 
+--Tiene un DEFAULT en Observaciones = Ninguna 
+--Tiene un DEFAULT en TipoPersona = 1
+--Tiene un DEFAULT en FechaCreacion = GETDATE();
+--Es identity
+--Escuela de procedencia e EMAIL pueden ser NULL
+--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key con prestamo tiene un delete en cascade)
+--PROCEDIMIENTOS PARA Lector
+sp_RegistrarLector 'Teresa','Garcia G',31,1,'ITSSNP','8vo semestre','Zacatlan','Jose clemente orozco','786584939','teresa@gmail.com','test123',1,'',''
+go
+create procedure sp_RegistrarLector(--Hay un indice unico para el nombre completo del usuario 
+    --@IDUsuario int,---El id es Identity
+    @Nombres varchar(100),--Tiene indice compuesto con Apellidos
+    @Apellidos varchar(100),--Tiene indice compuesto con Nombre
+    @Edad tinyint, --Tiene un check (0 - 125)
+    @Genero bit, --H = 1 o M = 0
+    @Escuela nvarchar(100),
+    @GradoGrupo nvarchar(100),
+    @Ciudad nvarchar(100),
+    @Calle nvarchar(100),
+    @Telefono varchar(20),
+    @Correo nvarchar(100),--Puede ser null
+    @Clave nvarchar(150),
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
+    --@ID_TipoPersona int --ESTARÁ COMO DEFAULT = 1, ES DECIR, COMO LECTOR
+    --FechaCreacion date --Esta como default DEFAULT GETDATE()
+    )
+as
+begin
+    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    IF NOT EXISTS (SELECT * FROM Lector WHERE Correo = @Correo)
+    begin 
+        insert into Lector(Nombres, Apellidos, Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave, Reestablecer, Activo) values 
+        (@Nombres, @Apellidos,@Edad,@Genero, @Escuela, @GradoGrupo, @Ciudad, @Calle, @Telefono, @Correo, @Clave,0, @Activo)
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = scope_identity()
+    end 
+    else 
+     SET @Mensaje = 'El correo del lector ya existe'
+end 
+go 
 -- ---------------------------------------------------Ejemplar------------------------------------------------------------
 -- --EJemplo en Ejemplar es  EJ0001,EJ0002,EJ0003,EJ0004, sucesivamente
 -- --Tiene un indice unico: ID_Libro

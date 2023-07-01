@@ -103,8 +103,8 @@ values ('Angel David','Nava Garcia Lector', 21, 1,'Instituto Tecnologico Superio
 insert into Lector(Nombres, Apellidos, Edad, Genero,Escuela,GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave)
 values ('Guadalupe','Garcia Lector', 21, 0,'Secundaria Benito Juarez','3ro de Secundaria','Puebla', 'Josefa Ortiz', '2229879873','guadalupe@gmail.com','test123')
 
-
-CREATE TABLE Lector(
+--RECORDAR QUE DEBEMOS CREAR DE NUEVO ESTA TABLA CON EL REESTABLECER EN DEFAULT 0
+CREATE  TABLE Lector(
 	IdLector int not null CONSTRAINT PK_Lector PRIMARY KEY identity,
   Nombres nvarchar(100) not null,
   Apellidos varchar(100) not null,
@@ -117,7 +117,7 @@ CREATE TABLE Lector(
   Telefono varchar(20) not null, 
 	Correo nvarchar(100) not null,--No puede ser null porque es con el que se van a registrar
 	Clave nvarchar(150) not null, --Contrase�as encriptadas
-	Reestablecer bit default 1, -- Por default 1
+	Reestablecer bit default 0, -- Por default 0
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
