@@ -32,10 +32,20 @@ namespace CapaPresentacionConsulta.Controllers
         {
             int resultado;
             string mensaje = string.Empty;
+            string edad = objeto.Edad.ToString();
+            string genero = objeto.Genero.ToString();
             ViewData["Nombres"] = string.IsNullOrEmpty(objeto.Nombres) ? "" : objeto.Nombres;
             ViewData["Apellidos"] = string.IsNullOrEmpty(objeto.Apellidos) ? "" : objeto.Apellidos;
+            ViewData["Edad"] = string.IsNullOrEmpty(edad) ? "" : objeto.Edad.ToString();
+            
+            ViewData["Genero"] = string.IsNullOrEmpty(genero) ? "" : objeto.Genero.ToString();
+            ViewData["Escuela"] = string.IsNullOrEmpty(objeto.Escuela) ? "" : objeto.Escuela;
+            ViewData["GradoGrupo"] = string.IsNullOrEmpty(objeto.GradoGrupo) ? "" : objeto.GradoGrupo;
+            ViewData["Ciudad"] = string.IsNullOrEmpty(objeto.Ciudad) ? "" : objeto.Ciudad;
+            ViewData["Calle"] = string.IsNullOrEmpty(objeto.Calle) ? "" : objeto.Calle;
+            ViewData["Telefono"] = string.IsNullOrEmpty(objeto.Telefono) ? "" : objeto.Telefono;
             ViewData["Correo"] = string.IsNullOrEmpty(objeto.Correo) ? "" : objeto.Correo;
-
+            /*View data pemrite almacenar valores mas simples, como cadenas de texto*/
             if (objeto.Clave != objeto.ConfirmarClave)
             {
                 ViewBag.Error = "Las contraseñas no coinciden";
@@ -78,7 +88,7 @@ namespace CapaPresentacionConsulta.Controllers
                     /*Creamos una sesion llamada Lector, será ocupada en el form de layout de inicio*/
                     Session["Lector"] = oLector;
                     ViewBag.Error = null;
-                    return RedirectToAction("Index", "Tienda");
+                    return RedirectToAction("Index", "Biblioteca");
                 }
 
             }
