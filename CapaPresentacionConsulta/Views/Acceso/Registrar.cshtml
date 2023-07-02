@@ -44,12 +44,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <div class="col-md-4">
-                                                <div class="form-floating mb-3 mb-md-0">
-                                                    @Html.TextBoxFor(m => m.Genero, new { @class = "form-control", @id = "txtGenero", @placeholder = ".", value = ViewData["Genero"] })
-                                                    @Html.Label("txtGenero", "Genero")
-                                                </div>
-                                            </div>
+
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 mb-md-0">
                                                     @Html.TextBoxFor(m => m.Escuela, new { @class = "form-control", @id = "txtEscuela", @autocomplete = "off", @placeholder = ".", value = ViewData["Escuela"] })
@@ -62,14 +57,15 @@
                                                     @Html.Label("txtGradoGrupo", "Grado / Grupo")
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row mb-3">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 mb-md-0">
                                                     @Html.TextBoxFor(m => m.Ciudad, new { @class = "form-control", @id = "txtCiudad", @placeholder = ".", value = ViewData["Ciudad"] })
                                                     @Html.Label("txtCiudad", "Ciudad")
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                           
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 mb-md-0">
                                                     @Html.TextBoxFor(m => m.Calle, new { @class = "form-control", @id = "txtCalle", @autocomplete = "off", @placeholder = ".", value = ViewData["Calle"] })
@@ -82,7 +78,19 @@
                                                     @Html.Label("txtTelefono", "Teléfono")
                                                 </div>
                                             </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.DropDownListFor(m => m.Genero, new List<SelectListItem>
 
+                                                    {
+                                                        //new SelectListItem { Value = "0", Text = "Seleccionar género",Selected = true, Disabled = true },
+                                                        new SelectListItem { Value = "true", Text = "Hombre" },
+                                                        new SelectListItem { Value = "false", Text = "Mujer" }
+                                                        // Agrega más opciones aquí
+                                                    }, new { @class = "form-select", @id = "ddlEdad" })
+                                                    @Html.Label("txtGenero", "Seleccionar Genéro")
+                                                </div>
+                                            </div>
                                         </div>
                                         
                                         <div class="row mb-3">

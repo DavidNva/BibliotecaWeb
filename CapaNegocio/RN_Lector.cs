@@ -31,7 +31,11 @@ namespace CapaNegocio
             }
             else if (obj.Edad == 0)
             {
-                Mensaje = "La edad del lector no puede ser vacio y debes ingresar una edad mayor a 0 ";
+                Mensaje = "Debe ingresar una edad válida";
+            }
+            else if (obj.Edad > 125)
+            {
+                Mensaje = "El rango de edad válido es entre 1 - 125";
             }
             else if (string.IsNullOrEmpty(obj.Escuela) || string.IsNullOrWhiteSpace(obj.Escuela))
             {
@@ -59,11 +63,11 @@ namespace CapaNegocio
             }
             else if (string.IsNullOrEmpty(obj.Clave) || string.IsNullOrWhiteSpace(obj.Clave))
             {
-                Mensaje = "La clave del lector no puede ser vacio";
+                Mensaje = "La contraseña del lector no puede ser vacio";
             }
             else if (string.IsNullOrEmpty(obj.ConfirmarClave) || string.IsNullOrWhiteSpace(obj.ConfirmarClave))
             {
-                Mensaje = "Debes confirmar la clave ingresada";
+                Mensaje = "Debes confirmar la contraseña ingresada";
             }
             if (string.IsNullOrEmpty(Mensaje))
             {/*Si no hay ningun mensaje, significa que no ha habido ningun error*/
