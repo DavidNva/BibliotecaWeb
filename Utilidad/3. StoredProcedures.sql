@@ -724,7 +724,7 @@ create procedure sp_RegistrarLector(--Hay un indice unico para el nombre complet
     @Telefono varchar(20),
     @Correo nvarchar(100),--Puede ser null
     @Clave nvarchar(150),
-    @Activo bit,
+    -- @Activo bit,
     @Mensaje varchar(500) output,
     @Resultado int output
     --@ID_TipoPersona int --ESTARÁ COMO DEFAULT = 1, ES DECIR, COMO LECTOR
@@ -735,14 +735,14 @@ begin
     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
     IF NOT EXISTS (SELECT * FROM Lector WHERE Correo = @Correo)
     begin 
-        insert into Lector(Nombres, Apellidos, Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave, Reestablecer, Activo) values 
-        (@Nombres, @Apellidos,@Edad,@Genero, @Escuela, @GradoGrupo, @Ciudad, @Calle, @Telefono, @Correo, @Clave,0, @Activo)
+        insert into Lector(Nombres, Apellidos, Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave, Reestablecer) values 
+        (@Nombres, @Apellidos,@Edad, @Genero, @Escuela, @GradoGrupo, @Ciudad, @Calle, @Telefono, @Correo, @Clave,0)
         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
         SET @Resultado = scope_identity()
     end 
     else 
      SET @Mensaje = 'El correo del lector ya existe'
-end 
+end     
 go 
 -- ---------------------------------------------------Ejemplar------------------------------------------------------------
 -- --EJemplo en Ejemplar es  EJ0001,EJ0002,EJ0003,EJ0004, sucesivamente

@@ -18,6 +18,8 @@ namespace CapaNegocio
         public int Registrar(EN_Lector obj, out string Mensaje)
         {
             Mensaje = string.Empty;
+          
+            
             //Validaciones para que la caja de texto no este vacio o con espacios
             if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres))
             {
@@ -25,20 +27,20 @@ namespace CapaNegocio
             }
             else if (string.IsNullOrEmpty(obj.Apellidos) || string.IsNullOrWhiteSpace(obj.Apellidos))
             {
-                Mensaje = "El apellido del lector no puede ser vacio";
+                Mensaje = "Los apellidos del lector no puede ser vacio";
             }
-            else if (string.IsNullOrEmpty(obj.Edad.ToString()) || string.IsNullOrWhiteSpace(obj.Edad.ToString()))
+            else if (obj.Edad == 0)
             {
-                Mensaje = "La edad del lector no puede ser vacio";
+                Mensaje = "La edad del lector no puede ser vacio y debes ingresar una edad mayor a 0 ";
             }
             else if (string.IsNullOrEmpty(obj.Escuela) || string.IsNullOrWhiteSpace(obj.Escuela))
             {
                 Mensaje = "La escuela del lector no puede ser vacio";//Por default tendra NINGUNA por si el lector no asiste a alguna escuela
             }
-            //else if (string.IsNullOrEmpty(obj.GradoGrupo) || string.IsNullOrWhiteSpace(obj.GradoGrupo))
-            //{
-            //    Mensaje = "El grado y el grupo del lector no puede ser vacio";
-            //}
+            else if (string.IsNullOrEmpty(obj.GradoGrupo) || string.IsNullOrWhiteSpace(obj.GradoGrupo))
+            {
+                Mensaje = "El grado y el grupo del lector no puede ser vacio";
+            }
             else if (string.IsNullOrEmpty(obj.Ciudad) || string.IsNullOrWhiteSpace(obj.Ciudad))
             {
                 Mensaje = "La ciudad del lector no puede ser vacio";//Por default tendra NINGUNA por si el lector no asiste a alguna escuela
@@ -54,6 +56,14 @@ namespace CapaNegocio
             else if (string.IsNullOrEmpty(obj.Correo) || string.IsNullOrWhiteSpace(obj.Correo))
             {
                 Mensaje = "El correo del lector no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Clave) || string.IsNullOrWhiteSpace(obj.Clave))
+            {
+                Mensaje = "La clave del lector no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.ConfirmarClave) || string.IsNullOrWhiteSpace(obj.ConfirmarClave))
+            {
+                Mensaje = "Debes confirmar la clave ingresada";
             }
             if (string.IsNullOrEmpty(Mensaje))
             {/*Si no hay ningun mensaje, significa que no ha habido ningun error*/

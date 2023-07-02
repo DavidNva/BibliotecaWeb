@@ -33,12 +33,12 @@ namespace CapaPresentacionConsulta.Controllers
             int resultado;
             string mensaje = string.Empty;
             string edad = objeto.Edad.ToString();
-            string genero = objeto.Genero.ToString();
+            //string genero = objeto.Genero.ToString();
             ViewData["Nombres"] = string.IsNullOrEmpty(objeto.Nombres) ? "" : objeto.Nombres;
             ViewData["Apellidos"] = string.IsNullOrEmpty(objeto.Apellidos) ? "" : objeto.Apellidos;
             ViewData["Edad"] = string.IsNullOrEmpty(edad) ? "" : objeto.Edad.ToString();
             
-            ViewData["Genero"] = string.IsNullOrEmpty(genero) ? "" : objeto.Genero.ToString();
+            ViewData["Genero"] =  objeto.Genero.ToString();
             ViewData["Escuela"] = string.IsNullOrEmpty(objeto.Escuela) ? "" : objeto.Escuela;
             ViewData["GradoGrupo"] = string.IsNullOrEmpty(objeto.GradoGrupo) ? "" : objeto.GradoGrupo;
             ViewData["Ciudad"] = string.IsNullOrEmpty(objeto.Ciudad) ? "" : objeto.Ciudad;

@@ -38,7 +38,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                 <div class="form-floating">
-                                                    @Html.TextBoxFor(m => m.Edad, new { @class = "form-control", @id = "txtEdad", @placeholder = ".", value = ViewData["Edad"] })
+                                                    @Html.TextBoxFor(m => m.Edad, new { @type = "number",  @class = "form-control", @autocomplete = "off", @id = "txtEdad", @placeholder = ".", value = ViewData["Edad"] })
                                                     @Html.Label("txtEdad", "Edad")
                                                 </div>
                                             </div>
@@ -52,7 +52,7 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    @Html.TextBoxFor(m => m.Escuela, new { @class = "form-control", @id = "txtEscuela", @placeholder = ".", value = ViewData["Escuela"] })
+                                                    @Html.TextBoxFor(m => m.Escuela, new { @class = "form-control", @id = "txtEscuela", @autocomplete = "off", @placeholder = ".", value = ViewData["Escuela"] })
                                                     @Html.Label("txtEscuela", "Escuela")
                                                 </div>
                                             </div>
@@ -72,13 +72,13 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    @Html.TextBoxFor(m => m.Calle, new { @class = "form-control", @id = "txtCalle", @placeholder = ".", value = ViewData["Calle"] })
+                                                    @Html.TextBoxFor(m => m.Calle, new { @class = "form-control", @id = "txtCalle", @autocomplete = "off", @placeholder = ".", value = ViewData["Calle"] })
                                                     @Html.Label("txtCalle", "Calle")
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-floating">
-                                                    @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", @id = "txtTelefono", @placeholder = ".", value = ViewData["Telefono"] })
+                                                    @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", @id = "txtTelefono", @autocomplete = "off", @placeholder = ".", value = ViewData["Telefono"] })
                                                     @Html.Label("txtTelefono", "Teléfono")
                                                 </div>
                                             </div>
@@ -88,7 +88,7 @@
                                         <div class="row mb-3">
                                             <div class="col-md-4">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    @Html.TextBoxFor(m => m.Correo, new { @class = "form-control", @id = "txtCorreo", @autocomplete = "off", @placeholder = ".", value = ViewData["Correo"] })
+                                                    @Html.TextBoxFor(m => m.Correo, new { @type = "email", @class = "form-control", @id = "txtCorreo", @autocomplete = "off", @placeholder = ".", value = ViewData["Correo"] })
                                                     @Html.Label("txtCorreo", "Correo")
                                                 </div>
                                             </div>
