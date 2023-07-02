@@ -1,0 +1,150 @@
+﻿@model CapaEntidad.EN_Lector
+@*Para acceder a las propiedades*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registrar</title>
+    <link href="~/Content/Site.css" rel="stylesheet" />
+</head>
+<body class="bg-danger">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-3">Crear una Cuenta</h3></div>
+                                <div class="card-body">
+                                    <form action="@Url.Action("Registrar","Acceso")" method="post">
+                                        <div class="row mb-3">
+                                            <div class="col-md-5">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Nombres, new { @class = "form-control", @id = "txtNombre", @autocomplete = "off", @placeholder = ".", value = ViewData["Nombres"] })
+                                                    @Html.Label("txtNombre", "Nombres")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control", @id = "txtApellidos", @autocomplete = "off", @placeholder = ".", value = ViewData["Apellidos"] })
+                                                    @Html.Label("txtApellidos", "Apellidos")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-floating">
+                                                    @Html.TextBoxFor(m => m.Edad, new { @class = "form-control", @id = "txtEdad", @placeholder = ".", value = ViewData["Edad"] })
+                                                    @Html.Label("txtEdad", "Edad")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Genero, new { @class = "form-control", @id = "txtGenero", @placeholder = ".", value = ViewData["Genero"] })
+                                                    @Html.Label("txtGenero", "Genero")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Escuela, new { @class = "form-control", @id = "txtEscuela", @placeholder = ".", value = ViewData["Escuela"] })
+                                                    @Html.Label("txtEscuela", "Escuela")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating">
+                                                    @Html.TextBoxFor(m => m.GradoGrupo, new { @class = "form-control", @id = "txtGradoGrupo", @placeholder = ".", value = ViewData["GradoGrupo"] })
+                                                    @Html.Label("txtGradoGrupo", "Grado / Grupo")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Ciudad, new { @class = "form-control", @id = "txtCiudad", @placeholder = ".", value = ViewData["Ciudad"] })
+                                                    @Html.Label("txtCiudad", "Ciudad")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Calle, new { @class = "form-control", @id = "txtCalle", @placeholder = ".", value = ViewData["Calle"] })
+                                                    @Html.Label("txtCalle", "Calle")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating">
+                                                    @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", @id = "txtTelefono", @placeholder = ".", value = ViewData["Telefono"] })
+                                                    @Html.Label("txtTelefono", "Teléfono")
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.TextBoxFor(m => m.Correo, new { @class = "form-control", @id = "txtCorreo", @autocomplete = "off", @placeholder = ".", value = ViewData["Correo"] })
+                                                    @Html.Label("txtCorreo", "Correo")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.PasswordFor(m => m.Clave, new { @class = "form-control", @id = "txtClave", @placeholder = "." })
+                                                    @Html.Label("txtClave", "Contraseña")
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    @Html.PasswordFor(m => m.ConfirmarClave, new { @class = "form-control", @id = "txtConfirmaClave", @placeholder = "." })
+                                                    @Html.Label("txtConfirmaClave", "Confirmar Contraseña")
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @{
+                                            if (ViewBag.Error != null)
+                                            {
+                                                <div class="row mb-3">
+                                                    <div class="alert alert-danger" role="alert">
+                                                        @ViewBag.Error
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        <div class="mt-4 mb-0">
+                                            <div class="d-grid"><button class="btn btn-primary btn-block" type="submit">Crear cuenta</button></div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                    <div class="small"><a href="@Url.Action("Index", "Acceso")">¿Ya tienes una cuenta? Iniciar Sesión</a></div> @*ventana inicial de login*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div id="layoutAuthentication_footer">
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; CuboRubikCode 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="~/Scripts/bootstrap.bundle.js"></script>
+</body>
+</html>
+

@@ -496,6 +496,7 @@
     <Content Include="webfonts\fa-brands-400.eot" />
     <Content Include="Scripts\loadingoverlay.min.js.map" />
     <Content Include="Views\Acceso\Index.cshtml" />
+    <Content Include="Views\Acceso\Registrar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
