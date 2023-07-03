@@ -1,0 +1,298 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header-->
+<header class="bg-success py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Biblioteca Luis Cabrera Lobato</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Bibliotecas CuboRubikCode</p>
+        </div>
+    </div>
+</header>
+<!-- Section-->
+<section>
+    <div class="container-fluid px-5 my-5">
+
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="row mb-3">
+                    @*para categorias*@
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                Categorias
+                            </div>
+                            <div id="contenedorCategoria" class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    @*para marcas*@
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                Marcas
+                            </div>
+                            <div id="contenedorMarca" class="card-body">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    @*boton de filtrar*@
+                    <div class="col-sm-12">
+                        <div class="d-grid gap-2">
+                            <button id="btnAplicarFiltro" class="btn btn-outline-dark btn-block" type="button">
+                                <i class="fas fa-filter"></i>Aplicar filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-9">
+                @*la ottra seccion*@
+                <div id="contenedorProducto" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+                    <!--<div class="col mb-5">
+                        <div class="card h-100">-->
+                    <!-- Product image-->
+                    <!--<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />-->
+                    <!-- Product details-->
+                    <!--<div class="card-body p-4">
+                        <div class="text-center">-->
+                    <!-- Product name-->
+                    <!--<h5 class="fw-bolder">Fancy Product</h5>-->
+                    <!-- Product price-->
+                    <!--$40.00 - $80.00
+                        </div>
+                    </div>-->
+                    <!-- Product actions-->
+                    <!--<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                            </div>
+                        </div>
+                    </div>-->
+                    <!--<div class="col mb-5">
+                        <div class="card h-100">-->
+                    <!-- Sale badge-->
+                    <!--<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>-->
+                    <!-- Product image-->
+                    <!--<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />-->
+                    <!-- Product details-->
+                    <!--<div class="card-body p-4">
+                        <div class="text-center">-->
+                    <!-- Product name-->
+                    <!--<h5 class="fw-bolder">Special Item</h5>-->
+                    <!-- Product reviews-->
+                    <!--<div class="d-flex justify-content-center small text-warning mb-2">
+                        <div class="bi-star-fill"></div>
+                        <div class="bi-star-fill"></div>
+                        <div class="bi-star-fill"></div>
+                        <div class="bi-star-fill"></div>
+                        <div class="bi-star-fill"></div>
+                    </div>-->
+                    <!-- Product price-->
+                    <!--<span class="text-muted text-decoration-line-through">$20.00</span>
+                            $18.00
+                        </div>
+                    </div>-->
+                    <!-- Product actions-->
+                    <!--<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                            </div>
+                        </div>
+                    </div>-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            MostrarCategorias();
+            MostrarProductos(0, 0)
+        })
+
+        function MostrarCategorias() { /*muetsra todas las categorias dentro del mantenedor*/
+
+            jQuery.ajax({
+                url:"@Url.Action("ListarCategorias", "Tienda")",
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    /*
+                     * <div class="form-check">
+                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                          <label class="form-check-label" for="flexRadioDefault1">
+                            Default radio
+                          </label>
+                        </div>
+                     */
+                    $("#contenedorCategoria").LoadingOverlay("hide");
+                    $("<div>").addClass("form-check").append(
+
+                        $("<input>").addClass("form-check-input").attr({ "type":"radio", "name":"categoria", "value":"0", "id":"cx", "checked":"checked" }),
+                        $("<label>").addClass("form-check-label").text("Todos").attr({ "for":"cx"})
+                    ).appendTo("#contenedorCategoria")
+                    //porque el metodo de listar categoria data viene del json
+                    $.each(response.data, function (i, element) {//itera cada tipo de categoria
+                        $("<div>").addClass("form-check").append(
+
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "categoria", "value": element.IdCategoria, "id": "cx"+i}),
+                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "cx" + i })
+                        ).appendTo("#contenedorCategoria")
+                    })
+                    MostrarMarca();
+                },
+                beforeSend: function () {
+                    $("#contenedorCategoria").LoadingOverlay("show");
+                }
+            })
+
+        }
+        function MostrarMarca() { /*muestra la marca de acuerdo a la categoria seleccionada*/
+
+            var _idCategoria = $("input[name=categoria]:checked").val()
+
+            jQuery.ajax({
+                url: "@Url.Action("ListarMarcaPorCategoria", "Tienda")",
+                type: "POST", //si categoria envia 0 muestra todas las marcas
+                data: JSON.stringify({ idCategoria: _idCategoria }),//Se envia el valor para el parametro tipo int a utilizar
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $("#contenedorMarca").html("");//Antes de que vuelva a pintar todas las marcas, limpia todo el contenedor, de esta forma cada vez que actualicemos
+                    //va a tener en inicio el contenedor vacio y pinta nuevamente todos los elementos de las marcas
+                    $("#contenedorMarca").LoadingOverlay("hide");
+                    $("<div>").addClass("form-check").append(
+
+                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "marca", "value": "0", "id": "mx", "checked": "checked" }),
+                        $("<label>").addClass("form-check-label").text("Todos").attr({ "for": "mx" })
+                    ).appendTo("#contenedorMarca")
+                    //porque el metodo de listar categoria data viene del json
+                    $.each(response.data, function (i, element) {//itera cada tipo de categoria
+                        $("<div>").addClass("form-check").append(
+
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "marca", "value": element.IdMarca, "id": "m" + i }),
+                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "m" + i })
+                        ).appendTo("#contenedorMarca")
+                    })
+                },
+                beforeSend: function () {
+                    $("#contenedorMarca").LoadingOverlay("show");
+                }
+            })
+
+        }
+
+        $(document).on("change", "input[name=categoria]", function () {
+            //la accion a realizar
+            MostrarMarca();
+        })
+
+        function MostrarProductos(_idCategoria, _idMarca) { /*muestra la marca de acuerdo a la categoria seleccionada*/
+
+            jQuery.ajax({
+                url: "@Url.Action("ListarProductos", "Tienda")",
+                type: "POST", //si categoria envia 0 muestra todas las marcas
+                //los parametros indicados deben ser igual a los nombrados en tienda controller de su metodo
+                data: JSON.stringify({ idCategoria: _idCategoria, idMarca: _idMarca }),//Se envia el valor para el parametro tipo int a utilizar
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $("#contenedorProducto").html("");
+                    $("#contenedorProducto").LoadingOverlay("hide");
+
+                    $.each(response.data, function (i, element) {//itera cada tipo de categoria
+                        $("<div>").addClass("col mb-5").append(
+                            $("<div>").addClass("card h-100").append(
+                                $("<img>").addClass("card-img-top").attr({ "src": "data:image/" + element.Extension + ";base64," + element.Base64 }),
+                                $("<div>").addClass("card-body p-4").append(
+                                    $("<div>").addClass("text-center").append(
+                                        $("<h5>").addClass("fw-bolder").text(element.Nombre),
+                                        "$" + element.Precio.toFixed(2) + "USD" //para devolver solo dos decimales
+                                    )
+                                ),
+                                 $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
+
+                                            $("<div>").addClass("d-grid gap-2").append(
+                                                @if(Session["Cliente"] != null){ //Si el usuario ha iniciado sesion, se muestra el boton  de agregar al carrito
+                                                    @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idProducto", element.IdProducto).text("Agregar a carrito"),//añadimos una propiedad interna el valor que va a tener sera el del elemento id
+
+                                                }
+                                                $("<a>").addClass("btn btn-dark mt-auto")//con margin-top de auto
+                                                    .attr({ "href": "@Url.Action("DetalleProducto","Tienda")" + "?idProducto=" + element.IdProducto })//tiene el parametro idProducto
+                                                    .text("Ver detalle")
+                                            )
+
+                                        )
+                            )
+                        ).appendTo("#contenedorProducto")
+                    })
+                },
+                beforeSend: function () {
+                    $("#contenedorProducto").LoadingOverlay("show");
+                }
+            })
+
+        }
+
+        $("#btnAplicarFiltro").click(function () {
+            var _idCategoria = $("input[name=categoria]:checked").val()
+            var _idMarca = $("input[name=marca]:checked").val()
+            MostrarProductos(_idCategoria, _idMarca)
+        })
+
+        $(document).on("click", "button.agregarcarrito", function () {//boton agregar carrito
+            console.log($(this).data("idProducto"))
+            jQuery.ajax({
+                url: "@Url.Action("AgregarCarrito", "Tienda")",
+                type: "POST", //si categoria envia 0 muestra todas las marcas
+                //los parametros indicados deben ser igual a los nombrados en tienda controller de su metodo
+                //el identificador idProducto debe ser igual al del metodo declaado en su parametro
+                data: JSON.stringify({ idProducto: $(this).data("idProducto") }),//Se envia el valor para el parametro tipo int a utilizar
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    //data.respuesta es lo que retorna el metodo agregarCarrito
+                    if (data.respuesta) {
+                        MostrarCantidadCarrito();//Este metodo esta declarado en layout, en la master page, entoncees aunque no estemos en la misma vista
+                        //pdemos acceder a este metodo porque layout es la master page y este index es un contenido del mismo (porque index de tienda esta referenciado al layout)
+                        swal({
+                            title: "Agregado al carrito",
+                            text: "¿Desea ir al carrito?",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-primary",
+                            confirmButtonText: "Si",
+                            cancelButtonText: "No",
+                            closeOnConfirm: true
+                        }, function () {
+                            //redirige al carrito
+                            window.location.href = '@Url.Action("Carrito","Tienda")'
+                        })
+                    } else {
+                        swal("", data.mensaje, "warning");//el mensaje se esta obteniendo de data
+                    }
+                }
+            });
+        })
+
+
+    </script>
+
+}
+

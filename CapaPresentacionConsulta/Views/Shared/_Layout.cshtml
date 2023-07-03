@@ -3,40 +3,92 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Biblioteca CuboRubikCode</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid px-4">
+            @*modifique clases de este tema, para que el menu tome todo el ancho de la vista*@
+            <a class="navbar-brand" href="#!">Biblioteca CuboRubikCode</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="@Url.Action("Index","Biblioteca")">Inicio</a></li>
                 </ul>
+                <form class="d-flex">
+                    @if (Session["Lector"] == null)
+                    {
+                        @*significa que el usuario no ha iniciado sesion, entonces muestra un boton que indica iniciar sesion y regirige al login*@
+                        <a class="btn btn-outline-dark" aria-current="page" href="@Url.Action("Index", "Acceso")"><i class="fas fa-sign-out-alt me-1"></i> Iniciar Sesión</a> @*Redirige al login de acceso*@
+                    } @*en caso de que si se haya iniciado sesión*@
+                    else
+                    {
+                        <a class="btn btn-outline-dark" href="@Url.Action("Carrito","Biblioteca")">
+                            @*muestra el boton de carrito de compras*@
+                            <i class="fas fa-shopping-cart me-1"></i> @*redirige a la vista de los productos agregados al carrito*@
+                            Carrito
+                            <span class="badge bg-dark text-white ms-1 rounded-pill" id="cantidadCarrito">0</span> @*esta etiqueta indicará cuantos productos existen el carrito del cliente*@
+                        </a>
+                        <!-- Navbar--> @*ms-auto ms-md-0 me-3 me-lg-4*@
+                        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#!"><b>@User.Identity.Name</b></a></li> @*valor de la cookie de la sesion creada, la cookie creada fue por correo, con esta linea de codigo estamos mostrando el correo con el que se inicio sesión*@
+                                    @*<li><a class="dropdown-item" href="#!">Activity Log</a></li>*@
+                                    <li><a class="dropdown-item" href="@Url.Action("MisPrestamos","Biblioteca")">Mis Compras</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("CerrarSesion","Acceso")">Cerrar Sesión</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+
+
+                    }
+
+                </form>
             </div>
         </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+    </nav>
+
+    @RenderBody()
+
+    @*<div class="container body-content">
+
+            <hr />
+
+        </div>*@
+    <footer>
+        <p>&copy; @DateTime.Now.Year - CuboRubikCode</p>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+
+    $(document).ready(function () {
+        MostrarCantidadCarrito();
+    })
+        function MostrarCantidadCarrito() {
+            //va a retornar menos de 0 en el caso de que no exista la etiqueta, pero si es mayor a 0, significa que si existe la etiqueta
+            if ($("#cantidadCarrito").length > 0) {
+                jQuery.ajax({
+                    url: '@Url.Action("CantidadEnCarrito", "Biblioteca")',
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#cantidadCarrito").text(data.cantidad)
+                    }
+                });
+
+            }
+        }
+    </script>
 </body>
 </html>

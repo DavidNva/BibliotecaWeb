@@ -6,9 +6,9 @@ using System.Web.Mvc;
 
 namespace CapaPresentacionConsulta.Controllers
 {
-    public class BlibliotecaController : Controller
+    public class BibliotecaController : Controller
     {
-        // GET: Bliblioteca
+        // GET: Biblioteca
         public ActionResult Index()
         {
             return View();
