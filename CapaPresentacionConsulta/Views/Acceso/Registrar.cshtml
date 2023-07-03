@@ -11,8 +11,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>Registrar</title>
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/misestilos.css" rel="stylesheet" />
 </head>
-<body class="bg-danger">
+<body class="bg-login-lector">
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
@@ -73,13 +74,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
-                                                <div class="form-floating">
+                                                <div class="form-floating mb-3 mb-md-0">
                                                     @Html.TextBoxFor(m => m.Telefono, new { @class = "form-control", @id = "txtTelefono", @autocomplete = "off", @placeholder = ".", value = ViewData["Telefono"] })
                                                     @Html.Label("txtTelefono", "Teléfono")
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <div class="form-floating mb-3 mb-md-0">
+                                                <div class="form-floating">
                                                     @Html.DropDownListFor(m => m.Genero, new List<SelectListItem>
 
                                                     {
@@ -87,7 +88,7 @@
                                                         new SelectListItem { Value = "true", Text = "Hombre" },
                                                         new SelectListItem { Value = "false", Text = "Mujer" }
                                                         // Agrega más opciones aquí
-                                                    }, new { @class = "form-select", @id = "ddlEdad" })
+                                                    }, new { @class = "form-select", @id = "txtGenero" })
                                                     @Html.Label("txtGenero", "Seleccionar Genéro")
                                                 </div>
                                             </div>
@@ -138,8 +139,8 @@
             </main>
         </div>
         <div id="layoutAuthentication_footer">
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
+            <footer class="py-3 bg-light mt-auto">
+                <div class="container-fluid px-3">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; CuboRubikCode 2023</div>
                         <div>

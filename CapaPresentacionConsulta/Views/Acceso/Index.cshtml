@@ -10,8 +10,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
     <link href="~/Content/Site.css" rel="stylesheet" />
+    <link href="~/Content/misestilos.css" rel="stylesheet" />
 </head>
-<body class="bg-danger">
+<body class="bg-login-lector">
     <div id="layoutAuthentication">
         <div id="layoutAuthentication_content">
             <main>
@@ -19,16 +20,16 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-5">
                             <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                                <div class="card-header"><h3 class="text-center font-weight-light my-2">Login</h3></div> @*my se puede cambiar la altura*@
                                 <div class="card-body">
                                     <form action="@Url.Action("Index", "Acceso")" method="post">
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" name="correo" type="email" autocomplete="off" placeholder="test@gmail.com" />
-                                            <label for="inputEmail">Email</label>
+                                            <input class="form-control" name="correo" type="email" id="mail" autocomplete="off" placeholder="test@gmail.com" />
+                                            <label for="mail">Email</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" name="clave" type="password" autocomplete="off" placeholder="123" />
-                                            <label for="inputPassword">Contraseña</label>
+                                            <input class="form-control" name="clave" id="pass" type="password" autocomplete="off" placeholder="123" />
+                                            <label for="pass">Contraseña</label>
                                         </div>
                                         @{
                                             if (ViewBag.Error != null)
@@ -57,8 +58,8 @@
             </main>
         </div>
         <div id="layoutAuthentication_footer">
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
+            <footer class="py-3 bg-light mt-auto">
+                <div class="container-fluid px-3">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; CuboRubikCode 2023</div>
                         <div>

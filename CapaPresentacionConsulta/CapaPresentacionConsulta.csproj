@@ -329,7 +329,10 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\bg-book.jpg" />
+    <Content Include="images\bg-book1.jpg" />
     <Content Include="images\bg-woman-book.jpg" />
+    <Content Include="images\bg-woman-book1.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
