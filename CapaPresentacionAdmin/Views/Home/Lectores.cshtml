@@ -27,12 +27,13 @@
                     <th>Nombres</th>
                     <th>Apellidos</th>
                     <th>Edad</th>
-                    <th>Sexo</th>
+
                     <th>Escuela</th>
                     <th>Grado/Grupo</th>
                     <th>Telefono</th>
                     <th>Ciudad</th>
                     <th>Calle</th>
+                    <th>Género</th>
                     <th>Activo</th>
 
 
@@ -157,6 +158,11 @@
                 { "data": "Nombres" },
                 { "data": "Apellidos" },
                 { "data": "Edad"},
+                { "data": "Escuela" },
+                { "data": "GradoGrupo" },
+                { "data": "Telefono" },
+                { "data": "Ciudad" },
+                { "data": "Calle" },
                 {
                     "data": "Genero", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
                         if (valor) {/*Si el valor es verdadero*/
@@ -167,11 +173,6 @@
                     }
 
                 },
-                { "data": "Escuela" },
-                { "data": "GradoGrupo" },
-                { "data": "Telefono" },
-                { "data": "Ciudad" },
-                { "data": "Calle" },
                 {
                     "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
                         if (valor) {/*Si el valor es verdadero*/
