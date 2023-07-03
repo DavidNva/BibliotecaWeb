@@ -48,6 +48,7 @@ namespace CapaPresentacionConsulta
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/site.css",
+                "~/Content/misestilos.css",
                  "~/Content/DataTables/css/jquery.dataTables.min.css",//Agregado
                 "~/Content/DataTables/css/responsive.dataTables.min.css",//Agregado
                 "~/Content/sweetalert.css",

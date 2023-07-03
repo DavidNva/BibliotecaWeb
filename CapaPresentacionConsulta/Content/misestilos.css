@@ -1,0 +1,7 @@
+﻿.image-fondo-lector{
+   /* background-color: aqua;*/
+    background-image: url('../images/bg-woman-book.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
