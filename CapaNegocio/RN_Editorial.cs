@@ -60,6 +60,7 @@ namespace CapaNegocio
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }
+
         public List<EN_Editorial> ListarEditorialPorCategoria(string idCategoria) /*Para listar las Editorials a filtrar en la presentacion de tienda*/
         {
             return objCapaDato.ListarEditorialPorCategoria(idCategoria);

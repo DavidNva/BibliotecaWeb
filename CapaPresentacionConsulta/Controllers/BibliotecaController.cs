@@ -82,8 +82,8 @@ namespace CapaPresentacionConsulta.Controllers
             }).Where(l =>
             //Si el id categoria es  = 0, entonces colocas el idcategoria y si no colocas el id dado en parametro (la del usuario), dependiendo de eso
             //hara la busqueda por filtro, teniendo en cuenta el stock y si el Libros esta activo
-                l.oId_Categoria.IdCategoria == (idCategoria == "0" ? l.oId_Categoria.IdCategoria : idCategoria) &&
-                l.oId_Editorial.IdEditorial == (idEditorial == "0" ? l.oId_Editorial.IdEditorial : idEditorial) &&
+                l.oId_Categoria.IdCategoria == (idCategoria == "T" ? l.oId_Categoria.IdCategoria : idCategoria) &&
+                l.oId_Editorial.IdEditorial == (idEditorial == "T" ? l.oId_Editorial.IdEditorial : idEditorial) &&//Se cambia de 0 a T, ya que en este caso categoria y editorial tienen id tipo string
                 l.Ejemplares > 0 && l.Activo == true //Solo muestra Libros activos y con un stock mayor a 0
                 ).ToList();
 

@@ -73,7 +73,8 @@
 
         $(document).ready(function () {
             MostrarCategorias();
-            MostrarLibros(0, 0)
+            MostrarLibros('T', 'T')//Anteriormente estaba en 0, pero al ser de codigo tipo string, se cambio a que fuera una T,
+            //indicando Todos, de esta forma, no hay problema al mandar un ID y ya muestra todos los productos con solo iniciar la pagina
         })
 
         function MostrarCategorias() { /*muetsra todas las categorias dentro del mantenedor*/
@@ -131,14 +132,14 @@
                     $("#contenedorEditorial").LoadingOverlay("hide");
                     $("<div>").addClass("form-check").append(
 
-                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "Editorial", "value": "0", "id": "mx", "checked": "checked" }),
+                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "editorial", "value": "T", "id": "mx", "checked": "checked" }),
                         $("<label>").addClass("form-check-label").text("Todos").attr({ "for": "mx" })
                     ).appendTo("#contenedorEditorial")
                     //porque el metodo de listar categoria data viene del json
                     $.each(response.data, function (i, element) {//itera cada tipo de categoria
                         $("<div>").addClass("form-check").append(
 
-                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "Editorial", "value": element.IdEditorial, "id": "m" + i }),
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "editorial", "value": element.IdEditorial, "id": "m" + i }),
                             $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "m" + i })
                         ).appendTo("#contenedorEditorial")
                     })
@@ -175,8 +176,9 @@
                                 $("<img>").addClass("card-img-top").attr({ "src": "data:image/" + element.Extension + ";base64," + element.Base64 }),
                                 $("<div>").addClass("card-body p-4").append(
                                     $("<div>").addClass("text-center").append(
-                                        $("<h5>").addClass("fw-bolder").text(element.Nombre),
-                                        "$" + element.Ejemplares.toFixed(2) + "USD" //para devolver solo dos decimales
+                                        $("<h5>").addClass("fw-bolder").text(element.Titulo),
+                                        //"$" + element.Ejemplares.toFixed(2) + "Ejemplares disponibles" //para devolver solo dos decimales
+                                         element.Ejemplares + " Ejemplares disponibles" //para devolver solo dos decimales
                                     )
                                 ),
                                  $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
@@ -205,7 +207,7 @@
 
         $("#btnAplicarFiltro").click(function () {
             var _idCategoria = $("input[name=categoria]:checked").val()
-            var _idEditorial = $("input[name=Editorial]:checked").val()
+            var _idEditorial = $("input[name=editorial]:checked").val()
             MostrarLibros(_idCategoria, _idEditorial)
         })
 
