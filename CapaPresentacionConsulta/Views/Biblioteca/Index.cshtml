@@ -95,7 +95,7 @@
                     $("#contenedorCategoria").LoadingOverlay("hide");
                     $("<div>").addClass("form-check").append(//Creacion de checkBox's
 
-                        $("<input>").addClass("form-check-input").attr({ "type":"radio", "name":"categoria", "value":"0", "id":"cx", "checked":"checked" }),
+                        $("<input>").addClass("form-check-input").attr({ "type":"radio", "name":"categoria", "value":"T", "id":"cx", "checked":"checked" }),
                         $("<label>").addClass("form-check-label").text("Todos").attr({ "for":"cx"})
                     ).appendTo("#contenedorCategoria")//Implementado dentro del contenedorCategoria
                     //porque el metodo de listar categoria data viene del json
@@ -117,7 +117,7 @@
         function MostrarEditorial() { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
             var _idCategoria = $("input[name=categoria]:checked").val()
-
+           
             jQuery.ajax({
                 url: "@Url.Action("ListarEditorialPorCategoria", "Biblioteca")",
                 type: "POST", //si categoria envia 0 muestra todas las Editoriales
@@ -127,6 +127,7 @@
                 success: function (response) {
                     $("#contenedorEditorial").html("");//Antes de que vuelva a pintar todas las Editoriales, limpia todo el contenedor, de esta forma cada vez que actualicemos
                     //va a tener en inicio el contenedor vacio y pinta nuevamente todos los elementos de las Editoriales
+                    //console.log(_idcategoria);
                     $("#contenedorEditorial").LoadingOverlay("hide");
                     $("<div>").addClass("form-check").append(
 
@@ -146,6 +147,7 @@
                     $("#contenedorEditorial").LoadingOverlay("show");
                 }
             })
+           // console.log(_idcategoria);
 
         }
 
@@ -174,7 +176,7 @@
                                 $("<div>").addClass("card-body p-4").append(
                                     $("<div>").addClass("text-center").append(
                                         $("<h5>").addClass("fw-bolder").text(element.Nombre),
-                                        "$" + element.Precio.toFixed(2) + "USD" //para devolver solo dos decimales
+                                        "$" + element.Ejemplares.toFixed(2) + "USD" //para devolver solo dos decimales
                                     )
                                 ),
                                  $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
