@@ -33,13 +33,13 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    @*para marcas*@
+                    @*para Editoriales*@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header bg-success text-white">
-                                Marcas
+                                Editoriales
                             </div>
-                            <div id="contenedorMarca" class="card-body">
+                            <div id="contenedorEditorial" class="card-body">
 
                             </div>
                         </div>
@@ -58,57 +58,8 @@
             </div>
             <div class="col-sm-9">
                 @*la ottra seccion*@
-                <div id="contenedorProducto" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <div id="contenedorLibro" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
-                    <!--<div class="col mb-5">
-                        <div class="card h-100">-->
-                    <!-- Product image-->
-                    <!--<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />-->
-                    <!-- Product details-->
-                    <!--<div class="card-body p-4">
-                        <div class="text-center">-->
-                    <!-- Product name-->
-                    <!--<h5 class="fw-bolder">Fancy Product</h5>-->
-                    <!-- Product price-->
-                    <!--$40.00 - $80.00
-                        </div>
-                    </div>-->
-                    <!-- Product actions-->
-                    <!--<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>-->
-                    <!--<div class="col mb-5">
-                        <div class="card h-100">-->
-                    <!-- Sale badge-->
-                    <!--<div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>-->
-                    <!-- Product image-->
-                    <!--<img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />-->
-                    <!-- Product details-->
-                    <!--<div class="card-body p-4">
-                        <div class="text-center">-->
-                    <!-- Product name-->
-                    <!--<h5 class="fw-bolder">Special Item</h5>-->
-                    <!-- Product reviews-->
-                    <!--<div class="d-flex justify-content-center small text-warning mb-2">
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                        <div class="bi-star-fill"></div>
-                    </div>-->
-                    <!-- Product price-->
-                    <!--<span class="text-muted text-decoration-line-through">$20.00</span>
-                            $18.00
-                        </div>
-                    </div>-->
-                    <!-- Product actions-->
-                    <!--<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>-->
 
                 </div>
             </div>
@@ -122,18 +73,18 @@
 
         $(document).ready(function () {
             MostrarCategorias();
-            MostrarProductos(0, 0)
+            MostrarLibros(0, 0)
         })
 
         function MostrarCategorias() { /*muetsra todas las categorias dentro del mantenedor*/
 
             jQuery.ajax({
-                url:"@Url.Action("ListarCategorias", "Tienda")",
+                url:"@Url.Action("ListarCategorias", "Biblioteca")",
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    /*
+                    /*Pasamos de este check a la forma de abajo
                      * <div class="form-check">
                           <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
                           <label class="form-check-label" for="flexRadioDefault1">
@@ -142,20 +93,20 @@
                         </div>
                      */
                     $("#contenedorCategoria").LoadingOverlay("hide");
-                    $("<div>").addClass("form-check").append(
+                    $("<div>").addClass("form-check").append(//Creacion de checkBox's
 
                         $("<input>").addClass("form-check-input").attr({ "type":"radio", "name":"categoria", "value":"0", "id":"cx", "checked":"checked" }),
                         $("<label>").addClass("form-check-label").text("Todos").attr({ "for":"cx"})
-                    ).appendTo("#contenedorCategoria")
+                    ).appendTo("#contenedorCategoria")//Implementado dentro del contenedorCategoria
                     //porque el metodo de listar categoria data viene del json
                     $.each(response.data, function (i, element) {//itera cada tipo de categoria
                         $("<div>").addClass("form-check").append(
 
-                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "categoria", "value": element.IdCategoria, "id": "cx"+i}),
-                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "cx" + i })
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "categoria", "value": element.IdCategoria, "id": "cx" + i}),
+                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "cx" + i })//Checar si vamos a cambiar el cx a c
                         ).appendTo("#contenedorCategoria")
                     })
-                    MostrarMarca();
+                    MostrarEditorial();
                 },
                 beforeSend: function () {
                     $("#contenedorCategoria").LoadingOverlay("show");
@@ -163,36 +114,36 @@
             })
 
         }
-        function MostrarMarca() { /*muestra la marca de acuerdo a la categoria seleccionada*/
+        function MostrarEditorial() { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
             var _idCategoria = $("input[name=categoria]:checked").val()
 
             jQuery.ajax({
-                url: "@Url.Action("ListarMarcaPorCategoria", "Tienda")",
-                type: "POST", //si categoria envia 0 muestra todas las marcas
+                url: "@Url.Action("ListarEditorialPorCategoria", "Biblioteca")",
+                type: "POST", //si categoria envia 0 muestra todas las Editoriales
                 data: JSON.stringify({ idCategoria: _idCategoria }),//Se envia el valor para el parametro tipo int a utilizar
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    $("#contenedorMarca").html("");//Antes de que vuelva a pintar todas las marcas, limpia todo el contenedor, de esta forma cada vez que actualicemos
-                    //va a tener en inicio el contenedor vacio y pinta nuevamente todos los elementos de las marcas
-                    $("#contenedorMarca").LoadingOverlay("hide");
+                    $("#contenedorEditorial").html("");//Antes de que vuelva a pintar todas las Editoriales, limpia todo el contenedor, de esta forma cada vez que actualicemos
+                    //va a tener en inicio el contenedor vacio y pinta nuevamente todos los elementos de las Editoriales
+                    $("#contenedorEditorial").LoadingOverlay("hide");
                     $("<div>").addClass("form-check").append(
 
-                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "marca", "value": "0", "id": "mx", "checked": "checked" }),
+                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "Editorial", "value": "0", "id": "mx", "checked": "checked" }),
                         $("<label>").addClass("form-check-label").text("Todos").attr({ "for": "mx" })
-                    ).appendTo("#contenedorMarca")
+                    ).appendTo("#contenedorEditorial")
                     //porque el metodo de listar categoria data viene del json
                     $.each(response.data, function (i, element) {//itera cada tipo de categoria
                         $("<div>").addClass("form-check").append(
 
-                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "marca", "value": element.IdMarca, "id": "m" + i }),
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "Editorial", "value": element.IdEditorial, "id": "m" + i }),
                             $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "m" + i })
-                        ).appendTo("#contenedorMarca")
+                        ).appendTo("#contenedorEditorial")
                     })
                 },
                 beforeSend: function () {
-                    $("#contenedorMarca").LoadingOverlay("show");
+                    $("#contenedorEditorial").LoadingOverlay("show");
                 }
             })
 
@@ -200,21 +151,21 @@
 
         $(document).on("change", "input[name=categoria]", function () {
             //la accion a realizar
-            MostrarMarca();
+            MostrarEditorial();
         })
 
-        function MostrarProductos(_idCategoria, _idMarca) { /*muestra la marca de acuerdo a la categoria seleccionada*/
+        function MostrarLibros(_idCategoria, _idEditorial) { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
             jQuery.ajax({
-                url: "@Url.Action("ListarProductos", "Tienda")",
-                type: "POST", //si categoria envia 0 muestra todas las marcas
-                //los parametros indicados deben ser igual a los nombrados en tienda controller de su metodo
-                data: JSON.stringify({ idCategoria: _idCategoria, idMarca: _idMarca }),//Se envia el valor para el parametro tipo int a utilizar
+                url: "@Url.Action("ListarLibros", "Biblioteca")",
+                type: "POST", //si categoria envia 0 muestra todas las Editoriales
+                //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
+                data: JSON.stringify({ idCategoria: _idCategoria, idEditorial: _idEditorial }),//Se envia el valor para el parametro tipo int a utilizar
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
-                    $("#contenedorProducto").html("");
-                    $("#contenedorProducto").LoadingOverlay("hide");
+                    $("#contenedorLibro").html("");
+                    $("#contenedorLibro").LoadingOverlay("hide");
 
                     $.each(response.data, function (i, element) {//itera cada tipo de categoria
                         $("<div>").addClass("col mb-5").append(
@@ -229,22 +180,22 @@
                                  $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
 
                                             $("<div>").addClass("d-grid gap-2").append(
-                                                @if(Session["Cliente"] != null){ //Si el usuario ha iniciado sesion, se muestra el boton  de agregar al carrito
-                                                    @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idProducto", element.IdProducto).text("Agregar a carrito"),//añadimos una propiedad interna el valor que va a tener sera el del elemento id
+                                                @if(Session["Lector"] != null){ //Si el usuario ha iniciado sesion, se muestra el boton  de agregar al carrito
+                                                    @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idLibro", element.IdLibro).text("Agregar a carrito"),//añadimos una propiedad interna el valor que va a tener sera el del elemento id
 
                                                 }
                                                 $("<a>").addClass("btn btn-dark mt-auto")//con margin-top de auto
-                                                    .attr({ "href": "@Url.Action("DetalleProducto","Tienda")" + "?idProducto=" + element.IdProducto })//tiene el parametro idProducto
+                                                    .attr({ "href": "@Url.Action("DetalleLibro","Biblioteca")" + "?idLibro=" + element.IdLibro })//tiene el parametro idLibro
                                                     .text("Ver detalle")
                                             )
 
                                         )
                             )
-                        ).appendTo("#contenedorProducto")
+                        ).appendTo("#contenedorLibro")
                     })
                 },
                 beforeSend: function () {
-                    $("#contenedorProducto").LoadingOverlay("show");
+                    $("#contenedorLibro").LoadingOverlay("show");
                 }
             })
 
@@ -252,25 +203,25 @@
 
         $("#btnAplicarFiltro").click(function () {
             var _idCategoria = $("input[name=categoria]:checked").val()
-            var _idMarca = $("input[name=marca]:checked").val()
-            MostrarProductos(_idCategoria, _idMarca)
+            var _idEditorial = $("input[name=Editorial]:checked").val()
+            MostrarLibros(_idCategoria, _idEditorial)
         })
 
         $(document).on("click", "button.agregarcarrito", function () {//boton agregar carrito
-            console.log($(this).data("idProducto"))
+            console.log($(this).data("idLibro"))
             jQuery.ajax({
-                url: "@Url.Action("AgregarCarrito", "Tienda")",
-                type: "POST", //si categoria envia 0 muestra todas las marcas
-                //los parametros indicados deben ser igual a los nombrados en tienda controller de su metodo
-                //el identificador idProducto debe ser igual al del metodo declaado en su parametro
-                data: JSON.stringify({ idProducto: $(this).data("idProducto") }),//Se envia el valor para el parametro tipo int a utilizar
+                url: "@Url.Action("AgregarCarrito", "Biblioteca")",
+                type: "POST", //si categoria envia 0 muestra todas las Editoriales
+                //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
+                //el identificador idLibro debe ser igual al del metodo declaado en su parametro
+                data: JSON.stringify({ idLibro: $(this).data("idLibro") }),//Se envia el valor para el parametro tipo int a utilizar
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     //data.respuesta es lo que retorna el metodo agregarCarrito
                     if (data.respuesta) {
                         MostrarCantidadCarrito();//Este metodo esta declarado en layout, en la master page, entoncees aunque no estemos en la misma vista
-                        //pdemos acceder a este metodo porque layout es la master page y este index es un contenido del mismo (porque index de tienda esta referenciado al layout)
+                        //pdemos acceder a este metodo porque layout es la master page y este index es un contenido del mismo (porque index de Biblioteca esta referenciado al layout)
                         swal({
                             title: "Agregado al carrito",
                             text: "¿Desea ir al carrito?",
@@ -282,7 +233,7 @@
                             closeOnConfirm: true
                         }, function () {
                             //redirige al carrito
-                            window.location.href = '@Url.Action("Carrito","Tienda")'
+                            window.location.href = '@Url.Action("Carrito","Biblioteca")'
                         })
                     } else {
                         swal("", data.mensaje, "warning");//el mensaje se esta obteniendo de data

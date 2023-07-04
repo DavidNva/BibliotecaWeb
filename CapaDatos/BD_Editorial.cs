@@ -143,5 +143,45 @@ namespace CapaDatos
             }
             return resultado;
         }
+        public List<EN_Editorial> ListarEditorialPorCategoria(string idCategoria) /*Para listar las Editorials a filtrar en la presentacion de tienda*/
+        {
+            List<EN_Editorial> lista = new List<EN_Editorial>();
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    //string query = "SELECT IDEditorial, Descripcion, Activo FROM Editorial";
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("select distinct m.IDEditorial, m.Descripcion from Libro l");
+                    sb.AppendLine("inner join categoria c on c.IDCategoria = l.ID_Categoria");
+                    sb.AppendLine("inner join Editorial m on m.IDEditorial = l.ID_Editorial and m.Activo = 1");//--muestra solo las Editorials que estan activadas
+                    sb.AppendLine("where c.IDCategoria = iif(@idCategoria = '0', c.IDCategoria, @idCategoria)");//--si el idcategoria = 0 muestra todas, pero si no, muestra solo la indicada
+
+                    SqlCommand cmd = new SqlCommand(sb.ToString(), oConexion);
+                    cmd.Parameters.AddWithValue("@idCategoria", idCategoria);//Pasamos el parametro de categoria
+                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
+
+                    oConexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
+                    {
+                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
+                        {
+                            lista.Add(/*Agrega una nueva Editorial la lista*/
+                                new EN_Editorial()
+                                {
+                                    IdEditorial = dr["IdEditorial"].ToString(),//En este caso solo necesitamos el id y descripcion de la Editorial
+                                    Descripcion = dr["Descripcion"].ToString(),
+                                });
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lista = new List<EN_Editorial>();
+            }
+
+            return lista;
+        }
     }
 }
