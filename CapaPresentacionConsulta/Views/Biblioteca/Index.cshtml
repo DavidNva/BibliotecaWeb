@@ -183,7 +183,7 @@
                                 ),
                                  $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
 
-                                            $("<div>").addClass("d-grid gap-2").append(
+                                            $("<div>").addClass("d-grid gap-2").append(//Esto es para mejora del diseño y que los elementos tomen todo el ancho y que se alineen los elementos
                                                 @if(Session["Lector"] != null){ //Si el usuario ha iniciado sesion, se muestra el boton  de agregar al carrito
                                                     @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idLibro", element.IdLibro).text("Agregar a carrito"),//añadimos una propiedad interna el valor que va a tener sera el del elemento id
 

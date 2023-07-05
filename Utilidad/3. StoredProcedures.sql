@@ -1500,9 +1500,71 @@ begin
     /*Si el usuario no esta indicando ningun id de transaccion, le decimos que use ese mismo id transaccion del where, pero
     si lo esta indicando, lo use con el @idTransaccion*/
 end
+go
+--Agregar al carrito
+create proc sp_ExisteCarrito( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
+    @IdLector int, 
+    @IdLibroEjemplar int, 
+    @Resultado bit output
+)
+as 
+begin 
+    if exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdLibroEjemplar)
+        set @Resultado = 1
+    else 
+        set @Resultado = 0
+end 
+go 
+create proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un producto a un carrito
+    @IdLector int,
+    @IdLibro int,--solo se utiliza para la parte de sumar o restar ejemplares a la tabla libro
+    @IdEjemplarLibro int, --funcionará para ser el prestamo, 
+    @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin
+    set @Resultado = 1
+    set @Mensaje = '' 
+    --si en verdad existe una relacion con id Lector y idLibro en la tabla carrito
+    declare @existeCarrito bit =  iif(exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdEjemplarLibro),1,0)
+    declare @stockLibro int = (select Ejemplares from Libro where IdLibro=  @IdLibro)--obtener el stock actual  del producto de acuerdo al que estamos solicitando
 
-select * from Prestamo
+    BEGIN TRY --capturador de errores
+        BEGIN TRANSACTION OPERACION 
+        if(@Sumar = 1)
+        begin 
+            if(@stockLibro > 0)--validamos que el stock del libro sea mayor a 0 (que si haya libros disponibles)
+            begin 
+                if(@existeCarrito = 1) --verificamos entonces que si ya existe en el carrito
+                --en el caso de que ya existe, actualiza la cantidad con un mas 1
+                    update Carrito set Cantidad = Cantidad + 1 where IdLector = @IdLector and IdEjemplarLibro = @IdEjemplarLibro
+                else --y si todavia no exista en el carrito, insertamos un nuevo valor a carrito
+                    insert into Carrito(IdLector, IdEJemplarLibro, Cantidad) values (@IdLector, @IdEjemplarLibro, 1)
+                
+                update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --si lo anterior fue bien, resta 1 a stock de la tabla producto
+            end 
+            else --en el caso de que el stock del libro no se mayor a 0
+            begin --envia el siguiente error
+                set @Resultado = 0
+                set @Mensaje = 'El Libro no cuenta con stock/ejemplar disponible'
+            end 
+        end 
+        else --si la suma no es igual a 1
+        --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este producto
+        begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idproducto
+            update Carrito set Cantidad =  Cantidad - 1 where IdLector = @IdLector  and IdEjemplarLibro = @IdEjemplarLibro
+            update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro --y actualiza el stock con un + 1 
+        end 
+        --todo lo anterior lo ejecuta temporalmente, pero cuando llega a esta linea lo qu hace es guardar los cambios ya definitivos
+        COMMIT TRANSACTION OPERACION --indica que toda operacion que se haya realizado se va a guardar los cambios
+    END TRY 
+    BEGIN CATCH --en el casi de que exista un error en el proceso
+        set @Resultado = 0 --manda un result de 0, envia el mensaje
+        set @Mensaje = ERROR_MESSAGE()
+        ROLLBACK TRANSACTION OPERCION -- entonces regresa a como estaba antes, como si no hubieramos hecho nada
+    END CATCH
 
-update prestamo set estado =  1
-
-SELECT * FROM USUARIO
+end 
+go

@@ -148,8 +148,8 @@ CREATE TABLE TipoPersona(
 go
 
 CREATE TABLE Libro(
-    IDLibro int not null identity,
-    Codigo varchar(25)  not null CONSTRAINT PK_CodigoLibro PRIMARY KEY,
+    IDLibro int not null identity CONSTRAINT PK_CodigoLibro PRIMARY KEY,
+    Codigo varchar(25)  not null ,
     Titulo nvarchar(130) not null,
     -- Ubicacion varchar(10) not null,--Ejemplo EN
     Paginas int not null,
@@ -191,11 +191,13 @@ select * from prestamo
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
 	IdDetallePrestamo int primary key identity,
 	IdPrestamo int references Prestamo(IdPrestamo),
-	IDLibro varchar(25) references Libro(Codigo),--Posiblemente sea mejor el ejemplar id de ejemplar
+  --Este id libro,tendrá que ser el id del ejemplar (Pero primero lo manejaremos con el id de libro)
+	IDEjemplar int references Ejemplar(IdEjemplarLibro),--Posiblemente sea mejor el ejemplar id de ejemplar
 	CantidadEjemplares int,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
 	Total decimal(10,2)--total del precio del producto
 )
 go
+
 -- /*ALTER TABLE libro
 -- ADD 
 --     RutaPortada nvarchar(200)  null,
@@ -227,13 +229,22 @@ go
 --       estando referenciando a un libro que no existe)
 --     */
 -- go
+CREATE TABLE Carrito(
+	IdCarrito int primary key identity,
+	IdLector int references Lector(IdLector),
+   --Este id libro,tendrá que ser el id del ejemplar 
+	--IdLibro int references Libro(IdLibro),
+  IdEjemplarLibro int references Ejemplar(IdEjemplarLibro),
+	Cantidad int--Cuantas unidades para este Libro esta seleccionando el Lector
+)
+go
 
 CREATE TABLE Ejemplar(
-    IDEjemplar varchar(10)  not null CONSTRAINT PK_Ejemplar PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+    IDEjemplarLibro int  not null CONSTRAINT PK_EjemplarLibro PRIMARY KEY,--Tiene un trigger para autogenerar codigo
     -- NumEjemplar int not null,
     --Llave foranea
-    ID_Libro varchar(25) not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
-    REFERENCES Libro(Codigo) ON DELETE CASCADE ON UPDATE CASCADE --Tiene un indice unico: ID_Libro
+    ID_Libro int not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
+    REFERENCES Libro(IdLibro) ON DELETE CASCADE ON UPDATE CASCADE --Tiene un indice unico: ID_Libro
     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
     -- /*
 --       Ocurre lo mismo con Ejemplar

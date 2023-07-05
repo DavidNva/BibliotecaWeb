@@ -161,7 +161,8 @@ namespace CapaPresentacionConsulta.Controllers
         {
             Session["Lector"] = null;
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Acceso");
+            //return RedirectToAction("Index", "Acceso");
+            return RedirectToAction("Index", "Biblioteca");
         }
     }
 }
