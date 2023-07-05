@@ -1,0 +1,86 @@
+﻿
+@model  CapaEntidad.EN_Libro
+@{
+    ViewBag.Title = "DetalleLibro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Product section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6"><img class="card-img-top mb-5 mb-md-0" src="data:image/@Html.DisplayTextFor(m => m.Extension);base64,@Html.DisplayTextFor(m => m.Base64)" alt="..." /></div>
+            <div class="col-md-6">
+                <div class="lead mb-1 text-success">Código: @Html.DisplayTextFor(m => m.Codigo)</div>
+                <h1 class="display-5 fw-bolder">@Html.DisplayTextFor(m => m.Titulo)</h1> @*nombre del Libro*@
+                <div class="fs-5 mb-4">
+                    @*<span class="text-decoration-line-through">@Html.DisplayTextFor(m => m.Precio)</span>*@
+                    <span>@Html.DisplayTextFor(m => m.Ejemplares) Ejemplares disponibles</span>
+                </div>
+                <p class="lead">Sala: @Html.DisplayTextFor(m => m.oId_Sala.Descripcion)</p>
+
+                <p class="lead">Editorial: @Html.DisplayTextFor(m => m.oId_Editorial.Descripcion)</p>
+                <p class="lead">Categoría: @Html.DisplayTextFor(m => m.oId_Categoria.Descripcion)</p>
+                <p class="lead">@Html.DisplayTextFor(m => m.Paginas) páginas, volúmen @Html.DisplayTextFor(m => m.Volumen), edición: @Html.DisplayTextFor(m => m.AñoEdicion) </p>
+
+                <div class="d-flex">
+                    <a href="@Url.Action("Index", "Biblioteca")" class="btn btn-danger w-50 text-center me-3">
+                        @*margin end de 3*@
+                        <i class="fas fa-undo-alt"></i> Volver
+                    </a>
+                    @if (Session["Lector"] != null)
+                    {
+                        <button class="btn btn-success agregarcarrito flex-shink-0 w-50" type="button" data-idLibro="@Html.DisplayTextFor(m => m.IdLibro)">
+                            <i class="fas fa-cart-plus"></i> Agregar al carrito
+                        </button>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section scripts{
+
+    <script>
+        $(document).on("click", "button.agregarcarrito", function () {//boton agregar carrito
+            console.log($(this).data("idLibro"))//en este caso solo se pudo con idLibro minusculas
+            jQuery.ajax({
+                url: "@Url.Action("AgregarCarrito", "Biblioteca")",
+                type: "POST", //si categoria envia 0 muestra todas las marcas
+                //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
+                //el identificador idLibro debe ser igual al del metodo declaado en su parametro
+                data: JSON.stringify({ idLibro: $(this).data("idLibro") }),//Se envia el valor para el parametro tipo int a utilizar
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    //data.respuesta es lo que retorna el metodo agregarCarrito
+                    if (data.respuesta) {
+                        MostrarCantidadCarrito();//Este metodo esta declarado en layout, en la master page, entoncees aunque no estemos en la misma vista
+                        //pdemos acceder a este metodo porque layout es la master page y este index es un contenido del mismo (porque index de Biblioteca esta referenciado al layout)
+                        @*swal({
+                            title: "Agregado al carrito",
+                            text: "¿Desea ir al carrito?",
+                            type: "success",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-primary",
+                            confirmButtonText: "Si",
+                            cancelButtonText: "No",
+                            closeOnConfirm: true
+                        }, function () {
+                            //redirige al carrito
+                            window.location.href = '@Url.Action("Carrito","Biblioteca")'
+                        })*@
+                        swal("", "Agregado al carrito", "success");
+                    } else {
+                        swal("", data.mensaje, "warning");//el mensaje se esta obteniendo de data
+                    }
+                }
+            });
+        })
+    </script>
+
+}

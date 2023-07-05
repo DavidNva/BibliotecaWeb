@@ -22,21 +22,21 @@ namespace CapaPresentacionConsulta.Controllers
         {
             return View();
         }
-        //public ActionResult DetalleLibro(int idLibro = 0)//por default recibe 0
-        //{
-        //    EN_Libro oLibro = new EN_Libro();
-        //    bool conversion;
+        public ActionResult DetalleLibro(int idLibro = 0)//por default recibe 0
+        {
+            EN_Libro oLibro = new EN_Libro();
+            bool conversion;
 
-        //    oLibro = new RN_Libro().Listar().Where(p => p.IdLibro == idLibro).FirstOrDefault();//El id a encontrar debe ser el especificado como parametro
+            oLibro = new RN_Libro().Listar().Where(p => p.IdLibro == idLibro).FirstOrDefault();//El id a encontrar debe ser el especificado como parametro
 
-        //    if (oLibro != null)
-        //    {//Actualiza la extension
-        //        oLibro.Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oLibro.RutaImagen, oLibro.NombreImagen), out conversion);
-        //        oLibro.Extension = Path.GetExtension(oLibro.NombreImagen);
-        //    }
+            if (oLibro != null)
+            {//Actualiza la extension
+                oLibro.Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oLibro.RutaImagen, oLibro.NombreImagen), out conversion);
+                oLibro.Extension = Path.GetExtension(oLibro.NombreImagen);
+            }
 
-        //    return View(oLibro);
-        //}
+            return View(oLibro);
+        }
 
         [HttpGet]
         public JsonResult ListarCategorias()
