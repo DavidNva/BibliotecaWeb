@@ -12,8 +12,8 @@ namespace CapaDatos
 {
     public class BD_Carrito
     {
-        //si realmente existen un producto dentro de un carrito de un Lector
-        public bool ExisteCarrito(int idLector, int idProducto)//out indica parametro de salida
+        //si realmente existen un Libro dentro de un carrito de un Lector
+        public bool ExisteCarrito(int idLector, int idLibroEjemplar)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -23,7 +23,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_ExisteCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdProducto", idProducto);
+                    cmd.Parameters.AddWithValue("IdLibroEjemplar", idLibroEjemplar);
 
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -45,7 +45,7 @@ namespace CapaDatos
 
         }
 
-        public bool OperacionCarrito(int idLector, int idProducto, bool sumar, out string Mensaje)//out indica parametro de salida
+        public bool OperacionCarrito(int idLector, int idEjemplarLibro, bool sumar, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -56,7 +56,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_OperacionCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdProducto", idProducto);
+                    cmd.Parameters.AddWithValue("IddEjemplarLibro", idEjemplarLibro);
                     cmd.Parameters.AddWithValue("Sumar", sumar);
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -78,7 +78,7 @@ namespace CapaDatos
             return resultado;
 
         }
-        // public bool ExisteCarrito(int idLector, int idProducto)
+        // public bool ExisteCarrito(int idLector, int idLibro)
         public int CantidadEnCarrito(int idLector)//out indica parametro de salida
         {
             int resultado = 0;
@@ -102,7 +102,7 @@ namespace CapaDatos
         }
 
         //Para carrito + o -
-        //public List<EN_Carrito> ListarProducto(int idLector)
+        //public List<EN_Carrito> ListarLibro(int idLector)
         //{
         //    List<EN_Carrito> lista = new List<EN_Carrito>();
         //    try
@@ -120,12 +120,12 @@ namespace CapaDatos
         //            {
         //                while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
         //                {
-        //                    lista.Add(/*Agrega una nueva Producto la lista*/
+        //                    lista.Add(/*Agrega una nueva Libro la lista*/
         //                        new EN_Carrito()
         //                        {
-        //                            oId_Producto = new EN_Producto()
+        //                            oId_Libro = new EN_Libro()
         //                            {
-        //                                IdProducto = Convert.ToInt32(dr["IdProducto"]),
+        //                                IdLibro = Convert.ToInt32(dr["IdLibro"]),
         //                                oId_Marca = new EN_Marca() { Descripcion = dr["DesMarca"].ToString() },
         //                                Nombre = dr["Nombre"].ToString(),
         //                                Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-MX")),//Indica que los decimales los trabaje con puntos
@@ -148,7 +148,7 @@ namespace CapaDatos
         //    return lista;
         //}
 
-        public bool EliminarCarrito(int idLector, int idProducto)//out indica parametro de salida
+        public bool EliminarCarrito(int idLector, int idEjemplarLibro)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -158,7 +158,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_EliminarCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdProducto", idProducto);
+                    cmd.Parameters.AddWithValue("IdEjemplarLibro", idEjemplarLibro);
 
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;

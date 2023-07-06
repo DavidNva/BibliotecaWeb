@@ -1517,7 +1517,7 @@ end
 go 
 create proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un producto a un carrito
     @IdLector int,
-    @IdLibro int,--solo se utiliza para la parte de sumar o restar ejemplares a la tabla libro
+   -- @IdLibros int,--solo se utiliza para la parte de sumar o restar ejemplares a la tabla libro
     @IdEjemplarLibro int, --funcionará para ser el prestamo, 
     @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
     @Mensaje varchar(500) output,
@@ -1529,7 +1529,15 @@ begin
     set @Mensaje = '' 
     --si en verdad existe una relacion con id Lector y idLibro en la tabla carrito
     declare @existeCarrito bit =  iif(exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdEjemplarLibro),1,0)
-    declare @stockLibro int = (select Ejemplares from Libro where IdLibro=  @IdLibro)--obtener el stock actual  del producto de acuerdo al que estamos solicitando
+    --declare @stockLibro int = (select Ejemplares from Libro where IdLibro=  @IdLibro)--obtener el stock actual  del producto de acuerdo al que estamos solicitando
+    declare @idlibro int = (select IDLibro from Libro 
+    inner join Ejemplar on libro.IDLibro = Ejemplar.ID_Libro
+    where IDEjemplarLibro = @IdEjemplarLibro)
+
+    declare @stockLibro int = (select ejemplares from Libro 
+    inner join Ejemplar on libro.IDLibro = Ejemplar.ID_Libro
+    where IDEjemplarLibro =  @IdEjemplarLibro)--obtener el stock actual  del producto de acuerdo al que estamos solicitando
+
 
     BEGIN TRY --capturador de errores
         BEGIN TRANSACTION OPERACION 
@@ -1543,7 +1551,8 @@ begin
                 else --y si todavia no exista en el carrito, insertamos un nuevo valor a carrito
                     insert into Carrito(IdLector, IdEJemplarLibro, Cantidad) values (@IdLector, @IdEjemplarLibro, 1)
                 
-                update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --si lo anterior fue bien, resta 1 a stock de la tabla producto
+                update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @idlibro --si lo anterior fue bien, resta 1 a stock de la tabla producto
+                --ese idlibro (en minusculas) fue traido del inner join con el idejemplar            
             end 
             else --en el caso de que el stock del libro no se mayor a 0
             begin --envia el siguiente error
@@ -1555,7 +1564,7 @@ begin
         --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este producto
         begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idproducto
             update Carrito set Cantidad =  Cantidad - 1 where IdLector = @IdLector  and IdEjemplarLibro = @IdEjemplarLibro
-            update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro --y actualiza el stock con un + 1 
+            update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @idlibro --y actualiza el stock con un + 1 
         end 
         --todo lo anterior lo ejecuta temporalmente, pero cuando llega a esta linea lo qu hace es guardar los cambios ya definitivos
         COMMIT TRANSACTION OPERACION --indica que toda operacion que se haya realizado se va a guardar los cambios

@@ -240,7 +240,7 @@ CREATE TABLE Carrito(
 go
 
 CREATE TABLE Ejemplar(
-    IDEjemplarLibro int  not null CONSTRAINT PK_EjemplarLibro PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+    IDEjemplarLibro int identity not null CONSTRAINT PK_EjemplarLibro PRIMARY KEY,--Tiene un trigger para autogenerar codigo
     -- NumEjemplar int not null,
     --Llave foranea
     ID_Libro int not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 

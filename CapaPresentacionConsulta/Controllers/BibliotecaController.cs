@@ -96,34 +96,34 @@ namespace CapaPresentacionConsulta.Controllers
 
 
         //-----------------------------------------Metodos para carrito ---------------------------------------------
-        //[HttpPost]
-        //public JsonResult AgregarCarrito(int idLibro)
-        //{
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
-        //    //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
-        //    bool existe = new RN_Carrito().ExisteCarrito(idLector, idLibro); //Valida si existe el Libro dentro del carrito del Lector
+        [HttpPost]
+        public JsonResult AgregarCarrito(int idEjemplarLibro)
+        {
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
+            //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
+            bool existe = new RN_Carrito().ExisteCarrito(idLector, idEjemplarLibro); //Valida si existe el Libro dentro del carrito del Lector
 
-        //    bool respuesta = false;
-        //    string mensaje = string.Empty;
-        //    if (existe)
-        //    {
-        //        mensaje = "El Libro ya existe en el carrito";
-        //    }
-        //    else
-        //    {
-        //        respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, true, out mensaje);//true es igual sumar = 1
-        //    }
-        //    return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        //}
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            if (existe)
+            {
+                mensaje = "El Ejemplar del Libro ya existe en el carrito";
+            }
+            else
+            {
+                respuesta = new RN_Carrito().OperacionCarrito(idLector, idEjemplarLibro, true, out mensaje);//true es igual sumar = 1
+            }
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
-        //[HttpGet]
-        //public JsonResult CantidadEnCarrito()//devuelve la cantidad que tiene los Libros segun el carrito del Lector
-        //{
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;
-        //    int cantidad = new RN_Carrito().CantidadEnCarrito(idLector);
+        [HttpGet]
+        public JsonResult CantidadEnCarrito()//devuelve la cantidad que tiene los Libros segun el carrito del Lector
+        {
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+            int cantidad = new RN_Carrito().CantidadEnCarrito(idLector);
 
-        //    return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
+        }
 
         //[HttpPost]
         //public JsonResult ListarLibrosCarrito()
