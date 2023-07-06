@@ -160,7 +160,7 @@
         function MostrarLibros(_idCategoria, _idEditorial) { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
             jQuery.ajax({
-                url: "@Url.Action("ListarLibros", "Biblioteca")",
+                url: "@Url.Action("ListarEjemplarLibros", "Biblioteca")",
                 type: "POST", //si categoria envia 0 muestra todas las Editoriales
                 //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
                 data: JSON.stringify({ idCategoria: _idCategoria, idEditorial: _idEditorial }),//Se envia el valor para el parametro tipo int a utilizar
@@ -170,7 +170,7 @@
                     $("#contenedorLibro").html("");
                     $("#contenedorLibro").LoadingOverlay("hide");
 
-                    $.each(response.data, function (i, element) {//itera cada tipo de categoria
+                    $.each(response.data, function (i, element) {//itera cada tipo de Libro
                         $("<div>").addClass("col mb-5").append(
                             $("<div>").addClass("card h-100").append(
                                 $("<img>").addClass("card-img-top").attr({ "src": "data:image/" + element.Extension + ";base64," + element.Base64 }),

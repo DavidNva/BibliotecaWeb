@@ -1515,7 +1515,7 @@ begin
         set @Resultado = 0
 end 
 go 
-create proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un producto a un carrito
+create  proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un producto a un carrito
     @IdLector int,
    -- @IdLibros int,--solo se utiliza para la parte de sumar o restar ejemplares a la tabla libro
     @IdEjemplarLibro int, --funcionará para ser el prestamo, 

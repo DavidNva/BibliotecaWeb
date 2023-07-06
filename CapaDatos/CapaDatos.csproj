@@ -46,6 +46,7 @@
     <Compile Include="BD_Carrito.cs" />
     <Compile Include="BD_Categoria.cs" />
     <Compile Include="BD_Editorial.cs" />
+    <Compile Include="BD_Ejemplar.cs" />
     <Compile Include="BD_Lector.cs" />
     <Compile Include="BD_Libro.cs" />
     <Compile Include="BD_Reporte.cs" />

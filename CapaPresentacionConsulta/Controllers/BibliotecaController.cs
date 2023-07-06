@@ -57,13 +57,15 @@ namespace CapaPresentacionConsulta.Controllers
         }
 
         [HttpPost]
-        public JsonResult ListarLibros(string idCategoria, string idEditorial)//cambiamos de tipo int a string
+        public JsonResult ListarEjemplarLibros(string idCategoria, string idEditorial)//cambiamos de tipo int a string
         {
-            List<EN_Libro> lista = new List<EN_Libro>();
+            List<EN_Ejemplar> lista = new List<EN_Ejemplar>();
             bool conversion;
 
-            lista = new RN_Libro().Listar().Select(l => new EN_Libro()
+            lista = new RN_Ejemplar().Listar().Select(l => new EN_Ejemplar()
             {
+                IdEjemplarLibro = l.IdEjemplarLibro,
+                Id_Libro = l.Id_Libro,
                 IdLibro = l.IdLibro,
                 Codigo = l.Codigo,
                 Titulo = l.Titulo,
@@ -97,7 +99,7 @@ namespace CapaPresentacionConsulta.Controllers
 
         //-----------------------------------------Metodos para carrito ---------------------------------------------
         [HttpPost]
-        public JsonResult AgregarCarrito(int idEjemplarLibro)
+        public JsonResult AgregarCarrito(int idLibros, int idEjemplarLibro)
         {
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
             //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
@@ -111,19 +113,19 @@ namespace CapaPresentacionConsulta.Controllers
             }
             else
             {
-                respuesta = new RN_Carrito().OperacionCarrito(idLector, idEjemplarLibro, true, out mensaje);//true es igual sumar = 1
+                respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibros,idEjemplarLibro, true, out mensaje);//true es igual sumar = 1
             }
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpGet]
-        public JsonResult CantidadEnCarrito()//devuelve la cantidad que tiene los Libros segun el carrito del Lector
-        {
-            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
-            int cantidad = new RN_Carrito().CantidadEnCarrito(idLector);
+        //[HttpGet]
+        //public JsonResult CantidadEnCarrito()//devuelve la cantidad que tiene los Libros segun el carrito del Lector
+        //{
+        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+        //    int cantidad = new RN_Carrito().CantidadEnCarrito(idLector);
 
-            return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
+        //}
 
         //[HttpPost]
         //public JsonResult ListarLibrosCarrito()
