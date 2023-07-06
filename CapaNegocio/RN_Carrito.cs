@@ -11,16 +11,22 @@ namespace CapaNegocio
     {
         private BD_Carrito objCapaDato = new BD_Carrito(); /*Instancia una clase de la capa datos */
 
-        public bool ExisteCarrito(int idLector, int idLibroEjemplar)
+        //public bool ExisteCarrito(int idLector, int idLibroEjemplar)
+        //{
+        //    return objCapaDato.ExisteCarrito(idLector, idLibroEjemplar);
+        //}
+        public bool ExisteCarrito(int idLector, int idLibro)
         {
-            return objCapaDato.ExisteCarrito(idLector, idLibroEjemplar);
+            return objCapaDato.ExisteCarrito(idLector, idLibro); 
         }
-
-        public bool OperacionCarrito(int idLector,int idLibros ,int idEjemplarLibro, bool sumar, out string Mensaje)
+        //public bool OperacionCarrito(int idLector,int idLibros ,int idEjemplarLibro, bool sumar, out string Mensaje)
+        //{
+        //    return objCapaDato.OperacionCarrito(idLector, idLibros, idEjemplarLibro, sumar, out Mensaje);
+        //}
+        public bool OperacionCarrito(int idLector, int idLibro, bool sumar, out string Mensaje)
         {
-            return objCapaDato.OperacionCarrito(idLector, idLibros, idEjemplarLibro, sumar, out Mensaje);
+            return objCapaDato.OperacionCarrito(idLector, idLibro, sumar, out Mensaje);
         }
-
         public int CantidadEnCarrito(int idLector)
         {
             return objCapaDato.CantidadEnCarrito(idLector);

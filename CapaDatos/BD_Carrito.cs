@@ -13,7 +13,7 @@ namespace CapaDatos
     public class BD_Carrito
     {
         //si realmente existen un Libro dentro de un carrito de un Lector
-        public bool ExisteCarrito(int idLector, int idLibroEjemplar)//out indica parametro de salida
+        public bool ExisteCarrito(int idLector, int idLibro)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -23,7 +23,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_ExisteCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdLibroEjemplar", idLibroEjemplar);
+                    cmd.Parameters.AddWithValue("IdLibro", idLibro);
 
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -44,8 +44,7 @@ namespace CapaDatos
             return resultado;
 
         }
-
-        public bool OperacionCarrito(int idLector, int idLibros, int idEjemplarLibro, bool sumar, out string Mensaje)//out indica parametro de salida
+        public bool OperacionCarrito(int idLector, int idLibro, bool sumar, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -56,8 +55,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_OperacionCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdLibros", idLibros);//ya tiene el id del libro, que ya estuve relacionado con el idejemplarlibro
-                    cmd.Parameters.AddWithValue("IdEjemplarLibro", idEjemplarLibro);
+                    cmd.Parameters.AddWithValue("IdLibro", idLibro);//ya tiene el id del libro, que ya estuve relacionado con el idejemplarlibro
                     cmd.Parameters.AddWithValue("Sumar", sumar);
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -79,6 +77,40 @@ namespace CapaDatos
             return resultado;
 
         }
+        //public bool OperacionCarrito(int idLector, int idLibros, int idEjemplarLibro, bool sumar, out string Mensaje)//out indica parametro de salida
+        //{
+        //    bool resultado = true;
+
+        //    Mensaje = string.Empty;
+        //    try
+        //    {
+        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+        //        {
+        //            SqlCommand cmd = new SqlCommand("sp_OperacionCarrito", oConexion);
+        //            cmd.Parameters.AddWithValue("IdLector", idLector);
+        //            cmd.Parameters.AddWithValue("IdLibros", idLibros);//ya tiene el id del libro, que ya estuve relacionado con el idejemplarlibro
+        //            cmd.Parameters.AddWithValue("IdEjemplarLibro", idEjemplarLibro);
+        //            cmd.Parameters.AddWithValue("Sumar", sumar);
+        //            //Dos parametros de salida, un entero de resultaado y un string de mensaje
+        //            cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+        //            cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+        //            cmd.CommandType = CommandType.StoredProcedure;
+
+        //            oConexion.Open();
+        //            cmd.ExecuteNonQuery();
+        //            resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+        //            Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        resultado = false;
+        //        Mensaje = ex.Message;
+
+        //    }
+        //    return resultado;
+
+        //}
         // public bool ExisteCarrito(int idLector, int idLibro)
         public int CantidadEnCarrito(int idLector)//out indica parametro de salida
         {

@@ -118,7 +118,7 @@
         function MostrarEditorial() { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
             var _idCategoria = $("input[name=categoria]:checked").val()
-           
+
             jQuery.ajax({
                 url: "@Url.Action("ListarEditorialPorCategoria", "Biblioteca")",
                 type: "POST", //si categoria envia 0 muestra todas las Editoriales
@@ -160,7 +160,7 @@
         function MostrarLibros(_idCategoria, _idEditorial) { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
             jQuery.ajax({
-                url: "@Url.Action("ListarEjemplarLibros", "Biblioteca")",
+                url: "@Url.Action("ListarLibros", "Biblioteca")",
                 type: "POST", //si categoria envia 0 muestra todas las Editoriales
                 //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
                 data: JSON.stringify({ idCategoria: _idCategoria, idEditorial: _idEditorial }),//Se envia el valor para el parametro tipo int a utilizar
@@ -178,7 +178,8 @@
                                     $("<div>").addClass("text-center").append(
                                         $("<h5>").addClass("fw-bolder").text(element.Titulo),
                                         //"$" + element.Ejemplares.toFixed(2) + "Ejemplares disponibles" //para devolver solo dos decimales
-                                         element.Ejemplares + " Ejemplares disponibles" //para devolver solo dos decimales
+                                        element.Ejemplares + " Ejemplares disponibles" //para devolver solo dos decimales
+
                                     )
                                 ),
                                  $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
@@ -215,7 +216,7 @@
             console.log($(this).data("idLibro"))
             jQuery.ajax({
                 url: "@Url.Action("AgregarCarrito", "Biblioteca")",
-                type: "POST", //si categoria envia 0 muestra todas las Editoriales
+                type: "POST", //si categoria envia 0 muestra todas las marcas
                 //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
                 //el identificador idLibro debe ser igual al del metodo declaado en su parametro
                 data: JSON.stringify({ idLibro: $(this).data("idLibro") }),//Se envia el valor para el parametro tipo int a utilizar

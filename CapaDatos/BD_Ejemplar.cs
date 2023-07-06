@@ -22,11 +22,11 @@ namespace CapaDatos
                     sb.AppendLine("select distinct ej.IDEjemplarLibro, ej.Id_Libro, l.IdLibro, l.Codigo, l.Titulo, l.Paginas,c.IDCategoria, c.Descripcion[DesCategoria],");
                     sb.AppendLine("e.IDEditorial, e.Descripcion[DesEditorial], s.IDSala, s.Descripcion[DesSala],");
                     sb.AppendLine("l.Ejemplares,l.AñoEdicion, l.Volumen, l.RutaImagen, l.NombreImagen,l.Observaciones, l.Activo");
-                    sb.AppendLine("from Ejemplar l");
+                    sb.AppendLine("from Libro l");
                     sb.AppendLine("inner join Categoria c on c.IDCategoria = l.Id_Categoria");
                     sb.AppendLine("inner join Editorial e on e.IDEditorial = l.ID_Editorial");
                     sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala");
-                    sb.AppendLine("inner join Ejemplar ej on l.IDEjemplar = Ej.ID_Ejemplar order by l.IDEjemplar desc");
+                    sb.AppendLine("inner join Ejemplar ej on l.IDLibro = Ej.ID_Libro order by l.IDLibro desc");
 
                     //string query = "select IDEjemplar,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,Tipo,Reestablecer,Activo from Ejemplar";                    //string query = "select IDEjemplar,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,tp.IdTipoPersona,tp.Descripcion[Tipo],Reestablecer,Activo from Ejemplar inner join TipoPersona TP on tp.IdTipoPersona = Ejemplar.Tipo";
 

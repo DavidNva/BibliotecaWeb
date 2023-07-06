@@ -1515,10 +1515,9 @@ begin
         set @Resultado = 0
 end 
 go 
-create  proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un producto a un carrito
+create proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un Libro a un carrito
     @IdLector int,
-   -- @IdLibros int,--solo se utiliza para la parte de sumar o restar ejemplares a la tabla libro
-    @IdEjemplarLibro int, --funcionará para ser el prestamo, 
+    @IdLibro int, 
     @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
     @Mensaje varchar(500) output,
     @Resultado bit output
@@ -1528,43 +1527,34 @@ begin
     set @Resultado = 1
     set @Mensaje = '' 
     --si en verdad existe una relacion con id Lector y idLibro en la tabla carrito
-    declare @existeCarrito bit =  iif(exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdEjemplarLibro),1,0)
-    --declare @stockLibro int = (select Ejemplares from Libro where IdLibro=  @IdLibro)--obtener el stock actual  del producto de acuerdo al que estamos solicitando
-    declare @idlibro int = (select IDLibro from Libro 
-    inner join Ejemplar on libro.IDLibro = Ejemplar.ID_Libro
-    where IDEjemplarLibro = @IdEjemplarLibro)
-
-    declare @stockLibro int = (select ejemplares from Libro 
-    inner join Ejemplar on libro.IDLibro = Ejemplar.ID_Libro
-    where IDEjemplarLibro =  @IdEjemplarLibro)--obtener el stock actual  del producto de acuerdo al que estamos solicitando
-
+    declare @existeCarrito bit =  iif(exists(select * from carrito where IdLector = @IdLector and IdLibro = @IdLibro),1,0)
+    declare @EjemplaresLibro int = (select Ejemplares from Libro where IdLibro =  @IdLibro)--obtener el Ejemplares actual  del Libro de acuerdo al que estamos solicitando
 
     BEGIN TRY --capturador de errores
         BEGIN TRANSACTION OPERACION 
         if(@Sumar = 1)
         begin 
-            if(@stockLibro > 0)--validamos que el stock del libro sea mayor a 0 (que si haya libros disponibles)
+            if(@EjemplaresLibro > 0)--validamos que el Ejemplares del Libro sea mayor a 0 (que si haya Libros disponibles)
             begin 
                 if(@existeCarrito = 1) --verificamos entonces que si ya existe en el carrito
                 --en el caso de que ya existe, actualiza la cantidad con un mas 1
-                    update Carrito set Cantidad = Cantidad + 1 where IdLector = @IdLector and IdEjemplarLibro = @IdEjemplarLibro
+                    update Carrito set Cantidad = Cantidad + 1 where IdLector = @IdLector and IdLibro = @IdLibro
                 else --y si todavia no exista en el carrito, insertamos un nuevo valor a carrito
-                    insert into Carrito(IdLector, IdEJemplarLibro, Cantidad) values (@IdLector, @IdEjemplarLibro, 1)
+                    insert into Carrito(IdLector, IdLibro, Cantidad) values (@IdLector, @IdLibro, 1)
                 
-                update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @idlibro --si lo anterior fue bien, resta 1 a stock de la tabla producto
-                --ese idlibro (en minusculas) fue traido del inner join con el idejemplar            
+                update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --si lo anterior fue bien, resta 1 a Ejemplares de la tabla Libro
             end 
-            else --en el caso de que el stock del libro no se mayor a 0
+            else --en el caso de que el Ejemplares del Libro no se mayor a 0
             begin --envia el siguiente error
                 set @Resultado = 0
-                set @Mensaje = 'El Libro no cuenta con stock/ejemplar disponible'
+                set @Mensaje = 'El Libro no cuenta con Ejemplares disponible'
             end 
         end 
         else --si la suma no es igual a 1
-        --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este producto
-        begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idproducto
-            update Carrito set Cantidad =  Cantidad - 1 where IdLector = @IdLector  and IdEjemplarLibro = @IdEjemplarLibro
-            update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @idlibro --y actualiza el stock con un + 1 
+        --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este Libro
+        begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idLibro 
+            update Carrito set Cantidad =  Cantidad - 1 where IdLector = @IdLector  and IdLibro = @IdLibro
+            update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro --y actualiza el Ejemplares con un + 1 
         end 
         --todo lo anterior lo ejecuta temporalmente, pero cuando llega a esta linea lo qu hace es guardar los cambios ya definitivos
         COMMIT TRANSACTION OPERACION --indica que toda operacion que se haya realizado se va a guardar los cambios

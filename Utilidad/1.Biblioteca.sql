@@ -234,7 +234,7 @@ CREATE TABLE Carrito(
 	IdLector int references Lector(IdLector),
    --Este id libro,tendrá que ser el id del ejemplar 
 	--IdLibro int references Libro(IdLibro),
-  IdEjemplarLibro int references Ejemplar(IdEjemplarLibro),
+  IdLibro int references Libro(IdLibro),
 	Cantidad int--Cuantas unidades para este Libro esta seleccionando el Lector
 )
 go
