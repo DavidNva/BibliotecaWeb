@@ -262,12 +262,13 @@ namespace CapaPresentacionConsulta.Controllers
         //    oLista = new RN_Ubicacion().ObtenerDistrito(idProvincia, idDepartamento);
         //    return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
         //}
+
         //[ValidarSession]
         //[Authorize]
-        //public ActionResult Carrito()//Solo los que han iniciado sesión
-        //{
-        //    return View();
-        //}
+        public ActionResult Carrito()//Solo los que han iniciado sesión
+        {
+            return View();
+        }
 
         ////Boton de procesar pago
         //[HttpPost]

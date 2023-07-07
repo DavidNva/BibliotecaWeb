@@ -1,0 +1,570 @@
+﻿
+@{
+    ViewBag.Title = "Carrito";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5">
+    <div class="rov">
+        <div class="col-sm-12 ">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <!--Detalle del Libro-->
+                        <div class="col-sm-12 col-sm-12 col-md-9">
+                            <div class="me-2">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="ms-2 mt-2">Detalle Carrito</h5> @*redirige a la vista de inicio*@
+                                    <a class="btn btn-success" href="@Url.Action("Index","Biblioteca")"><i class="fas fa-cart-plus"></i> Seguir Consultando</a>
+                                </div>
+                                <hr class="mt-2 mb-2"/>
+                                <div id="LibrosCarrito" class="col-12 col-md-12" >
+                                    <div class="card mb-2 card-Libro ">
+                                        <div class="card-body">
+
+                                            <div class="row">
+                                                <div class="col-sm-2 align-self-center d-flex justify-content-center">@*para visualizar la imagen del Libro*@
+                                                    <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" style="width:100px; height:100px"/>
+
+                                                </div>
+
+                                                <div class="col-sm-4 align-self-center"> @*para visualizar la marca del Libro*@
+                                                    <span class="font-wight-bold d-block">Categoria</span>
+                                                    <span>Título del Libro</span>
+                                                </div>
+
+                                                <div class="col-sm-1 align-self-center"> @*para visualizar el precio del Libro*@
+                                                    <span>Cantidad: 0</span>
+                                                </div>
+
+                                                <!--<div class="col-sm-2 align-self-center">--> @*para aumentar la cantidad del Libro*@
+                                                    <!--<div class="d-flex">
+                                                        <button class="btn btn-outline-secondary btn-restar rounded-0">
+                                                            <i class="fas fa-minus"></i>
+                                                        </button>--> @*boton de restar*@
+                                                        
+                                                        <!--<input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px" />-->@*para visualizar la cantidad de Libros*@
+                                                        
+                                                        <!--<button class="btn btn-outline-secondary btn-sumar rounded-0">
+                                                            <i class="fas fa-plus"></i>
+                                                        </button>--> @*boton de sumar*@
+                                                    <!--</div>
+                                                </div>-->
+                                                @*<div class="mb-2">
+                                                    <label for="cmbProvincia" class="form-label">Provincia (Municipio): </label>
+                                                    <select class="form-select form-select-sm" id="cmbProvincia"></select>
+                                                </div>*@
+                                                 <div class="col-sm-3 mt-2">
+                                                     <label for="cbocategoria" class="form-label">Ejemplares disponibles:</label>
+                                                    <select id="cbocategoria" class="form-select" name="categoria">
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center mt-2"> @*para visualizar el precio del Libro*@
+                                                    <button class="btn btn-outline-danger btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button> @*boton de eliminar*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <label class="align-self-center"><b>Total de Ejemplares:  <span id="total">0</span></b></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Detalle de Envio-->
+                        <div class="col-sm-4 col-sm-12 col-md-3 mt-sm-1 mt-md-0">
+                            <div class="card">
+                                <div class="card-body bg-light">
+                                    <h5 class="card-title">Detalle Envio</h5>
+                                    <form>
+                                        <div class="mb-2">
+                                            <label for="cmbDepartamento" class="form-label">Departamento (Estado): </label>
+                                            <select class="form-select form-select-sm" id="cmbDepartamento"></select>
+                                        </div>
+                                        @*<div class="mb-2">
+                                        <label for="cmbProvincia" class="form-label">Provincia (Municipio): </label>
+                                        <select class="form-select form-select-sm" id="cmbProvincia"></select>
+                                    </div>*@
+                                        @*<div class="mb-2">
+                                            <label for="cbocategoria" class="form-label">Categoria</label>
+                                            <select id="cbocategoria" class="form-select" name="categoria">
+                                            </select>
+                                        </div>*@
+                                        <div class="mb-2">
+                                            <label for="cmbDistrito" class="form-label">Distrito (Localidad): </label>
+                                            <select class="form-select form-select-sm" id="cmbDistrito"></select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txtNombreContacto" class="form-label">Nombre Contacto: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtNombreContacto" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txtDireccion" class="form-label">Dirección: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtDireccion" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txtTelefono" class="form-label">Teléfono: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtTelefono" autocomplete="off">
+                                        </div>
+                                        <div class="d-grid">
+                                            <button class="btn btn-success" type="button" onclick="RealizarPago()">
+                                                <i class="fas fa-check-circle"></i> Realizar Préstamo
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            //ListarDepartamento();
+            //ListarProvincia();
+            //MostrarCategorias();
+            $("#cbocategoria").val($("#cbocategoria option:first").val());
+            MostrarCarrito();
+            //MostrarListaCategorias();
+            responsive: true
+           
+
+        })
+        function MostrarCarrito() {
+            jQuery.ajax({
+                url: '@Url.Action("ListarLibrosCarrito", "Biblioteca")',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {//una lista dentro de data
+                    $("#LibrosCarrito").html("");
+                    $("#LibrosCarrito").LoadingOverlay("hide");
+
+                    $.each(response.data, function (i, item) {
+                       /* console.log(i);*/
+                        $("<div>").addClass("card mb-2 card-Libro").append(
+                            $("<div>").addClass("card-body ").append(
+                                $("<div>").addClass("row").append(
+                                    //1
+                                    //$("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
+                                    $("<div>").addClass("col-12 col-sm-2 col-md-2 align-self-center d-flex justify-content-center").append(
+                                        $("<img>").addClass("rounded").attr({ "src": "data:image/" + item.oId_Libro.Extension + ";base64," + item.oId_Libro.Base64 })
+                                            .css({"width":"100%", "height":"auto"})
+                                    ),
+                                    //2
+                                    $("<div>").addClass("col-12  col-sm-4 align-self-center").append(
+                                        $("<span>").addClass("font-wight-bold d-block").text("Categoría: " + item.oId_Libro.oId_Categoria.Descripcion),
+                                        $("<span>").addClass("font-wight-bold d-block").text("Código: " + item.oId_Libro.Codigo),
+                                        $("<span>").text("Título: " + item.oId_Libro.Titulo)
+                                    ),
+                                    //3
+                                    $("<div>").addClass("col-sm-1 align-self-center").append(
+                                        //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
+                                        $("<span>").text(item.Cantidad)
+                                    ),
+                                    //4
+                                    $("<div>").addClass("col-12 col-sm-5 col-md-3  align-self-center mb-4").append(
+                                        $("<label>").addClass("form-label").text("Ejemplares disponibles:")/*.attr({ "for": "cbocategoria" + i})*/,
+                                        $("<select>").addClass("form-select desCategoria").attr({/* "id": "cbocategoria" + i,*/ "name": "categoria"})
+                                    ),
+
+                                    //<div class="mb-2">
+                                    //    <label for="cbocategoria" class="form-label">Categoria </label>
+                                    //    <select class="form-select" id="cbocategoria" name="categoria"></select>
+                                    //</div>
+
+                                    //<div class="mb-2">
+                                    //    <label for="cbocategoria" class="form-label">Categoria</label>
+                                    //    <select id="cbocategoria" class="form-select" name="categoria">
+                                    //    </select>
+                                    //</div>
+
+
+
+
+                                    //$("<div>").addClass("col-sm-3 align-self-center").append(
+                                    //    $("<label>").addClass("form-label").text("Ejemplares"),
+                                    //    $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar Ejemplares").appendTo("#cmbProvincia"),
+                                    //    $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar Ejemplares").appendTo("#cmbProvincia")
+                                    //),
+                                    //$("<div>").addClass("col-sm-2 align-self-center").append(
+                                    //    $("<div>").addClass("d-flex").append(
+                                    //        $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+
+                                    //        $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                    //            .css({ "width": "3em" })
+                                    //            .data("oId_Libro", item.oId_Libro)
+                                    //            .val(item.Cantidad),//almacena esta informacion dentro de la etiqueta
+
+                                    //        $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")),
+                                    //    )
+                                    //),
+                                    //5
+                                    $("<div>").addClass("col-sm-2 col-sm-12 col-md-2 align-self-center d-flex justify-content-end mt-2").append(
+
+                                        $("<button>").addClass("btn btn-outline-danger btn-eliminar").append($("<i>").addClass("fas fa-trash-alt"), " Eliminar")
+                                            .data("IdLibro", item.oId_Libro.IdLibro)
+                                    )
+                                    //5
+                                    //$("<div>").addClass("col-sm-2 align-self-center").append(
+                                    //    $("<button>").addClass("btn btn-outline-danger btn-eliminar btn-block").append($("<i>").addClass("fas fa-trash-alt"), " Eliminar")
+                                    //        .data("IdLibro", item.oId_Libro.IdLibro)
+                                    //)
+                                    //5
+                                    //$("<div>").addClass("col-sm-2 col-sm-12 col-md-2 align-self-center d-flex justify-content-end mt-1").append(
+                                    //$("<div>").addClass("col-sm-2 align-self-center mt-1").append(
+                                    //    $("<button>").addClass("btn btn-outline-danger btn-eliminar  btn-block").append($("<i>").addClass("fas fa-trash-alt"), " Eliminar")
+                                    //        .data("IdLibro", item.oId_Libro.IdLibro)
+                                    //)
+                                    //$("<div>").addClass("col-12 col-md-2 align-self-center d-flex justify-content-end mt-1").append(
+                                    //    $("<button>").addClass("btn btn-outline-danger btn-eliminar btn-block").append(
+                                    //        $("<i>").addClass("fas fa-trash-alt"), "Eliminar"
+                                    //    ).data("IdLibro", item.oId_Libro.IdLibro)
+                                    //)
+                                    //$("<div>").addClass("col-lg-2 col-md-4 col-sm-4 align-self-center text-right").append(
+                                    //    $("<button>").addClass("btn btn-outline-danger btn-eliminar btn-block").append(
+                                    //        $("<i>").addClass("fas fa-trash-alt"), "Eliminar"
+                                    //    ).data("IdLibro", item.oId_Libro.IdLibro)
+                                    //)
+                                )
+                            )
+                        ).appendTo("#LibrosCarrito")
+                    })
+                    sumarTotal();
+                    MostrarListaCategorias();
+                    
+                },
+                error: function (error) {
+                    $("#LibrosCarrito").LoadingOverlay("hide");
+                },
+                beforeSend: function () {
+                    $("#LibrosCarrito").LoadingOverlay("show");
+                }
+            })
+           
+        }
+        /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
+        function MostrarListaCategorias() {
+            jQuery.ajax({
+                url: '@Url.Action("ListarCategorias", "Biblioteca")',
+                type: "GET",
+                data: null,
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    $("<option>").attr({ "value": "T", "disabled": "true" }).text("Seleccionar").appendTo(".desCategoria");
+                    $(".desCategoria").val($(".desCategoria option:first").val());
+                    $.each(data.data, function (index, item) {
+
+                        $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo(".desCategoria");
+                    })
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        }
+
+        @*function MostrarCategorias() { /*muetsra todas las categorias dentro del mantenedor*/
+
+            jQuery.ajax({
+                url:"@Url.Action("ListarCategorias", "Biblioteca")",
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    /*Pasamos de este check a la forma de abajo
+                     * <div class="form-check">
+                          <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                          <label class="form-check-label" for="flexRadioDefault1">
+                            Default radio
+                          </label>
+                        </div>
+                     */
+                    $("#contenedorCategoria").LoadingOverlay("hide");
+                    $("<div>").addClass("form-check").append(//Creacion de checkBox's
+
+                        $("<input>").addClass("form-check-input").attr({ "type":"radio", "name":"categoria", "value":"T", "id":"cx", "checked":"checked" }),
+                        $("<label>").addClass("form-check-label").text("Todos").attr({ "for":"cx"})
+                    ).appendTo("#contenedorCategoria")//Implementado dentro del contenedorCategoria
+                    //porque el metodo de listar categoria data viene del json
+                    $.each(response.data, function (i, element) {//itera cada tipo de categoria
+                        $("<div>").addClass("form-check").append(
+
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "categoria", "value": element.IdCategoria, "id": "cx" + i}),
+                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "cx" + i })//Checar si vamos a cambiar el cx a c
+                        ).appendTo("#contenedorCategoria")
+                    })
+                    MostrarEditorial();
+                },
+                beforeSend: function () {
+                    $("#contenedorCategoria").LoadingOverlay("show");
+                }
+            })
+
+        }*@
+        function ListarDepartamento() {
+            //Aqui se colocan los atributos de html y opciones de valor, text, etc
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbDepartamento")
+            jQuery.ajax({
+                url: '@Url.Action("ObtenerDepartamento", "Biblioteca")',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.lista != null) {
+                        $.each(data.lista, function (i, item) {
+                            $("<option>").attr({ "value": item.IdDepartamento }).text(item.Descripcion).appendTo("#cmbDepartamento")
+                        })
+                    }
+                }
+            })
+        }
+
+        $("#cmbDepartamento").on("change", function () {
+            ListarProvincia();//Cada vez que cambia lista nuevamente las provincias
+        })
+
+        function ListarProvincia() {//Provincia = Municipio
+            $("#cmbProvincia").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
+            //Aqui se colocan los atributos de html y opciones de valor, text, etc
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbProvincia")
+
+            jQuery.ajax({
+                url: '@Url.Action("ObtenerProvincia", "Biblioteca")',
+                type: "POST",
+                data: JSON.stringify({ IdDepartamento: $("#cmbDepartamento option:selected").val() }),//pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.lista != null) {
+                        $.each(data.lista, function (i, item) {
+                            $("<option>").attr({ "value": item.IdProvincia }).text(item.Descripcion).appendTo("#cmbProvincia")
+                        })
+
+                        ListarDistrito();
+                    }
+                }
+            })
+        }
+
+        $("#cmbProvincia").on("change", function () {
+            ListarDistrito();//Cada vez que cambia lista nuevamente las provincias
+        })
+
+        function ListarDistrito() {//Distrito = Localidad
+            $("#cmbDistrito").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
+            //Aqui se colocan los atributos de html y opciones de valor, text, etc
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbDistrito")
+
+            jQuery.ajax({
+                url: '@Url.Action("ObtenerDistrito", "Biblioteca")',
+                type: "POST",
+                data: JSON.stringify({ IdProvincia: $("#cmbProvincia option:selected").val(), IdDepartamento: $("#cmbDepartamento option:selected").val() }),//pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.lista != null) {
+                        $.each(data.lista, function (i, item) {
+                            $("<option>").attr({ "value": item.IdDistrito }).text(item.Descripcion).appendTo("#cmbDistrito")
+                        })
+                    }
+                }
+            })
+        }
+
+        function sumarTotal() {//La suma total del precio de los Libros
+            var sumaTotal = parseFloat(0) //Va a empezar con el valor de 0
+            $("input.input-cantidad").each(function (i) {
+                //var precio = $(this).data("oId_Libro").Cantidad;
+                var cantidad = i.Cantidad;
+                console.log(cantidad);
+                var subTotal = cantidad;
+
+                sumaTotal += subTotal; //Va a sumar con el subtotal
+            })//input-cantidad esta declarada en el script para diseño y se trae la data que es la cantidad del Libro
+            //$("#total").text(sumaTotal.toFixed(2))//va a mostrar la suma total pero con dos decimales
+            $("#total").text(sumaTotal)//va a mostrar la suma total pero con dos decimales
+            $("#total").data("sumaTotal", sumaTotal)//Se le pasa toda la sumaTotal pero sin ninguno conversion para poder enviarlo mas adelante a la base de datos
+        }
+
+        //Esto es para aumentar el total de Libros y actualizar la suma total de los precios de esos Libros actuales en el carrito
+        $(document).on("click", ".btn-sumar", function () {//btn-sumar viene de la clase del diseño script de arriba
+
+                var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
+
+                var inputCantidad = $(divContenedor).find("input.input-cantidad");//encuentra un input con esa clase, obtiene el input cantidad
+
+                var btn = $(this);
+
+                var idLibro = $(inputCantidad).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
+
+                jQuery.ajax({
+                    url: '@Url.Action("OperacionCarrito", "Biblioteca")',
+                    type: "POST",
+                    //como se va a sumar colocamos true, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                    data: JSON.stringify({ idLibro: idLibro, sumar:true }),//pasamos los parametros que necesita este metodo
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $(btn).LoadingOverlay("hide")
+                        if (data.respuesta) {//si la respuesta es true
+                            var cantidad = parseInt($(inputCantidad).val()) + 1;//retorna el valor de inputCantidad en entero
+                            $(inputCantidad).val(cantidad)//Ahora la caja de texto tendrá un nuevo valor y sera la cantidad ya sumada 1+1 o 2+1, etc.
+                            sumarTotal();//vuelve a sumar total de los valores, actualiza el precio final
+                        } else {
+                            swal("", data.mensaje, "warning")
+                        }
+                    },
+                    beforeSend: function () {
+                        $(btn).LoadingOverlay("show")
+                    },
+                    error: function (error) {
+                        $(btn).LoadingOverlay("hide")
+                    }
+                })
+
+        })
+
+        //Esto es para restar el total de Libros y actualizar la resta total de los precios de esos Libros actuales en el carrito
+        $(document).on("click", ".btn-restar", function () {//btn-sumar viene de la clase del diseño script de arriba
+
+                var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
+
+                var inputCantidad = $(divContenedor).find("input.input-cantidad");//encuentra un input con esa clase, obtiene el input cantidad
+
+                var btn = $(this);
+
+                var idLibro = $(inputCantidad).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
+                var cantidad = parseInt($(inputCantidad).val()) - 1;//retorna el valor de inputCantidad en entero
+
+                if (cantidad >= 1) {//No debe ser 0 la cantidad en carrito o no tendria sentido
+                    jQuery.ajax({
+                        url: '@Url.Action("OperacionCarrito", "Biblioteca")',
+                        type: "POST",
+                        //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                        data: JSON.stringify({ idLibro: idLibro, sumar:false }),//pasamos los parametros que necesita este metodo
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+
+                            $(btn).LoadingOverlay("hide")
+                            if (data.respuesta) {//si la respuesta es true
+
+                                $(inputCantidad).val(cantidad)//Ahora la caja de texto tendrá un nuevo valor y sera la cantidad ya sumada 1+1 o 2+1, etc.
+                                sumarTotal();//vuelve a sumar total de los valores, actualiza el precio final
+                            } else {
+                                swal("", data.mensaje, "warning")
+                            }
+                        },
+                        beforeSend: function () {
+                            $(btn).LoadingOverlay("show")
+                        },
+                        error: function (error) {
+                            $(btn).LoadingOverlay("hide")
+                        }
+                    })
+                }
+        })
+        //Eliminar del carrito
+        $(document).on("click", ".btn-eliminar", function () {//btn-sumar viene de la clase del diseño script de arriba
+
+            var idLibro = $(this).data("IdLibro");//recordemos que el inputCantidad tiene data donde esta el idLibro
+            //el div.card-Libro es el contenedor todo este div que pertenezca (this) al boton que hemos presionado eliminar, será eliminado
+            var cardLibro = $(this).parents("div.card-Libro");//Parents para que Pueda obtener todas las etiquetas a un nivel superior
+
+            jQuery.ajax({
+                url: '@Url.Action("EliminarCarrito", "Biblioteca")',
+                type: "POST",
+                //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                data: JSON.stringify({ idLibro: idLibro}),//pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.respuesta) {//si la respuesta es true
+                        cardLibro.remove();//elimina el contenedor
+                        MostrarCantidadCarrito();//vuelve a mostrar la vista de carrito
+                        sumarTotal();//actualiza la suma total
+                    } else {
+                        swal("", data.mensaje, "warning")
+                    }
+                }
+            })
+        })
+
+        function RealizarPago() {
+            if (parseInt($("#cantidadCarrito").text()) == 0) {//Si la cantidad en carrito es igual a 0
+                swal("", "No existen Libros en el carrito", "warning");
+                return
+            }
+            if ($("#cmbDistrito").val() == null || $("#txtNombreContacto").val() == "" || $("#txtDireccion").val() == "" || $("#txtTelefono").val() == "") {
+                swal("", "Debe completar los datos de\ndetalle de Préstamo", "warning");
+                return
+            }
+            var venta = {
+                TotalLibro: $("input.input-cantidad").length,
+                MontoTotal: 0,
+                Contacto: $("#txtNombreContacto").val(),
+                IdDistrito: $("#cmbDistrito").val(),//Solo se pide distrito porque para que este exista antes ya debemos haber pasado el departamento y provincia
+                Telefono: $("#txtTelefono").val(),
+                Direccion: $("#txtDireccion").val()
+            }
+
+            var listaCarrito = [];//Por defecto esta lista estará vacia
+
+            $("input.input-cantidad").each(function () {//Se hará un recorrido a todos los controllers con estas caracteristicas
+
+                var Libro = $(this).data("oId_Libro");
+                var cantidad = parseFloat($(this).val())
+
+                listaCarrito.push({//para agregar elementos a esta lisra
+                    oId_Libro: Libro,
+                    Cantidad: cantidad
+                })
+            })
+
+            jQuery.ajax({
+                url: '@Url.Action("ProcesarPago", "Biblioteca")',
+                type: "POST",
+                //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                //pasamos la lista carrito creada  los datos de la venta
+                data: JSON.stringify({ oListaCarrito: listaCarrito, oVenta: venta }),
+                //pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $.LoadingOverlay("hide")
+                    if (data.Status) {//si la respuesta es true
+
+                        var jsonResult = data.Response;//Respuesta de la ejecucion del metodo procesar pago
+
+                        console.log(jsonResult);
+
+                        var links = jsonResult.links;
+
+                        var resultado = links.find(item => item.rel === "approve")
+
+                        window.location.href = resultado.href//url que proporciona paypal para realizar el pago
+                    } else {
+                        swal("", "Vuelva a intentarlo más tarde", "warning");
+                    }
+                },
+                beforeSend: function () { $.LoadingOverlay("show") },//mientras este ejecutando las operaciones
+                error: function (error) { $.LoadingOverlay("hide") }
+
+            })
+        }
+    </script>
+    }
+
