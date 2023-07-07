@@ -9,8 +9,8 @@ namespace CapaEntidad
     public class EN_Carrito
     {
         public int IdCarrito { get; set; }
-        public EN_Lector oId_Cliente { get; set; }
-        public EN_Libro oId_Producto { get; set; }
+        public EN_Lector oId_Lector { get; set; }
+        public EN_Libro oId_Libro { get; set; }
         public int Cantidad { get; set; }
     }
     /*

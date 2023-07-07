@@ -31,13 +31,13 @@ namespace CapaNegocio
         {
             return objCapaDato.CantidadEnCarrito(idLector);
         }
-        //public List<EN_Carrito> ListarProducto(int idLector)
-        //{
-        //    return objCapaDato.ListarProducto(idLector);
-        //}
-        public bool EliminarCarrito(int idLector, int idEjemplarLibro)
+        public List<EN_Carrito> ListarLibro(int idLector)
         {
-            return objCapaDato.EliminarCarrito(idLector, idEjemplarLibro);
+            return objCapaDato.ListarLibro(idLector);
+        }
+        public bool EliminarCarrito(int idLector, int idLibro)
+        {
+            return objCapaDato.EliminarCarrito(idLector, idLibro);
         }
     }
 }

@@ -135,53 +135,54 @@ namespace CapaDatos
         }
 
         //Para carrito + o -
-        //public List<EN_Carrito> ListarLibro(int idLector)
-        //{
-        //    List<EN_Carrito> lista = new List<EN_Carrito>();
-        //    try
-        //    {
-        //        using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-        //        {
-        //            string query = "select * from fn_obtenerCarritoLector(@idLector)";
+        public List<EN_Carrito> ListarLibro(int idLector)
+        {
+            List<EN_Carrito> lista = new List<EN_Carrito>();
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    string query = "select * from fn_obtenerCarritoLector(@idLector)";
 
-        //            SqlCommand cmd = new SqlCommand(query, oConexion);
-        //            cmd.Parameters.AddWithValue("@idLector", idLector);
-        //            cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@idLector", idLector);
+                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
 
-        //            oConexion.Open();
-        //            using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
-        //            {
-        //                while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
-        //                {
-        //                    lista.Add(/*Agrega una nueva Libro la lista*/
-        //                        new EN_Carrito()
-        //                        {
-        //                            oId_Libro = new EN_Libro()
-        //                            {
-        //                                IdLibro = Convert.ToInt32(dr["IdLibro"]),
-        //                                oId_Marca = new EN_Marca() { Descripcion = dr["DesMarca"].ToString() },
-        //                                Nombre = dr["Nombre"].ToString(),
-        //                                Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-MX")),//Indica que los decimales los trabaje con puntos
-        //                                //oId_Categoria = new EN_Categoria() { Descripcion = dr["Cantidad"].ToString() },
-        //                                RutaImagen = dr["RutaImagen"].ToString(),
-        //                                NombreImagen = dr["NombreImagen"].ToString()
-        //                            },
-        //                            Cantidad = Convert.ToInt32(dr["Cantidad"])
+                    oConexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
+                    {
+                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
+                        {
+                            lista.Add(/*Agrega una nueva Libro la lista*/
+                                new EN_Carrito()
+                                {
+                                    oId_Libro = new EN_Libro()     
+                                    {
+                                        IdLibro = Convert.ToInt32(dr["IdLibro"]),
+                                        Codigo = dr["Codigo"].ToString(),
+                                        oId_Categoria = new EN_Categoria() { Descripcion = dr["DesCategoria"].ToString() },
+                                        Titulo = dr["Titulo"].ToString(),
+                                        Ejemplares = Convert.ToInt32(dr["Ejemplares"]),//Indica que los decimales los trabaje con puntos
+                                        //oId_Categoria = new EN_Categoria() { Descripcion = dr["Cantidad"].ToString() },
+                                        RutaImagen = dr["RutaImagen"].ToString(),
+                                        NombreImagen = dr["NombreImagen"].ToString()
+                                    },
+                                    Cantidad = Convert.ToInt32(dr["Cantidad"])
 
-        //                        });
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        lista = new List<EN_Carrito>();
-        //    }
+                                });
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lista = new List<EN_Carrito>();
+            }
 
-        //    return lista;
-        //}
+            return lista;
+        }
 
-        public bool EliminarCarrito(int idLector, int idEjemplarLibro)//out indica parametro de salida
+        public bool EliminarCarrito(int idLector, int idLibro)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -191,7 +192,7 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_EliminarCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdEjemplarLibro", idEjemplarLibro);
+                    cmd.Parameters.AddWithValue("IdLibro", idLibro);
 
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;

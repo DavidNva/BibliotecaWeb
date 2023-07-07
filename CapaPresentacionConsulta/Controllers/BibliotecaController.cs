@@ -182,59 +182,59 @@ namespace CapaPresentacionConsulta.Controllers
             return Json(new { cantidad = cantidad }, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpPost]
-        //public JsonResult ListarLibrosCarrito()
-        //{
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
-        //    List<EN_Carrito> oLista = new List<EN_Carrito>();
-        //    bool conversion;
-        //    //por cada en_carrito que encuentre en la lista crea un nuevo carrito
-        //    oLista = new RN_Carrito().ListarLibro(idLector).Select(oc => new EN_Carrito()
-        //    {
-        //        oId_Libro = new EN_Libro()
-        //        {
-        //            IdLibro = oc.oId_Libro.IdLibro,
-        //            Codigo = oc.oId_Libro.Codigo,
-        //            Titulo = oc.oId_Libro.Titulo,
-        //            oId_Editorial = oc.oId_Libro.oId_Editorial,
-        //            Ejemplares = oc.oId_Libro.Ejemplares,//Esto se va a mostrar en el carrito de compras
-        //            RutaImagen = oc.oId_Libro.RutaImagen,
-        //            Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oc.oId_Libro.RutaImagen, oc.oId_Libro.NombreImagen), out conversion),
-        //            Extension = Path.GetExtension(oc.oId_Libro.NombreImagen)
+        [HttpPost]
+        public JsonResult ListarLibrosCarrito()
+        {
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
+            List<EN_Carrito> oLista = new List<EN_Carrito>();
+            bool conversion;
+            //por cada en_carrito que encuentre en la lista crea un nuevo carrito
+            oLista = new RN_Carrito().ListarLibro(idLector).Select(oc => new EN_Carrito()
+            {
+                oId_Libro = new EN_Libro()
+                {
+                    IdLibro = oc.oId_Libro.IdLibro,
+                    Codigo = oc.oId_Libro.Codigo,
+                    oId_Categoria = oc.oId_Libro.oId_Categoria,
+                    Titulo = oc.oId_Libro.Titulo,
+                    Ejemplares = oc.oId_Libro.Ejemplares,//Esto se va a mostrar en el carrito de compras
+                    RutaImagen = oc.oId_Libro.RutaImagen,
+                    Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oc.oId_Libro.RutaImagen, oc.oId_Libro.NombreImagen), out conversion),
+                    Extension = Path.GetExtension(oc.oId_Libro.NombreImagen)
 
-        //        },
-        //        Cantidad = oc.Cantidad
-        //    }).ToList();
-        //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
-        //}
+                },
+                Cantidad = oc.Cantidad
+            }).ToList();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
+        }
 
-        //[HttpPost]
-        //public JsonResult OperacionCarrito(int idLibro, bool sumar)
-        //{
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
-        //    //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
+        [HttpPost]
+        public JsonResult OperacionCarrito(int idLibro, bool sumar)//Va a permitir operar las cantidades del producto dentro del carrito
+        {
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
+            //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
 
-        //    bool respuesta = false;
-        //    string mensaje = string.Empty;
-        //    respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, sumar, out mensaje);//true es igual sumar = 1 = true, restar = 0 = false 
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, sumar, out mensaje);//true es igual sumar = 1 = true, restar = 0 = false 
 
-        //    return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
-        //[HttpPost]
-        //public JsonResult EliminarCarrito(int idLibro)
-        //{
+        [HttpPost]
+        public JsonResult EliminarCarrito(int idLibro)
+        {
 
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
 
-        //    bool respuesta = false;
+            bool respuesta = false;
 
-        //    string mensaje = string.Empty;
+            string mensaje = string.Empty;
 
-        //    respuesta = new RN_Carrito().EliminarCarrito(idLector, idLibro);
+            respuesta = new RN_Carrito().EliminarCarrito(idLector, idLibro);
 
-        //    return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
 
         //[HttpPost]
         //public JsonResult ObtenerDepartamento()

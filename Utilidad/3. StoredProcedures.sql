@@ -1502,14 +1502,28 @@ begin
 end
 go
 --Agregar al carrito
+-- create proc sp_ExisteCarrito( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
+--     @IdLector int, 
+--     @IdLibroEjemplar int, 
+--     @Resultado bit output
+-- )
+-- as 
+-- begin 
+--     if exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdLibroEjemplar)
+--         set @Resultado = 1
+--     else 
+--         set @Resultado = 0
+-- end 
+-- go 
+go
 create proc sp_ExisteCarrito( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
     @IdLector int, 
-    @IdLibroEjemplar int, 
+    @IdLibro int, 
     @Resultado bit output
 )
 as 
 begin 
-    if exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdLibroEjemplar)
+    if exists(select * from carrito where IdLector = @IdLector and IdLibro = @IdLibro)
         set @Resultado = 1
     else 
         set @Resultado = 0
@@ -1567,3 +1581,41 @@ begin
 
 end 
 go
+select * from fn_obtenerCarritoLector(1006)
+go
+---------------------------------------FUNCION PARA OBTENER CARRITO CLIENTE 
+create function fn_obtenerCarritoLector(
+    @idLector int 
+)
+returns table --una funcion de tipo tabla
+as 
+return (
+    select l.IdLibro,l.Codigo, ct.Descripcion[DesCategoria],l.Titulo, l.Ejemplares, c.Cantidad, l.RutaImagen, l.NombreImagen 
+    from carrito c
+    inner join Libro l on l.IdLibro = c.IdLibro
+    inner join Categoria ct on ct.IdCategoria = l.Id_Categoria
+    where c.IdLector = @idLector
+)
+GO
+---Procedimiento almacenado para eliminar del carrito
+create proc sp_EliminarCarrito(
+    @IdLector int, 
+    @IdLibro int, 
+    @Resultado bit output
+)
+as 
+begin 
+    set @Resultado = 1 --obtiene la cantidad de este Libro en carrito
+    declare @cantidadLibro int  = (select Cantidad from Carrito where IdLector = @IdLector and IdLibro = @IdLibro)
+
+    BEGIN TRY --inicia una transaccion
+        BEGIN TRANSACTION OPERACION 
+        update Libro set Ejemplares = Ejemplares + @cantidadLibro where IdLibro = @IdLibro --actualiza el stock del Libro + 1
+        delete top(1) from Carrito where IdLector = @IdLector and IdLibro = @IdLibro --y eliminamos ese Libro en la tabla carrito
+        COMMIT TRANSACTION OPERACION 
+    END TRY 
+    BEGIN CATCH --si existe un error
+        set @Resultado = 0
+        ROLLBACK TRANSACTION OPERACION  --reestablece todo lo que hayamos hecho antes
+    END CATCH
+end
