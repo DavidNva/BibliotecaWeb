@@ -11,9 +11,13 @@ namespace CapaNegocio
     {
         private BD_Ejemplar objCapaDato = new BD_Ejemplar();
 
-        public List<EN_Ejemplar> Listar() /*Usa una clase de la capa entidad*/
+        //public List<EN_Ejemplar> Listar() /*Usa una clase de la capa entidad*/
+        //{
+        //    return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
+        //}
+        public List<EN_Ejemplar> ListarEjemplarLibro(int idlibro)
         {
-            return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
+            return objCapaDato.ListarEjemplarLibro(idlibro);
         }
     }
 }

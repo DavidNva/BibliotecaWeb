@@ -244,7 +244,8 @@ CREATE TABLE Ejemplar(
     -- NumEjemplar int not null,
     --Llave foranea
     ID_Libro int not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
-    REFERENCES Libro(IdLibro) ON DELETE CASCADE ON UPDATE CASCADE --Tiene un indice unico: ID_Libro
+    REFERENCES Libro(IdLibro) ON DELETE CASCADE ON UPDATE CASCADE, --Tiene un indice unico: ID_Libro,
+    Activo bit default 1
     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
     -- /*
 --       Ocurre lo mismo con Ejemplar

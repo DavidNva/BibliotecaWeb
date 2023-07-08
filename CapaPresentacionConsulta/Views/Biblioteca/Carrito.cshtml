@@ -20,7 +20,7 @@
                                 <hr class="mt-2 mb-2"/>
                                 <div id="LibrosCarrito" class="col-12 col-md-12" >
                                     <div class="card mb-2 card-Libro ">
-                                        <div class="card-body">
+                                        <div class="card-body row-libro">
 
                                             <div class="row">
                                                 <div class="col-sm-2 align-self-center d-flex justify-content-center">@*para visualizar la imagen del Libro*@
@@ -134,7 +134,7 @@
             MostrarCarrito();
             //MostrarListaCategorias();
             responsive: true
-           
+
 
         })
         function MostrarCarrito() {
@@ -148,15 +148,16 @@
                     $("#LibrosCarrito").LoadingOverlay("hide");
 
                     $.each(response.data, function (i, item) {
-                       /* console.log(i);*/
+                        /* console.log(i);*/
+                        //MostrarListaCategorias();
                         $("<div>").addClass("card mb-2 card-Libro").append(
-                            $("<div>").addClass("card-body ").append(
-                                $("<div>").addClass("row").append(
+                            $("<div>").addClass("card-body row-libro").append(
+                                $("<div>").addClass("row ").append(
                                     //1
                                     //$("<div>").addClass("col-sm-2 align-self-center d-flex justify-content-center").append(
                                     $("<div>").addClass("col-12 col-sm-2 col-md-2 align-self-center d-flex justify-content-center").append(
                                         $("<img>").addClass("rounded").attr({ "src": "data:image/" + item.oId_Libro.Extension + ";base64," + item.oId_Libro.Base64 })
-                                            .css({"width":"100%", "height":"auto"})
+                                            .css({ "width": "100%", "height": "auto" })
                                     ),
                                     //2
                                     $("<div>").addClass("col-12  col-sm-4 align-self-center").append(
@@ -167,13 +168,19 @@
                                     //3
                                     $("<div>").addClass("col-sm-1 align-self-center").append(
                                         //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
-                                        $("<span>").text(item.Cantidad)
+                                        $("<span>").addClass("input-cantidad").data("IdLibro", item.oId_Libro.IdLibro).val(item.Cantidad).text("1")
                                     ),
                                     //4
                                     $("<div>").addClass("col-12 col-sm-5 col-md-3  align-self-center mb-4").append(
                                         $("<label>").addClass("form-label").text("Ejemplares disponibles:")/*.attr({ "for": "cbocategoria" + i})*/,
-                                        $("<select>").addClass("form-select desCategoria").attr({/* "id": "cbocategoria" + i,*/ "name": "categoria"})
+                                        $("<select>").addClass("form-select desCategoria select-des").attr({/* "id": "cbocategoria" + i,*/ "name": "categoria" }).data("IdLibro", item.oId_Libro.IdLibro)
+                                        
                                     ),
+                                    
+                                    //$("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                    //    .css({ "width": "40px" })
+                                    //    .data("oId_Producto", item.oId_Producto)
+                                    //    .val(item.Cantidad),//almacena esta informacion dentro de la etiqueta
 
                                     //<div class="mb-2">
                                     //    <label for="cbocategoria" class="form-label">Categoria </label>
@@ -236,10 +243,11 @@
                                 )
                             )
                         ).appendTo("#LibrosCarrito")
+
                     })
                     sumarTotal();
-                    MostrarListaCategorias();
-                    
+                    //MostrarListaCategorias();
+
                 },
                 error: function (error) {
                     $("#LibrosCarrito").LoadingOverlay("hide");
@@ -248,14 +256,25 @@
                     $("#LibrosCarrito").LoadingOverlay("show");
                 }
             })
-           
+
         }
+        $(document).on("click", ".select-des", function () {
         /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
-        function MostrarListaCategorias() {
+        //function MostrarListaCategorias() {
+
+            //var inputCantidad = $(divContenedor).find("input.input-cantidad")");//encuentra un input con esa clase, obtiene el input cantidad
+            //var inputCantidad = $(divContenedor).find("span.input-cantidad");
+            //var idLibro = $(".input-cantidad").data("IdLibro");
+            //.data("IdLibro", item.oId_Libro.IdLibro)
+            //var idLibro = $("button.btn-eliminar").data("IdLibro");
+            //var idLibro = $(inputLibro).data("IdLibro");//recordemos que el inputCantidad tiene data donde esta el idLibro
+            var idLibro = $(this).data("IdLibro");
+            //var idLibro = $(this).data("IdLibro"); /
+            console.log(idLibro)
             jQuery.ajax({
-                url: '@Url.Action("ListarCategorias", "Biblioteca")',
-                type: "GET",
-                data: null,
+                url: '@Url.Action("ListarEjemplarLibro", "Biblioteca")',
+                type: "POST",
+                data: JSON.stringify({ idLibro: idLibro }),
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
@@ -264,15 +283,52 @@
                     $(".desCategoria").val($(".desCategoria option:first").val());
                     $.each(data.data, function (index, item) {
 
-                        $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo(".desCategoria");
+                        $("<option>").attr({ "value": item.IdEjemplarLibro }).text(item.IdEjemplarLibro).appendTo(".desCategoria");
+                       
                     })
+                    //console.log(data.IdLibro)
                 },
                 error: function (error) {
                     console.log(error)
                 }
             });
-        }
+        })
+        @*function MostrarEditorial() { /*muestra la Editorial de acuerdo a la categoria seleccionada*/
 
+            var _idCategoria = $("input[name=categoria]:checked").val()
+
+            jQuery.ajax({
+                url: "@Url.Action("ListarEditorialPorCategoria", "Biblioteca")",
+                type: "POST", //si categoria envia 0 muestra todas las Editoriales
+                data: JSON.stringify({ idCategoria: _idCategoria }),//Se envia el valor para el parametro tipo int a utilizar
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    $("#contenedorEditorial").html("");//Antes de que vuelva a pintar todas las Editoriales, limpia todo el contenedor, de esta forma cada vez que actualicemos
+                    //va a tener en inicio el contenedor vacio y pinta nuevamente todos los elementos de las Editoriales
+                    //console.log(_idcategoria);
+                    $("#contenedorEditorial").LoadingOverlay("hide");
+                    $("<div>").addClass("form-check").append(
+
+                        $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "editorial", "value": "T", "id": "mx", "checked": "checked" }),
+                        $("<label>").addClass("form-check-label").text("Todos").attr({ "for": "mx" })
+                    ).appendTo("#contenedorEditorial")
+                    //porque el metodo de listar categoria data viene del json
+                    $.each(response.data, function (i, element) {//itera cada tipo de categoria
+                        $("<div>").addClass("form-check").append(
+
+                            $("<input>").addClass("form-check-input").attr({ "type": "radio", "name": "editorial", "value": element.IdEditorial, "id": "m" + i }),
+                            $("<label>").addClass("form-check-label").text(element.Descripcion).attr({ "for": "m" + i })
+                        ).appendTo("#contenedorEditorial")
+                    })
+                },
+                beforeSend: function () {
+                    $("#contenedorEditorial").LoadingOverlay("show");
+                }
+            })*@
+           // console.log(_idcategoria);
+
+        //}
         @*function MostrarCategorias() { /*muetsra todas las categorias dentro del mantenedor*/
 
             jQuery.ajax({
@@ -311,7 +367,8 @@
             })
 
         }*@
-        function ListarDepartamento() {
+        
+            function ListarDepartamento() {
             //Aqui se colocan los atributos de html y opciones de valor, text, etc
             $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbDepartamento")
             jQuery.ajax({

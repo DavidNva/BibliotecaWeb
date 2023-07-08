@@ -134,9 +134,29 @@ namespace CapaPresentacionConsulta.Controllers
 
 
         //-----------------------------------------Metodos para carrito ---------------------------------------------
+        #region CARRITO
+        //[HttpGet]
+        //public JsonResult ListarejemplaresLibro()
+        //{
+        //    List<EN_Ejemplar> lista = new List<EN_Ejemplar>();//una lista para Ejemplars posibles a filtrar
+        //    lista = new RN_Ejemplar().ListarEjemplarLibro();//Devuelve la lista de Ejemplars actuales
+
+        //    return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        //}
+        //public int idLibros;
+        [HttpPost]
+        public JsonResult ListarEjemplarLibro(int idLibro)
+        {
+            List<EN_Ejemplar> lista = new List<EN_Ejemplar>();//una lista para categorias posibles a filtrar
+            lista = new RN_Ejemplar().ListarEjemplarLibro(idLibro);//Devuelve la lista de categorias actuales
+
+            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+        }
+        
         [HttpPost]
         public JsonResult AgregarCarrito(int idLibro)
         {
+            //idLibros = idLibro;
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
             //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
             bool existe = new RN_Carrito().ExisteCarrito(idLector, idLibro); //Valida si existe el Libro dentro del carrito del Lector
@@ -235,7 +255,7 @@ namespace CapaPresentacionConsulta.Controllers
 
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion
         //[HttpPost]
         //public JsonResult ObtenerDepartamento()
         //{
