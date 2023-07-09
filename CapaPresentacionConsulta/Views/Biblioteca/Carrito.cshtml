@@ -68,7 +68,7 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end">
-                                    <label class="align-self-center"><b>Total de Ejemplares:  <span id="total">0</span></b></label>
+                                    <label class="align-self-center"><b>Total de Ejemplares: <span id="total">0</span></b></label>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +174,21 @@
                                     //3
                                     $("<div>").addClass("col-sm-1 align-self-center").append(
                                         //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
-                                        $("<span>").addClass("input-cantidad").data("IdLibroSelect", item.oId_Libro.IdLibro).val(item.Cantidad).text("1")
+                                        $("<span>").addClass("span-cantidad").text(item.Cantidad)
+                                    ),
+                                   
+                                    //4
+                                    $("<div>").addClass("col-sm-2 align-self-center").append(
+                                        $("<div>").addClass("d-flex").append(
+                                            $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+
+                                            $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                                .css({ "width": "40px" })
+                                                .data("oId_Libro", item.oId_Libro)
+                                                .val(item.Cantidad),//almacena esta informacion dentro de la etiqueta
+
+                                            $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")),
+                                        )
                                     ),
                                     //data("idLibro", item.IdLibro)
                                     //4
@@ -452,7 +466,7 @@
 
         }*@
 
-            function ListarDepartamento() {
+            @*function ListarDepartamento() {
             //Aqui se colocan los atributos de html y opciones de valor, text, etc
             $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbDepartamento")
             jQuery.ajax({
@@ -522,19 +536,33 @@
                     }
                 }
             })
-        }
+        }*@
 
+        //function sumarTotal() {//La suma total del precio de los Libros
+        //    var sumaTotal = parseFloat(0) //Va a empezar con el valor de 0
+        //    $("input.input-cantidad").each(function (i) {
+        //        //var precio = $(this).data("oId_Libro").Cantidad;
+        //        var cantidad = i.Cantidad;
+        //        console.log(cantidad);
+        //        var subTotal = cantidad;
+
+        //        sumaTotal += subTotal; //Va a sumar con el subtotal
+        //    })//input-cantidad esta declarada en el script para diseño y se trae la data que es la cantidad del Libro
+        //    //$("#total").text(sumaTotal.toFixed(2))//va a mostrar la suma total pero con dos decimales
+        //    $("#total").text(sumaTotal)//va a mostrar la suma total pero con dos decimales
+        //    $("#total").data("sumaTotal", sumaTotal)//Se le pasa toda la sumaTotal pero sin ninguno conversion para poder enviarlo mas adelante a la base de datos
+        //}
         function sumarTotal() {//La suma total del precio de los Libros
             var sumaTotal = parseFloat(0) //Va a empezar con el valor de 0
             $("input.input-cantidad").each(function (i) {
-                //var precio = $(this).data("oId_Libro").Cantidad;
-                var cantidad = i.Cantidad;
-                console.log(cantidad);
-                var subTotal = cantidad;
+                //var precio = $(this).data("oId_Libro").IdLibro;
+                //var variable = 1;
+                var cantidad = $(this).val()
+
+                var subTotal = 1 * cantidad;
 
                 sumaTotal += subTotal; //Va a sumar con el subtotal
             })//input-cantidad esta declarada en el script para diseño y se trae la data que es la cantidad del Libro
-            //$("#total").text(sumaTotal.toFixed(2))//va a mostrar la suma total pero con dos decimales
             $("#total").text(sumaTotal)//va a mostrar la suma total pero con dos decimales
             $("#total").data("sumaTotal", sumaTotal)//Se le pasa toda la sumaTotal pero sin ninguno conversion para poder enviarlo mas adelante a la base de datos
         }
