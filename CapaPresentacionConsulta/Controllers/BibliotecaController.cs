@@ -144,15 +144,26 @@ namespace CapaPresentacionConsulta.Controllers
         //    return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         //}
         //public int idLibros;
+
         [HttpPost]
         public JsonResult ListarEjemplarLibro(int idLibro)
         {
+            //int idLibros = ((EN_Libro)Session["Lector"]).IdLibro;
             List<EN_Ejemplar> lista = new List<EN_Ejemplar>();//una lista para categorias posibles a filtrar
             lista = new RN_Ejemplar().ListarEjemplarLibro(idLibro);//Devuelve la lista de categorias actuales
 
-            return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+            return Json(new { lista = lista }, JsonRequestBehavior.AllowGet);
         }
-        
+
+
+        //[HttpPost]
+        //public JsonResult ObtenerProvincia(string idDepartamento)//Con parametros
+        //{
+        //    List<EN_Provincia> oLista = new List<EN_Provincia>();
+
+        //    oLista = new RN_Ubicacion().ObtenerProvincia(idDepartamento);
+        //    return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
+        //}
         [HttpPost]
         public JsonResult AgregarCarrito(int idLibro)
         {
@@ -205,9 +216,15 @@ namespace CapaPresentacionConsulta.Controllers
         [HttpPost]
         public JsonResult ListarLibrosCarrito()
         {
+
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
             List<EN_Carrito> oLista = new List<EN_Carrito>();
             bool conversion;
+
+
+            //List<EN_Ejemplar> lista = new List<EN_Ejemplar>();//una lista para categorias posibles a filtrar
+            //lista = new RN_Ejemplar().ListarEjemplarLibro(idLibro);//Devuelve la lista de categorias actuales
+
             //por cada en_carrito que encuentre en la lista crea un nuevo carrito
             oLista = new RN_Carrito().ListarLibro(idLector).Select(oc => new EN_Carrito()
             {
@@ -221,6 +238,7 @@ namespace CapaPresentacionConsulta.Controllers
                     RutaImagen = oc.oId_Libro.RutaImagen,
                     Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oc.oId_Libro.RutaImagen, oc.oId_Libro.NombreImagen), out conversion),
                     Extension = Path.GetExtension(oc.oId_Libro.NombreImagen)
+                    //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar
 
                 },
                 Cantidad = oc.Cantidad

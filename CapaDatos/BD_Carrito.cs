@@ -161,6 +161,7 @@ namespace CapaDatos
                                         IdLibro = Convert.ToInt32(dr["IdLibro"]),
                                         Codigo = dr["Codigo"].ToString(),
                                         oId_Categoria = new EN_Categoria() { Descripcion = dr["DesCategoria"].ToString() },
+                                        //oId_Ejemplar = new EN_Ejemplar() { IdEjemplarLibro = Convert.ToInt32 (dr["IDEjemplarLibro"]) },
                                         Titulo = dr["Titulo"].ToString(),
                                         Ejemplares = Convert.ToInt32(dr["Ejemplares"]),//Indica que los decimales los trabaje con puntos
                                         //oId_Categoria = new EN_Categoria() { Descripcion = dr["Cantidad"].ToString() },

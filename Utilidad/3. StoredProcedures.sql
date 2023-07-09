@@ -1581,7 +1581,10 @@ begin
 
 end 
 go
-select * from fn_obtenerCarritoLector(1006)
+select * from fn_obtenerCarritoLector(2006)
+go
+select * from categoria
+select * from lector
 go
 ---------------------------------------FUNCION PARA OBTENER CARRITO CLIENTE 
 create function fn_obtenerCarritoLector(
@@ -1594,9 +1597,11 @@ return (
     from carrito c
     inner join Libro l on l.IdLibro = c.IdLibro
     inner join Categoria ct on ct.IdCategoria = l.Id_Categoria
+    --inner join Ejemplar ej on ej.Id_libro = l.IdLibro
     where c.IdLector = @idLector
 )
 GO
+SELECT * FROM EJEMPLAR
 ---Procedimiento almacenado para eliminar del carrito
 create proc sp_EliminarCarrito(
     @IdLector int, 

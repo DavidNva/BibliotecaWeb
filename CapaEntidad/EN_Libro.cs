@@ -16,6 +16,7 @@ namespace CapaEntidad
 		public EN_Categoria oId_Categoria { get; set; }
 		public EN_Editorial oId_Editorial { get; set; }
 		public EN_Sala oId_Sala { get; set; }
+		public EN_Ejemplar oId_Ejemplar { get; set; }
 		public int Ejemplares { get; set; }
 		//public string NumEdicion { get; set; }
 		public string AñoEdicion { get; set; }
