@@ -1561,7 +1561,7 @@ begin
             else --en el caso de que el Ejemplares del Libro no se mayor a 0
             begin --envia el siguiente error
                 set @Resultado = 0
-                set @Mensaje = 'El Libro no cuenta con Ejemplares disponible'
+                set @Mensaje = 'El libro no cuenta con otro ejemplar disponible'
             end 
         end 
         else --si la suma no es igual a 1
@@ -1602,6 +1602,7 @@ return (
 )
 GO
 SELECT * FROM EJEMPLAR
+go
 ---Procedimiento almacenado para eliminar del carrito
 create proc sp_EliminarCarrito(
     @IdLector int, 
@@ -1624,3 +1625,8 @@ begin
         ROLLBACK TRANSACTION OPERACION  --reestablece todo lo que hayamos hecho antes
     END CATCH
 end
+
+
+select * from Prestamo
+
+select * from usuario
