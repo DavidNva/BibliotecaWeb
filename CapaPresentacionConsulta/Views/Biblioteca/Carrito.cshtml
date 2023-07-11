@@ -1,5 +1,4 @@
-﻿@model  CapaEntidad.EN_Libro
-@{
+﻿@{
     ViewBag.Title = "Carrito";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -24,7 +23,7 @@
                                             .data("IdLibroPrueba", item.oId_Libro.IdLibro)
                                     )*@
 
-                                @*<button class="btn btn-success btn-pruebas" type="button" data-IdLibroPruebas="@Html.DisplayTextFor(m => m.IdLibro)"><i class="fas fa-check-circle"></i> Seleccionar Ejemplares</button>*@
+                                <button class="btn btn-success btn-hola" type="button"><i class="fas fa-check-circle"></i> Seleccionar Hola</button>
                                 <div id="LibrosCarrito" class="col-12 col-md-12">
                                     <div class="card mb-2 card-Libro ">
                                         <div class="card-body row-libro">
@@ -146,7 +145,7 @@
             responsive: true
             //$("#cbocategoria").val($("#cbocategoria option:first").val());
             MostrarCarrito();
-
+            
             //ListarEjemplar();
             //MostrarListaEjemplares();
             //MostrarListaCategorias();
@@ -185,25 +184,36 @@
                                         $("<span>").text("Título: " + item.oId_Libro.Titulo),
                                         $("<span>").addClass("font-wight-bold d-block idLibro-de-descripcion").text("IdLibro: "+item.oId_Libro.IdLibro).val(item.oId_Libro.IdLibro)
                                     ),
-                                    //3
                                     $("<div>").addClass("col-sm-1 align-self-center").append(
                                         //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
                                         $("<span>").addClass("span-cantidad").text(item.Cantidad)
                                     ),
+                                    $('<div>').addClass('col-12 col-sm-5 col-md-5 align-self-center mb-4 d-flex').append(
+                                        $('<label>').addClass('form-label').text('Ejemplar: '),
+                                        $("<input>").addClass("form-control input-ejemplar p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                            .css({ "width": "40px" })
+                                            .data("oId_Libro", item.oId_Libro)
+                                            .val(item.oId_Libro.IdLibro),//almacena esta informacion dentro de la etiqueta
+                                        $('<select>').addClass('form-select btn-select').attr({ 'name': 'ejemplar' })
+                                            //.data("oId_Libro", item.oId_Libro)
+                                            //.val(item.oId_Libro.IdLibro),
+                                    ),
+                                    //3
+
 
                                     //4
-                                    $("<div>").addClass("col-sm-2 align-self-center").append(
-                                        $("<div>").addClass("d-flex").append(
-                                            $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
+                                    //$("<div>").addClass("col-sm-2 align-self-center").append(
+                                    //    $("<div>").addClass("d-flex").append(
+                                    //        $("<button>").addClass("btn btn-outline-secondary btn-restar rounded-0").append($("<i>").addClass("fas fa-minus")),
 
-                                            $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
-                                                .css({ "width": "40px" })
-                                                .data("oId_Libro", item.oId_Libro)
-                                                .val(item.Cantidad),//almacena esta informacion dentro de la etiqueta
+                                    //        $("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                    //            .css({ "width": "40px" })
+                                    //            .data("oId_Libro", item.oId_Libro)
+                                    //            .val(item.Cantidad),//almacena esta informacion dentro de la etiqueta
 
-                                            $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")),
-                                        )
-                                    ),
+                                    //        $("<button>").addClass("btn btn-outline-secondary btn-sumar rounded-0").append($("<i>").addClass("fas fa-plus")),
+                                    //    )
+                                    //),
                                     //data("idLibro", item.IdLibro)
                                     //4
                                     //$("<div>").addClass("col-12 col-sm-5 col-md-3  align-self-center mb-4").append(
@@ -318,6 +328,7 @@
 
                     })
                     sumarTotal();
+                    //hola2();
                     //MostrarListaEjemplares()
                     //ListarEjemplar();
                 },
@@ -326,10 +337,61 @@
                 },
                 beforeSend: function () {
                     $("#LibrosCarrito").LoadingOverlay("show");
+
                 }
             })
 
         }
+        //Esto es para aumentar el total de Libros y actualizar la suma total de los precios de esos Libros actuales en el carrito
+        $(document).on("focus", ".btn-select", function () {
+            //btn-sumar viene de la clase del diseño script de arriba
+            
+            $(".btn-select").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma*/
+            //Aqui se colocan los atributos de html y opciones de valor, text, etc
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo(".btn-select")
+                var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
+
+                var inputEjemplar = $(divContenedor).find("input.input-ejemplar");//encuentra un input con esa clase, obtiene el input cantidad
+
+                var btn = $(this);
+
+                var idLibro = $(inputEjemplar).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
+                
+                jQuery.ajax({
+                    url: '@Url.Action("ListarEjemplarLibro", "Biblioteca")',
+                    type: "POST",
+                    //como se va a sumar colocamos true, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                    data: JSON.stringify({ idLibro: idLibro}),//pasamos los parametros que necesita este metodo
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $(btn).LoadingOverlay("hide")
+                        if (data.lista != null) {
+                            //$(".btn-select").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
+                            $.each(data.lista, function (i, item) {
+                               
+                                $("<option>").attr({ "value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo(".btn-select")
+                            })
+                            //$.each(data.lista, function (key, value) {
+                            //    //$("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo(".select-ejemplares"),
+                            //    // Agregamos una opción por cada fila devuelta
+                            //    options += '<option value="' + value.IdEjemplarLibro + '">' + "Ejemplar del libro con ID:" + value.IdLibro + ", " + value.IdEjemplarLibro + '</option>';
+                            //});
+                            //$('.btn-select').append(options);
+                            console.log(idLibro)
+                            //ListarDistrito();
+
+                        }
+                    },
+                    beforeSend: function () {
+                        $(btn).LoadingOverlay("show")
+                    },
+                    error: function (error) {
+                        $(btn).LoadingOverlay("hide")
+                    }
+                })
+
+        })
         //$(document).on("click", ".select-des", function () {
         //    MostrarListaEjemplares();
         //})
@@ -408,7 +470,7 @@
         function hola() {
             console.log("hola")
         }
-        $(".select-ejemplares").on("change", function () {
+        $(".btn-select").on("change", function () {
             //ListarDistrito();//Cada vez que cambia lista nuevamente las provincias
             hola();
         })
@@ -687,7 +749,7 @@
         }
 
         //Esto es para aumentar el total de Libros y actualizar la suma total de los precios de esos Libros actuales en el carrito
-        $(document).on("click", ".btn-sumar", function () {//btn-sumar viene de la clase del diseño script de arriba
+        @*$(document).on("click", ".btn-sumar", function () {//btn-sumar viene de la clase del diseño script de arriba
 
                 var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
 
@@ -722,10 +784,10 @@
                     }
                 })
 
-        })
+        })*@
 
         //Esto es para restar el total de Libros y actualizar la resta total de los precios de esos Libros actuales en el carrito
-        $(document).on("click", ".btn-restar", function () {//btn-sumar viene de la clase del diseño script de arriba
+        @*$(document).on("click", ".btn-restar", function () {//btn-sumar viene de la clase del diseño script de arriba
 
                 var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
 
@@ -763,7 +825,7 @@
                         }
                     })
                 }
-        })
+        })*@
         //Eliminar del carrito
         $(document).on("click", ".btn-eliminar", function () {//btn-sumar viene de la clase del diseño script de arriba
 
