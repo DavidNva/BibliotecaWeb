@@ -23,7 +23,7 @@
                                             .data("IdLibroPrueba", item.oId_Libro.IdLibro)
                                     )*@
 
-                                <button class="btn btn-success btn-hola" type="button"><i class="fas fa-check-circle"></i> Seleccionar Hola</button>
+                                @*<button class="btn btn-success btn-hola" type="button"><i class="fas fa-check-circle"></i> Seleccionar Hola</button>*@
                                 <div id="LibrosCarrito" class="col-12 col-md-12">
                                     <div class="card mb-2 card-Libro ">
                                         <div class="card-body row-libro">
@@ -186,15 +186,18 @@
                                     ),
                                     $("<div>").addClass("col-sm-1 align-self-center").append(
                                         //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
-                                        $("<span>").addClass("span-cantidad").text(item.Cantidad)
+                                        $("<span>").addClass("span-cantidad").text(item.Cantidad).val(item.Cantidad),
                                     ),
-                                    $('<div>').addClass('col-12 col-sm-5 col-md-5 align-self-center mb-4 d-flex').append(
-                                        $('<label>').addClass('form-label').text('Ejemplar: '),
-                                        $("<input>").addClass("form-control input-ejemplar p-1 text-center rounded-0").attr({ "disabled": "disabled" })
+                                    $('<div>').addClass('col-12 col-sm-5 col-md-3 align-self-center mb-4 d-flexE').append(
+                                        $('<label>').addClass('form-label').text('Ejemplar disponible: '),
+                                        //El input se coloca como hidden para que no se vea en el diseño
+
+                                        $("<input>").addClass("form-control input-ejemplar p-1 text-center rounded-0").attr({"type":"hidden", "disabled": "disabled" })
                                             .css({ "width": "40px" })
                                             .data("oId_Libro", item.oId_Libro)
                                             .val(item.oId_Libro.IdLibro),//almacena esta informacion dentro de la etiqueta
-                                        $('<select>').addClass('form-select btn-select').attr({ 'name': 'ejemplar' })
+                                        $('<select>').addClass('form-select btn-select').attr({ 'name': 'ejemplar' }).append(
+                                         $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar"))
                                             //.data("oId_Libro", item.oId_Libro)
                                             //.val(item.oId_Libro.IdLibro),
                                     ),
@@ -223,7 +226,12 @@
                                     //   // ListarEjemplar()
 
                                     //),
-                                    $('<div>').addClass('col-12 col-sm-5 col-md-3 align-self-center mb-4').append(
+                                    //--------------------------------------------------------------------------------------
+                                    //ESTE DIV PERTENECE AL SELECT 2 DONDE APLICA CUANDO PULSAMOS EL BOTON DE ABAJO (SELECCIONAR EJEMPLAR PRUEBA)
+                                    //EL CUAL, POR EL MOMENTO ES COMENTADO PORQUE LA SOLUCION MEJOR ES USAR EL EVENTO FOCUS (EN LUGAR DE CLIC)
+                                    //DIRECTAMENTE EN EL SELECT Y NO DESDE UN BOTON
+
+                                    @*$('<div>').addClass('col-12 col-sm-5 col-md-3 align-self-center mb-4').append(
                                         $('<label>').addClass('form-label').text('Ejemplares disponibles:'),
                                         $('<select>').addClass('form-select select-ejemplares').attr({ 'name': 'ejemplares' }).data('IdLibroPrueba', item.oId_Libro.IdLibro)
                                             .append(
@@ -250,19 +258,22 @@
                                                 $('.select-ejemplares').append(options);
                                             }
                                         })
-                                    ),
+                                    ),*@
                                     //5
                                     $("<div>").addClass("col-sm-2 col-sm-12 col-md-2 align-self-center d-flex justify-content-end mt-2").append(
 
                                         $("<button>").addClass("btn btn-outline-danger btn-eliminar").append($("<i>").addClass("fas fa-trash-alt"), " Eliminar")
                                             .data("IdLibro", item.oId_Libro.IdLibro)
-                                    ),
-                                    //6
-                                    $("<div>").addClass("d-grid  mt-2").append(
-
-                                        $("<button>").addClass("btn btn-success btn-prueba").append($("<i>").addClass("fas fa-check-circle"), " Seleccionar Ejemplar Prueba")
-                                            .data("IdLibroPrueba", item.oId_Libro.IdLibro)
                                     )
+                                    //6
+                                    //------------------------------------------------------------------------------
+                                    //ESTE BOTON FUNCIONA PARA QUE CUANDO SE PULSE APLIQUE EL LISTADO DE EJEMPLARES POR ID
+                                    //SE COMENTA PORQUE SE HAYO UNA MEJOR SOLUCION (MENCIONADA ARRIBA)
+                                    //,$("<div>").addClass("d-grid  mt-2").append(
+
+                                    //    $("<button>").addClass("btn btn-success btn-prueba").append($("<i>").addClass("fas fa-check-circle"), " Seleccionar Ejemplar Prueba")
+                                    //        .data("IdLibroPrueba", item.oId_Libro.IdLibro)
+                                    //)
                                     //$("<input>").addClass("form-control input-cantidad p-1 text-center rounded-0").attr({ "disabled": "disabled" })
                                     //    .css({ "width": "40px" })
                                     //    .data("oId_Producto", item.oId_Producto)
@@ -349,7 +360,7 @@
             $(".btn-select").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma*/
             //Aqui se colocan los atributos de html y opciones de valor, text, etc
             $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo(".btn-select")
-                var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
+                var divContenedor = $(this).parent("div.d-flexE");//encuentra un control superior a este que es un div con la clase d-flexE
 
                 var inputEjemplar = $(divContenedor).find("input.input-ejemplar");//encuentra un input con esa clase, obtiene el input cantidad
 
@@ -370,7 +381,7 @@
                             //$(".btn-select").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
                             $.each(data.lista, function (i, item) {
                                
-                                $("<option>").attr({ "value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo(".btn-select")
+                                $("<option>").attr({"name":"ejemlibro" ,"value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo(".btn-select")
                             })
                             //$.each(data.lista, function (key, value) {
                             //    //$("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo(".select-ejemplares"),
@@ -392,6 +403,24 @@
                 })
 
         })
+        //$(document).on("change", "option[name=ejemlibro]", function () {
+        //    //la accion a realizar
+        //    console.log("hola");
+        //    //MostrarEditorial();
+        //})
+        $(document).on("change", ".btn-select", function () {
+            var ejemID = $("option[name=ejemlibro]").val();
+            console.log(ejemID);
+            console.log("hola");
+        })
+        //$(document).on("mousedown", ".btn-select", function () {
+        //    var ejemID = $("option[name=ejemlibro]").text();
+        //    console.log(ejemID);
+        //    console.log("hola");
+        //})
+        //$(".btn-select").on("focus", function () {
+        //    console.log("Alo");
+        //})
         //$(document).on("click", ".select-des", function () {
         //    MostrarListaEjemplares();
         //})
@@ -462,18 +491,18 @@
         //    console.log(valorSeleccionado);
         //});
 
-        $(".select-ejemplares.option").on("change", function () {
-            var eje = $(".select-ejemplares option:selected").val()
-            console.log(eje);
+        //$(".select-ejemplares.option").on("change", function () {
+        //    var eje = $(".select-ejemplares option:selected").val()
+        //    console.log(eje);
 
-        })
-        function hola() {
-            console.log("hola")
-        }
-        $(".btn-select").on("change", function () {
-            //ListarDistrito();//Cada vez que cambia lista nuevamente las provincias
-            hola();
-        })
+        //})
+        //function hola() {
+        //    console.log("hola")
+        //}
+        //$(".btn-select").on("change", function () {
+        //    //ListarDistrito();//Cada vez que cambia lista nuevamente las provincias
+        //    hola();
+        //})
         //$(".select-ejemplares").on("change", function () {
         //    var eje = $(".select-ejemplares option:selected").val()
         //    console.log("hOLA");
@@ -735,7 +764,7 @@
         //}
         function sumarTotal() {//La suma total del precio de los Libros
             var sumaTotal = parseFloat(0) //Va a empezar con el valor de 0
-            $("input.input-cantidad").each(function (i) {
+            $("span.span-cantidad").each(function (i) {
                 //var precio = $(this).data("oId_Libro").IdLibro;
                 //var variable = 1;
                 var cantidad = $(this).val()
