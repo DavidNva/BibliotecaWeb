@@ -241,7 +241,7 @@ namespace CapaPresentacionConsulta.Controllers
                     //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar
 
                 },
-                Cantidad = oc.Cantidad
+                CantidadEjemplares = oc.CantidadEjemplares
             }).ToList();
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
         }
@@ -302,102 +302,177 @@ namespace CapaPresentacionConsulta.Controllers
         //}
 
         //[ValidarSession]
-        //[Authorize]
+        [Authorize]
         public ActionResult Carrito()//Solo los que han iniciado sesión
         {
             return View();
         }
-
+        //---------------------------------------------------PROCESAR PRESTAMO-----------------------------------------
+        #region PROCESAR Prestamo
         ////Boton de procesar pago
         //[HttpPost]
-        //public async Task<JsonResult> ProcesarPago(List<EN_Carrito> oListaCarrito, EN_Venta oVenta)//Con parametros
+        //public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
         //{//los servicios de paypal obligan a trabajar de manera asincrona
         //    decimal total = 0;
-        //    DataTable detalleVenta = new DataTable();
-        //    detalleVenta.Locale = new CultureInfo("es-MX");
+        //    DataTable detallePrestamo = new DataTable();
+        //    detallePrestamo.Locale = new CultureInfo("es-MX");
         //    //Comenzamos a crear las columnas que necesita esta table
-        //    detalleVenta.Columns.Add("IdLibro", typeof(string));
-        //    detalleVenta.Columns.Add("Cantidad", typeof(int));
-        //    detalleVenta.Columns.Add("Total", typeof(decimal));//Esta tabla viene a ser la representacion de la estructura creada en sql (EDetalle_Venta)
+        //    detallePrestamo.Columns.Add("IdEjemplar", typeof(string));//antes era IdLibro
+        //    detallePrestamo.Columns.Add("CantidadEjemplares", typeof(int));
+        //    detallePrestamo.Columns.Add("Total", typeof(decimal));//Esta tabla viene a ser la representacion de la estructura creada en sql (EDetalle_Prestamo)
 
-        //    List<Item> oListaItem = new List<Item>();//Almacenará todos los Libros del carrito
+        //    //List<Item> oListaItem = new List<Item>();//Almacenará todos los Libros del carrito
 
         //    foreach (EN_Carrito oCarrito in oListaCarrito)//por cada carrito en la lista carrito
         //    {
-        //        decimal subTotal = Convert.ToDecimal(oCarrito.Cantidad.ToString()) * oCarrito.oId_Libro.Precio;
+        //        decimal subTotal = Convert.ToDecimal(oCarrito.CantidadEjemplares.ToString()) /** oCarrito.oId_Libro.Precio*/;
+        //        //Antes se multiplicaaba por el precio, ahoa simplemente pasamos la cantidad directamente
 
         //        total += subTotal;//Va aumentando el valor de total con cada iteracion
 
-        //        oListaItem.Add(new Item()//Toda la lista de Libros hacia paypal, con la informacion requerida
+        //        //oListaItem.Add(new Item()//Toda la lista de Libros hacia paypal, con la informacion requerida
+        //        //{
+        //        //    name = oCarrito.oId_Libro.Nombre,
+        //        //    quantity = oCarrito.Cantidad.ToString(),
+        //        //    unit_amount = new UnitAmount()
+        //        //    {
+        //        //        currency_code = "USD",//tipo de moneda
+        //        //        value = oCarrito.oId_Libro.Precio.ToString("G", new CultureInfo("es-MX"))
+        //        //    }
+        //        //}); 
+        //        detallePrestamo.Rows.Add(new object[]
         //        {
-        //            name = oCarrito.oId_Libro.Nombre,
-        //            quantity = oCarrito.Cantidad.ToString(),
-        //            unit_amount = new UnitAmount()
-        //            {
-        //                currency_code = "USD",//tipo de moneda
-        //                value = oCarrito.oId_Libro.Precio.ToString("G", new CultureInfo("es-MX"))
-        //            }
-        //        }); ;
-        //        detalleVenta.Rows.Add(new object[]
-        //        {
-        //            oCarrito.oId_Libro.IdLibro,
-        //            oCarrito.Cantidad,
-        //            subTotal
+        //                oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+        //                oCarrito.CantidadEjemplares,
+        //                subTotal
         //        });
+
+        //        oPrestamo.TotalLibro = (int)total;
+        //        oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
+
+        //        TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
+        //        TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
+
+        //        return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?IdLibro=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+        //        //return Json(response_paypal, JsonRequestBehavior.AllowGet);
+
+        //        //Enviamos dos parametros el id de transaccon y un status como true
+        //        //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
         //    }
-
-        //    PurchaseUnit purchaseUnit = new PurchaseUnit()
-        //    {
-        //        amount = new Amount()
-        //        {
-        //            currency_code = "USD",
-        //            value = total.ToString("G", new CultureInfo("es-MX")),
-        //            breakdown = new Breakdown()
-        //            {
-        //                item_total = new ItemTotal()
-        //                {
-        //                    currency_code = "USD",
-        //                    value = total.ToString("G", new CultureInfo("es-MX"))
-        //                }
-        //            }
-        //        },
-        //        description = "compra de articulo de mi tienda",
-        //        items = oListaItem
-        //    };
-
-        //    Checkout_Order oCheckOutOrder = new Checkout_Order()
-        //    {
-        //        intent = "CAPTURE",
-        //        purchase_units = new List<PurchaseUnit>() { purchaseUnit },
-        //        application_context = new ApplicationContext()
-        //        {
-        //            brand_name = "MiTiendaCode.com",
-        //            landing_page = "NO_PREFERENCE",
-        //            user_action = "PAY_NOW",//Accion para que paypal muestre el monto de pago
-        //            return_url = "https://localhost:44330/Tienda/PagoEfectuado",
-        //            cancel_url = "https://localhost:44330/Tienda/Carrito"
-        //        }
-        //    };
-
-        //    oVenta.MontoTotal = total;
-        //    oVenta.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
-        //    TempData["Venta"] = oVenta;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de venta)
-        //    TempData["DetalleVenta"] = detalleVenta; //Almacena todo el dataTable
-
-        //    RN_Paypal oPaypal = new RN_Paypal();
-        //    Response_Paypal<Response_Checkout> response_paypal = new Response_Paypal<Response_Checkout>();
-
-        //    response_paypal = await oPaypal.CrearSolicitud(oCheckOutOrder);//Pasamos toda la configuracion que hemos creado
-
-        //    //return Json(new { Status = true, Link = "/Tienda/PagoEfectuado?IdTransaccion=code0001&status=true" }, JsonRequestBehavior.AllowGet);
-        //    return Json(response_paypal, JsonRequestBehavior.AllowGet);
-
-        //    //Enviamos dos parametros el id de transaccon y un status como true
-        //    //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
         //}
+        [HttpPost]
+        public async Task<JsonResult> ProcesarPago(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
+        {//los servicios de paypal obligan a trabajar de manera asincrona
+            decimal total = 0;
 
-        //[ValidarSession]
-        //[Authorize]
+            DataTable detallePrestamo = new DataTable();
+            detallePrestamo.Locale = new CultureInfo("es-MX"); //Comenzamos a crear las columnas que necesita esta table
+            detallePrestamo.Columns.Add("IdEjemplar", typeof(string));//antes era IdLibro
+            detallePrestamo.Columns.Add("CantidadEjemplares", typeof(int));
+            detallePrestamo.Columns.Add("Total", typeof(decimal));//Esta tabla viene a ser la representacion de la estructura creada en sql (EDetalle_Prestamo)
+
+            foreach (EN_Carrito oCarrito in oListaCarrito)//por cada carrito en la lista carrito
+            {
+                decimal subTotal = Convert.ToDecimal(oCarrito.CantidadEjemplares.ToString()) /** oCarrito.oId_Libro.Precio*/;
+                //        //Antes se multiplicaaba por el precio, ahoa simplemente pasamos la cantidad directamente
+
+                total += subTotal;//Va aumentando el valor de total con cada iteracion
+                detallePrestamo.Rows.Add(new object[]
+                {
+                        oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                        oCarrito.CantidadEjemplares,
+                        subTotal
+                });
+            }
+            oPrestamo.TotalLibro = (int)total;
+            oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
+
+            TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
+            TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
+
+            return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?idPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+            //Enviamos dos parametros el id de transaccon y un status como true
+            //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
+        }
+    
+    //    PurchaseUnit purchaseUnit = new PurchaseUnit()
+    //    {
+    //        amount = new Amount()
+    //        {
+    //            currency_code = "USD",
+    //            value = total.ToString("G", new CultureInfo("es-MX")),
+    //            breakdown = new Breakdown()
+    //            {
+    //                item_total = new ItemTotal()
+    //                {
+    //                    currency_code = "USD",
+    //                    value = total.ToString("G", new CultureInfo("es-MX"))
+    //                }
+    //            }
+    //        },
+    //        description = "compra de articulo de mi tienda",
+    //        items = oListaItem
+    //    };
+
+    //    Checkout_Order oCheckOutOrder = new Checkout_Order()
+    //    {
+    //        intent = "CAPTURE",
+    //        purchase_units = new List<PurchaseUnit>() { purchaseUnit },
+    //        application_context = new ApplicationContext()
+    //        {
+    //            brand_name = "MiTiendaCode.com",
+    //            landing_page = "NO_PREFERENCE",
+    //            user_action = "PAY_NOW",//Accion para que paypal muestre el monto de pago
+    //            return_url = "https://localhost:44330/Tienda/PagoEfectuado",
+    //            cancel_url = "https://localhost:44330/Tienda/Carrito"
+    //        }
+    //    };
+
+    //oPrestamo.TotalLibro = total;
+    //oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
+    //TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
+    //TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
+
+    //    RN_Paypal oPaypal = new RN_Paypal();
+    //    Response_Paypal<Response_Checkout> response_paypal = new Response_Paypal<Response_Checkout>();
+
+    //    response_paypal = await oPaypal.CrearSolicitud(oCheckOutOrder);//Pasamos toda la configuracion que hemos creado
+
+    //    //return Json(new { Status = true, Link = "/Tienda/PagoEfectuado?IdTransaccion=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+    //    return Json(response_paypal, JsonRequestBehavior.AllowGet);
+
+    //    //Enviamos dos parametros el id de transaccon y un status como true
+    //    //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
+    //}
+
+    //[ValidarSession]
+    [Authorize]
+    public async Task<ActionResult> PrestamoEfectuado()//Para la vista
+    {
+        string idPrestamo = Request.QueryString["idPrestamo"];//Esto era idTransaccion
+        bool status = Convert.ToBoolean(Request.QueryString["status"]);
+
+        ViewData["Status"] = status;//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
+
+        if (status) //si estatus es verdadero
+        {
+            EN_Prestamo oPrestamo = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
+                                                                      //un mismo controlador, de esta forma podemos acceder a este temp data del metodo anterior
+                                                                      //Lo convertimos en un objeto de Prestamo
+
+            DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
+            //oPrestamo.IdLibro = idTransaccion;
+            oPrestamo.IdPrestamo = Convert.ToInt32(idPrestamo);//Se convierte a int porque el id es de este tipo
+                //Estos eran IdTransaccion
+            string mensaje = string.Empty;//Por defecto el mensaje es vacio
+            bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo, out mensaje);
+
+            ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
+        }
+
+        return View();
+    }
+    #endregion
         //public async Task<ActionResult> PagoEfectuado()//Para la vista
         //{
         //    string token = Request.QueryString["token"];
@@ -426,6 +501,7 @@ namespace CapaPresentacionConsulta.Controllers
 
         //    return View();
         //}
+        //[ValidarSession]
 
         //[ValidarSession]
         //[Authorize]
@@ -452,6 +528,7 @@ namespace CapaPresentacionConsulta.Controllers
         //    }).ToList();
 
         //    return View(oLista);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
+        //}
         //}
     }
 }

@@ -1630,3 +1630,48 @@ end
 select * from Prestamo
 
 select * from usuario
+go
+------------------------------------------------------- Para Prestamos -------------------------------------------------
+--creacion de estructura tipo tabla de detallePrestamo
+CREATE TYPE [dbo].[EDetalle_Prestamo] AS TABLE(
+    [IdEjemplar] int null,
+    [CantidadEjemplares] int null,
+    [Total] decimal (18, 2) null
+)
+go
+create procedure usp_RegistrarPrestamo(
+    @Id_Lector int,
+    @TotalLibro int, 
+    --@MontoTotal decimal(18,2),
+    @DiasDePrestamo int, 
+    --@Estado bit,--Es como si dijeramos activo(El 0 significa no Prestamo activo o "DEVUELTO" y
+    -- el 1 significa prestamo activo o "No devuelto")
+    @Observaciones nvarchar(500),
+    @DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
+    @Resultado bit output,
+    @Mensaje varchar(500) output
+)
+as 
+begin 
+    begin try 
+        declare @idPrestamo int = 0
+        set @Resultado = 1
+        set @Mensaje = ''
+        begin transaction registro
+        insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones )
+        values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones )
+
+        set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
+
+        insert into DetallePrestamo(IdPrestamo, IDEjemplar, CantidadEjemplares, Total)
+        select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
+
+        DELETE FROM CARRITO WHERE IdLector = @Id_Lector
+        commit transaction registro 
+    end try 
+    begin catch --en el caso de algun error, reestablece todo
+        set @Resultado = 0
+        set @Mensaje = ERROR_MESSAGE()
+        rollback transaction registro 
+    end catch 
+end

@@ -503,6 +503,7 @@
     <Content Include="Views\Biblioteca\Index.cshtml" />
     <Content Include="Views\Biblioteca\DetalleLibro.cshtml" />
     <Content Include="Views\Biblioteca\Carrito.cshtml" />
+    <Content Include="Views\Biblioteca\PrestamoEfectuado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

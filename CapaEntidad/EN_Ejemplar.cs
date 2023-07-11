@@ -11,7 +11,7 @@ namespace CapaEntidad
         //La tabla ejemplar solo tenemos estos dos valores
        
         public int IdEjemplarLibro { get; set; }
-        public int IdLibro { get; set; }
+        public int IdLibro { get; set; } //Esta como ID_Libro
 		public bool Activo { get; set; }
 
 

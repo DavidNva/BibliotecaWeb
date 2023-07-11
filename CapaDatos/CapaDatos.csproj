@@ -49,6 +49,7 @@
     <Compile Include="BD_Ejemplar.cs" />
     <Compile Include="BD_Lector.cs" />
     <Compile Include="BD_Libro.cs" />
+    <Compile Include="BD_Prestamo.cs" />
     <Compile Include="BD_Reporte.cs" />
     <Compile Include="BD_Sala.cs" />
     <Compile Include="BD_TipoPersona.cs" />
