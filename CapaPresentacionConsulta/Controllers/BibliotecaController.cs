@@ -232,7 +232,7 @@ namespace CapaPresentacionConsulta.Controllers
                 {
                     IdLibro = oc.oId_Libro.IdLibro,
                     Codigo = oc.oId_Libro.Codigo,
-                    oId_Categoria = oc.oId_Libro.oId_Categoria,
+                    oId_Ejemplar = oc.oId_Libro.oId_Ejemplar,
                     Titulo = oc.oId_Libro.Titulo,
                     Ejemplares = oc.oId_Libro.Ejemplares,//Esto se va a mostrar en el carrito de compras
                     RutaImagen = oc.oId_Libro.RutaImagen,
@@ -361,7 +361,7 @@ namespace CapaPresentacionConsulta.Controllers
         //    }
         //}
         [HttpPost]
-        public async Task<JsonResult> ProcesarPago(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
+        public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
         {//los servicios de paypal obligan a trabajar de manera asincrona
             decimal total = 0;
 
@@ -380,7 +380,7 @@ namespace CapaPresentacionConsulta.Controllers
                 detallePrestamo.Rows.Add(new object[]
                 {
                         //oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
-                        oCarrito.oId_Libro.IdLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                        oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
                         oCarrito.Cantidad,
                         subTotal
                 });

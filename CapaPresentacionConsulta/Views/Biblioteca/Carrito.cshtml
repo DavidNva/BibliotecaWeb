@@ -178,7 +178,7 @@
                                     ),
                                     //2
                                     $("<div>").addClass("col-12  col-sm-4 align-self-center").append(
-                                        $("<span>").addClass("font-wight-bold d-block").text("Categoría: " + item.oId_Libro.oId_Categoria.Descripcion),
+                                        $("<span>").addClass("font-wight-bold d-block").text("Ejemplar ID: " + item.oId_Libro.oId_Ejemplar.IdEjemplarLibro),
                                         //$("<span>").addClass("font-wight-bold d-block").text("Ejemplares: " + item.oId_Libro.oId_Ejemplar.IdEjemplarLibro),
                                         $("<span>").addClass("font-wight-bold d-block span-descripcion").text("Código: " + item.oId_Libro.Codigo).val(item.oId_Libro.IdLibro),
                                         $("<span>").text("Título: " + item.oId_Libro.Titulo),
@@ -980,7 +980,7 @@
             })
 
             jQuery.ajax({
-                url: '@Url.Action("ProcesarPago", "Biblioteca")',
+                url: '@Url.Action("ProcesarPrestamo", "Biblioteca")',
                 type: "POST",
                 //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
                 //pasamos la lista carrito creada  los datos de la Prestamo
