@@ -1,8 +1,35 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "PrestamoEfectuado";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>PrestamoEfectuado</h2>
 
+<div class="row col-sm-12 ">
+
+    <div class="col-sm-12 text-center">
+        <br /><br />
+        @{
+            if ((bool)ViewData["Status"])
+            {//Si el estatus es verdadero
+                <h1 class="text-success">¡En hora buena!</h1>
+                <i class="far fa-check-circle fa-9x text-success"></i>
+
+                <h2 class="text-success">El préstamo fué realizado con éxito</h2>
+                <h4>ID de Préstamo : @ViewData["IdPrestamo"]</h4>
+
+                <br />
+                <a href="@Url.Action("Index","Biblioteca")" class="btn btn-primary">Volver al Inicio de Biblioteca</a>
+            }
+            else
+            {
+                <h1 class="text-danger">¡Lo sentimos!</h1>
+                <i class="far fa-exclamation-circle fa-9x text-danger"></i>
+
+                <h2 class="text-danger">El préstamo no fué realizado</h2>
+
+                <br />
+                <a href="@Url.Action("Index","Biblioteca")" class="btn btn-primary">Volver a la Biblioteca</a>
+            }
+        }
+    </div>
+</div>

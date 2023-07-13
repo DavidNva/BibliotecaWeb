@@ -241,7 +241,7 @@ namespace CapaPresentacionConsulta.Controllers
                     //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar
 
                 },
-                CantidadEjemplares = oc.CantidadEjemplares
+                Cantidad = oc.Cantidad
             }).ToList();
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
         }
@@ -373,14 +373,15 @@ namespace CapaPresentacionConsulta.Controllers
 
             foreach (EN_Carrito oCarrito in oListaCarrito)//por cada carrito en la lista carrito
             {
-                decimal subTotal = Convert.ToDecimal(oCarrito.CantidadEjemplares.ToString()) /** oCarrito.oId_Libro.Precio*/;
+                decimal subTotal = Convert.ToDecimal(oCarrito.Cantidad.ToString()) /** oCarrito.oId_Libro.Precio*/;
                 //        //Antes se multiplicaaba por el precio, ahoa simplemente pasamos la cantidad directamente
 
                 total += subTotal;//Va aumentando el valor de total con cada iteracion
                 detallePrestamo.Rows.Add(new object[]
                 {
-                        oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
-                        oCarrito.CantidadEjemplares,
+                        //oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                        oCarrito.oId_Libro.IdLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                        oCarrito.Cantidad,
                         subTotal
                 });
             }
@@ -390,7 +391,7 @@ namespace CapaPresentacionConsulta.Controllers
             TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
 
-            return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?idPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+            return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
             //Enviamos dos parametros el id de transaccon y un status como true
             //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
         }
@@ -449,7 +450,7 @@ namespace CapaPresentacionConsulta.Controllers
     [Authorize]
     public async Task<ActionResult> PrestamoEfectuado()//Para la vista
     {
-        string idPrestamo = Request.QueryString["idPrestamo"];//Esto era idTransaccion
+        string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
         bool status = Convert.ToBoolean(Request.QueryString["status"]);
 
         ViewData["Status"] = status;//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
@@ -462,7 +463,7 @@ namespace CapaPresentacionConsulta.Controllers
 
             DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
             //oPrestamo.IdLibro = idTransaccion;
-            oPrestamo.IdPrestamo = Convert.ToInt32(idPrestamo);//Se convierte a int porque el id es de este tipo
+            oPrestamo.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
                 //Estos eran IdTransaccion
             string mensaje = string.Empty;//Por defecto el mensaje es vacio
             bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo, out mensaje);

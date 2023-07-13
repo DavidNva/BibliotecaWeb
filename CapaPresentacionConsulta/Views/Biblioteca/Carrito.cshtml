@@ -121,7 +121,7 @@
                                             <input type="text" class="form-control form-control-sm" id="txtTelefono" autocomplete="off">
                                         </div>*@
                                     <div class="d-grid">
-                                        <button class="btn btn-success" type="button" onclick="RealizarPago()">
+                                        <button class="btn btn-success" type="button" onclick="RealizarPrestamo()">
                                             <i class="fas fa-check-circle"></i> Realizar Préstamo
                                         </button>
                                     </div>
@@ -145,7 +145,7 @@
             responsive: true
             //$("#cbocategoria").val($("#cbocategoria option:first").val());
             MostrarCarrito();
-            
+
             //ListarEjemplar();
             //MostrarListaEjemplares();
             //MostrarListaCategorias();
@@ -186,7 +186,9 @@
                                     ),
                                     $("<div>").addClass("col-sm-1 align-self-center").append(
                                         //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
-                                        $("<span>").addClass("span-cantidad").text(item.Cantidad).val(item.Cantidad),
+                                        $("<span>").addClass("span-cantidad").text(item.Cantidad)
+                                            .data("oId_Libro", item.oId_Libro)
+                                            .val(item.Cantidad),
                                     ),
                                     $('<div>').addClass('col-12 col-sm-5 col-md-3 align-self-center mb-4 d-flexE').append(
                                         $('<label>').addClass('form-label').text('Ejemplar disponible: '),
@@ -356,7 +358,7 @@
         //Esto es para aumentar el total de Libros y actualizar la suma total de los precios de esos Libros actuales en el carrito
         $(document).on("focus", ".btn-select", function () {
             //btn-sumar viene de la clase del diseño script de arriba
-            
+
             $(".btn-select").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma*/
             //Aqui se colocan los atributos de html y opciones de valor, text, etc
             $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo(".btn-select")
@@ -367,7 +369,7 @@
                 var btn = $(this);
 
                 var idLibro = $(inputEjemplar).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
-                
+
                 jQuery.ajax({
                     url: '@Url.Action("ListarEjemplarLibro", "Biblioteca")',
                     type: "POST",
@@ -380,7 +382,7 @@
                         if (data.lista != null) {
                             //$(".btn-select").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
                             $.each(data.lista, function (i, item) {
-                               
+
                                 $("<option>").attr({"name":"ejemlibro" ,"value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo(".btn-select")
                             })
                             //$.each(data.lista, function (key, value) {
@@ -944,6 +946,71 @@
 
             })*@
         //}
+        function RealizarPrestamo() {
+            if (parseInt($("#cantidadCarrito").text()) == 0) {//Si la cantidad en carrito es igual a 0
+                swal("", "No existen Libros en el carrito", "warning");
+                return
+            }
+            if ($("#txtDiasPrestamo").val() == null || $("#txtObservaciones").val() == "") {
+                swal("", "Debe completar los datos de\ndetalle de Préstamo", "warning");
+                return
+            }
+            var Prestamo = {
+                //TotalLibro: $("input.input-cantidad").length,
+                TotalLibro: $("span.span-cantidad").length,
+                //MontoTotal: 0,
+                DiasDePrestamo: $("#txtDiasPrestamo").val(),
+                Observaciones: $("#txtObservaciones").val()
+            }
+
+            var listaCarrito = [];//Por defecto esta lista estará vacia
+
+            $("span.span-cantidad").each(function () {//Se hará un recorrido a todos los controllers con estas caracteristicas
+
+                var Libro = $(this).data("oId_Libro");
+                //var Libro = $("span.span-ejemplar").data("oId_Ejemplar2");
+                //var Libro = $("span.span-ejemplar").val()
+                var cantidad = $(this).val()
+
+                listaCarrito.push({//para agregar elementos a esta lisra
+                    oId_Libro: Libro,//Aqui tengo que darle el idEJEMPLAR
+
+                    Cantidad: cantidad
+                })
+            })
+
+            jQuery.ajax({
+                url: '@Url.Action("ProcesarPago", "Biblioteca")',
+                type: "POST",
+                //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                //pasamos la lista carrito creada  los datos de la Prestamo
+                data: JSON.stringify({ oListaCarrito: listaCarrito, oPrestamo: Prestamo }),
+                //pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $.LoadingOverlay("hide")
+                    if (data.Status) {//si la respuesta es true
+                        window.location.href = data.Link//url que proporciona paypal para realizar el pago
+                        //var jsonResult = data.Response;//Respuesta de la ejecucion del metodo procesar pago
+
+                        //console.log(jsonResult);
+
+                        //var links = jsonResult.links;
+
+                        //var resultado = links.find(item => item.rel === "approve")
+
+                        //window.location.href = resultado.href//url que proporciona paypal para realizar el pago
+                    } else {
+                        swal("", "Vuelva a intentarlo más tarde", "warning");
+                    }
+                },
+                beforeSend: function () { $.LoadingOverlay("show") },//mientras este ejecutando las operaciones
+                error: function (error) { $.LoadingOverlay("hide") }
+
+            })
+
+        }
     </script>
 }
 
