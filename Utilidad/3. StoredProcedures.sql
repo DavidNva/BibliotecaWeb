@@ -1593,15 +1593,25 @@ create function fn_obtenerCarritoLector(
 returns table --una funcion de tipo tabla
 as 
 return (
-    select l.IdLibro,l.Codigo, ct.Descripcion[DesCategoria],l.Titulo, l.Ejemplares, c.Cantidad, l.RutaImagen, l.NombreImagen 
-    from carrito c
-    inner join Libro l on l.IdLibro = c.IdLibro
-    inner join Categoria ct on ct.IdCategoria = l.Id_Categoria
+    
+	SELECT IdLibro, Codigo, DesEjemplar, Titulo, Ejemplares, Cantidad, RutaImagen, NombreImagen
+	FROM (
+		SELECT l.IdLibro, l.Codigo, ej.IdEjemplarLibro DesEjemplar, l.Titulo, l.Ejemplares, c.Cantidad, l.RutaImagen, l.NombreImagen,
+		ROW_NUMBER() OVER (PARTITION BY l.IdLibro ORDER BY ej.IdEjemplarLibro) AS RowNum
+		FROM carrito c
+		INNER JOIN Libro l ON l.IdLibro = c.IdLibro
+		INNER JOIN Ejemplar ej ON ej.Id_libro = l.IdLibro and ej.Activo = 1
+		WHERE c.IdLector = @idLector
+		) AS tbl
+	WHERE tbl.RowNum = 1
+	--select l.IdLibro,l.Codigo, ej.IDEjemplarLibro[DesEjemplar],l.Titulo, l.Ejemplares, c.Cantidad, l.RutaImagen, l.NombreImagen 
+    --from carrito c
+    --inner join Libro l on l.IdLibro = c.IdLibro
+    ----inner join Categoria ct on ct.IdCategoria = l.Id_Categoria
     --inner join Ejemplar ej on ej.Id_libro = l.IdLibro
-    where c.IdLector = @idLector
+    --where c.IdLector = @idLector
 )
-GO
-SELECT * FROM EJEMPLAR
+
 go
 ---Procedimiento almacenado para eliminar del carrito
 create proc sp_EliminarCarrito(
@@ -1675,3 +1685,16 @@ begin
         rollback transaction registro 
     end catch 
 end
+go
+select *  from  prestamo
+select *  from detallePrestamo
+select * from carrito
+select * from ejemplar 
+
+select * delete from Prestamo
+select * from libro
+select * from ejemplar 
+
+INSERT into ejemplar(ID_Libro) 
+VALUES (1),(2),(3),(4)
+
