@@ -26,7 +26,6 @@
                     } @*en caso de que si se haya iniciado sesión*@
                     else
                     {
-
                         <a class="btn btn-outline-dark" href="@Url.Action("Carrito","Biblioteca")">
                             @*muestra el boton de carrito de compras*@
                             <i class="fas fa-shopping-cart me-1"></i> @*redirige a la vista de los productos agregados al carrito*@
@@ -40,7 +39,7 @@
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" href="#!"><b>@User.Identity.Name</b></a></li> @*valor de la cookie de la sesion creada, la cookie creada fue por correo, con esta linea de codigo estamos mostrando el correo con el que se inicio sesión*@
                                     @*<li><a class="dropdown-item" href="#!">Activity Log</a></li>*@
-                                    <li><a class="dropdown-item" href="@Url.Action("MisPrestamos","Biblioteca")">Mis Compras</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("MisPrestamos","Biblioteca")">Mis Prestamos</a></li>
                                     <li><hr class="dropdown-divider" /></li>
                                     <li><a class="dropdown-item" href="@Url.Action("CerrarSesion","Acceso")">Cerrar Sesión</a></li>
                                 </ul>

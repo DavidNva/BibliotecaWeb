@@ -504,6 +504,7 @@
     <Content Include="Views\Biblioteca\DetalleLibro.cshtml" />
     <Content Include="Views\Biblioteca\Carrito.cshtml" />
     <Content Include="Views\Biblioteca\PrestamoEfectuado.cshtml" />
+    <Content Include="Views\Biblioteca\MisPrestamos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

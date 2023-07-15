@@ -1686,6 +1686,24 @@ begin
     end catch 
 end
 go
+create FUNCTION fn_ListarCompra(
+    @idLector int
+)
+RETURNS TABLE 
+AS 
+RETURN 
+(
+    SELECT distinct l.IDLibro, l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo, DP.CantidadEjemplares,p.TotalLibro, DP.Total, p.IdPrestamo FROM DETALLEPrestamo DP
+    INNER JOIN Ejemplar ej ON ej.IDEjemplarLibro = DP.IDEjemplar
+	INNER JOIN Libro l ON l.IdLibro = ej.ID_Libro
+    INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo
+    where p.Id_Lector = 2006
+)
+go
+select * from libro
+select * from detalleprestamo
+
+select * from prestamo
 select *  from  prestamo
 select *  from detallePrestamo
 select * from carrito
@@ -1697,4 +1715,5 @@ select * from ejemplar
 
 INSERT into ejemplar(ID_Libro) 
 VALUES (1),(2),(3),(4)
+
 

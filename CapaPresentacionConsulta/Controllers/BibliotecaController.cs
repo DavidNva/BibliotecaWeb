@@ -473,7 +473,7 @@ namespace CapaPresentacionConsulta.Controllers
 
         return View();
     }
-    #endregion
+        #endregion
         //public async Task<ActionResult> PagoEfectuado()//Para la vista
         //{
         //    string token = Request.QueryString["token"];
@@ -506,30 +506,66 @@ namespace CapaPresentacionConsulta.Controllers
 
         //[ValidarSession]
         //[Authorize]
-        //public ActionResult MisCompras()
+        
+        //public ActionResult MisPrestamos()
         //{
+
         //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
         //    List<EN_DetallePrestamo> oLista = new List<EN_DetallePrestamo>();
         //    bool conversion;
+
+
+        //    //List<EN_Ejemplar> lista = new List<EN_Ejemplar>();//una lista para categorias posibles a filtrar
+        //    //lista = new RN_Ejemplar().ListarEjemplarLibro(idLibro);//Devuelve la lista de categorias actuales
+
         //    //por cada en_carrito que encuentre en la lista crea un nuevo carrito
-        //    oLista = new RN_Prestamo().ListarCompras(idLector).Select(oc => new EN_DetallePrestamo()
+        //    oLista = new RN_Prestamo().ListarPrestamos(idLector).Select(oc => new EN_DetallePrestamo()
         //    {
         //        oId_Libro = new EN_Libro()
         //        {
-        //            Nombre = oc.oId_Libro.Nombre,
-        //            Precio = oc.oId_Libro.Precio,
+        //            IdLibro = oc.oId_Libro.IdLibro,
+        //            //Codigo = oc.oId_Libro.Codigo,
+        //            //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar,
+        //            Titulo = oc.oId_Libro.Titulo,
+
+        //            //Ejemplares = oc.oId_Libro.Ejemplares,//Esto se va a mostrar en el carrito de compras
         //            //RutaImagen = oc.oId_Libro.RutaImagen,
         //            Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oc.oId_Libro.RutaImagen, oc.oId_Libro.NombreImagen), out conversion),
         //            Extension = Path.GetExtension(oc.oId_Libro.NombreImagen)
+        //            //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar
 
         //        },
-        //        Cantidad = oc.Cantidad,
-        //        Total = oc.Total,
-        //        IdTransaccion = oc.IdTransaccion
+        //        CantidadEjemplares = oc.CantidadEjemplares,
+        //        Total = oc.Total
+        //        //IdPrestamo = oc.IdPrestamo
         //    }).ToList();
+        //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
+        //}
 
-        //    return View(oLista);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
-        //}
-        //}
+        //[ValidarSession]
+        //[Authorize]
+        public ActionResult MisPrestamos()
+        {
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
+            List<EN_DetallePrestamo> oLista = new List<EN_DetallePrestamo>();
+            bool conversion;
+            //por cada en_carrito que encuentre en la lista crea un nuevo carrito
+            oLista = new RN_Prestamo().ListarCompras(idLector).Select(oc => new EN_DetallePrestamo()
+            {
+                oId_Libro = new EN_Libro()
+                {
+                    Codigo = oc.oId_Libro.Codigo,
+                    Titulo = oc.oId_Libro.Titulo,
+                    //RutaImagen = oc.oId_Libro.RutaImagen,
+                    Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oc.oId_Libro.RutaImagen, oc.oId_Libro.NombreImagen), out conversion),
+                    Extension = Path.GetExtension(oc.oId_Libro.NombreImagen)
+
+                },
+                CantidadEjemplares = oc.CantidadEjemplares,
+                Total = oc.Total
+            }).ToList();
+
+            return View(oLista);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
+        }
     }
 }
