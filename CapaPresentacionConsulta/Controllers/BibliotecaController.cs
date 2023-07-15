@@ -562,7 +562,8 @@ namespace CapaPresentacionConsulta.Controllers
 
                 },
                 CantidadEjemplares = oc.CantidadEjemplares,
-                Total = oc.Total
+                Total = oc.Total,
+                IdDetallePrestamo = oc.IdDetallePrestamo
             }).ToList();
 
             return View(oLista);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector

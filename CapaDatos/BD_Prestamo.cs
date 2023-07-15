@@ -80,8 +80,9 @@ namespace CapaDatos
                                         NombreImagen = dr["NombreImagen"].ToString()
                                     },
                                     CantidadEjemplares = Convert.ToInt32(dr["CantidadEjemplares"]),
-                                    Total = Convert.ToDecimal(dr["Total"], new CultureInfo("es-MX"))
-                                  
+                                    Total = Convert.ToDecimal(dr["Total"], new CultureInfo("es-MX")),
+                                    IdDetallePrestamo = Convert.ToInt32(dr["IdDetallePrestamo"]),
+
 
                                 });
                         }

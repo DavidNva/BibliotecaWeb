@@ -1581,7 +1581,7 @@ begin
 
 end 
 go
-select * from fn_obtenerCarritoLector(2006)
+select * from fn_obtenerCarritoLector(1006)
 go
 select * from categoria
 select * from lector
@@ -1686,18 +1686,22 @@ begin
     end catch 
 end
 go
-create FUNCTION fn_ListarCompra(
+
+
+select * from fn_ListarPrestamos(1006)
+go
+create FUNCTION fn_ListarPrestamos(
     @idLector int
 )
 RETURNS TABLE 
 AS 
 RETURN 
 (
-    SELECT distinct l.IDLibro, l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo, DP.CantidadEjemplares,p.TotalLibro, DP.Total, p.IdPrestamo FROM DETALLEPrestamo DP
+    SELECT TOP(5000) l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo, DP.CantidadEjemplares, DP.Total, DP.IdDetallePrestamo FROM DETALLEPrestamo DP
     INNER JOIN Ejemplar ej ON ej.IDEjemplarLibro = DP.IDEjemplar
 	INNER JOIN Libro l ON l.IdLibro = ej.ID_Libro
-    INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo
-    where p.Id_Lector = 2006
+    INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo 
+    where p.Id_Lector = @idLector order by DP.IdDetallePrestamo DESC
 )
 go
 select * from libro
@@ -1717,3 +1721,15 @@ INSERT into ejemplar(ID_Libro)
 VALUES (1),(2),(3),(4)
 
 
+select * from lector
+
+select * from libro
+
+update libro set ejemplares = 2
+
+
+select * from DetallePrestamo
+
+SELECT * FROM PRESTAMO
+
+SELECT * FROM CARRITO
