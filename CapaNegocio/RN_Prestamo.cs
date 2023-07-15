@@ -16,13 +16,13 @@ namespace CapaNegocio
         {
             return objCapaDato.Registrar(obj, DetallePrestamo, out Mensaje);
         }
-        public List<EN_DetallePrestamo> ListarCompras(int idLector)
-        {
-            return objCapaDato.ListarCompras(idLector);
-        }
         public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         {
             return objCapaDato.ListarPrestamos(idLector);
         }
+        //public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
+        //{
+        //    return objCapaDato.ListarPrestamos(idLector);
+        //}
     }
 }

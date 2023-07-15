@@ -10,7 +10,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Data;
 using System.Globalization;
-//using CapaPresentacionTienda.Filter;
+using CapaPresentacionConsulta.Filter;
 //using CapaEntidad.Paypal;
 
 namespace CapaPresentacionConsulta.Controllers
@@ -301,8 +301,8 @@ namespace CapaPresentacionConsulta.Controllers
         //    return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
         //}
 
-        //[ValidarSession]
-        [Authorize]
+        [ValidarSession]
+        [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
         public ActionResult Carrito()//Solo los que han iniciado sesión
         {
             return View();
@@ -446,8 +446,8 @@ namespace CapaPresentacionConsulta.Controllers
     //    //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
     //}
 
-    //[ValidarSession]
-    [Authorize]
+    [ValidarSession]
+    [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
     public async Task<ActionResult> PrestamoEfectuado()//Para la vista
     {
         string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
@@ -506,7 +506,7 @@ namespace CapaPresentacionConsulta.Controllers
 
         //[ValidarSession]
         //[Authorize]
-        
+
         //public ActionResult MisPrestamos()
         //{
 
@@ -542,15 +542,15 @@ namespace CapaPresentacionConsulta.Controllers
         //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
         //}
 
-        //[ValidarSession]
-        //[Authorize]
+        [ValidarSession]
+        [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
         public ActionResult MisPrestamos()
         {
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
             List<EN_DetallePrestamo> oLista = new List<EN_DetallePrestamo>();
             bool conversion;
             //por cada en_carrito que encuentre en la lista crea un nuevo carrito
-            oLista = new RN_Prestamo().ListarCompras(idLector).Select(oc => new EN_DetallePrestamo()
+            oLista = new RN_Prestamo().ListarPrestamos(idLector).Select(oc => new EN_DetallePrestamo()
             {
                 oId_Libro = new EN_Libro()
                 {

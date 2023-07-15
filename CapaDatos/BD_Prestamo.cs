@@ -47,57 +47,8 @@ namespace CapaDatos
             return respuesta;
         }
 
+     
         public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
-        {
-            List<EN_DetallePrestamo> lista = new List<EN_DetallePrestamo>();
-            try
-            {
-                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-                {
-                    string query = "select * from fn_ListarPrestamos(@idLector)";
-
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@idLector", idLector);
-                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
-
-                    oConexion.Open();
-                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
-                    {
-                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
-                        {
-                            lista.Add(/*Agrega una nueva Libro la lista*/
-                               new EN_DetallePrestamo()
-                               {
-                                    oId_Libro = new EN_Libro()
-                                    {
-                                        IdLibro = Convert.ToInt32(dr["IdLibro"]),
-                                        Codigo = dr["Codigo"].ToString(),
-                                        //oId_Ejemplar = new EN_Ejemplar() { IdEjemplarLibro = Convert.ToInt32(dr["DesEjemplar"]) },
-                                        //oId_Categoria = new EN_Categoria() { Descripcion = dr["DesEjemplar"].ToString() },
-                                        //oId_Ejemplar = new EN_Ejemplar() { IdEjemplarLibro = Convert.ToInt32 (dr["IDEjemplarLibro"]) },
-                                        Titulo = dr["Titulo"].ToString(),
-                                        //Ejemplares = Convert.ToInt32(dr["Ejemplares"]),//Indica que los decimales los trabaje con puntos
-                                        //oId_Categoria = new EN_Categoria() { Descripcion = dr["Cantidad"].ToString() },
-                                        RutaImagen = dr["RutaImagen"].ToString(),
-                                        NombreImagen = dr["NombreImagen"].ToString()
-                                    },
-                                    CantidadEjemplares = Convert.ToInt32(dr["CantidadEjemplares"]),
-                                    Total = Convert.ToDecimal(dr["Total"])
-                                    //IdPrestamo = Convert.ToInt32(dr["IdPrestamo"])
-
-                               });
-                        }
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                lista = new List<EN_DetallePrestamo>();
-            }
-
-            return lista;
-        }
-        public List<EN_DetallePrestamo> ListarCompras(int idLector)
         {
             List<EN_DetallePrestamo> lista = new List<EN_DetallePrestamo>();
             try
