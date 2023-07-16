@@ -12,7 +12,7 @@ namespace CapaEntidad
 		public int Id_Lector { get; set; }
 		public int TotalLibro { get; set; }
 		//public decimal MontoTotal { get; set; }
-		public bool Estado { get; set; }//o activo
+		public bool Activo { get; set; }//o activo
 		
 		public string FechaPrestamo { get; set; }
 		public string FechaDevolucion { get; set; }

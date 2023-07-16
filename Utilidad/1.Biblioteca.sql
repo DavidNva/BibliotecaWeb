@@ -180,14 +180,13 @@ CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso an
   -- REFERENCES Ejemplar(IDEjemplar) ON DELETE CASCADE,
   TotalLibro int,--Total de libros, o total de ejemplares de ese libro --El lector pudo haber solicitado el prestamo de 3 libros
 	-- MontoTotal decimal(10,2),--La suma total del precio de todos los productos
-  Estado bit default 0,--Devuelto o no devuelto --1 es igual a si, y 0 es igual a no . Asigando por default = 0, 
-	FechaPrestamo datetime default getdate(),
+  Activo bit default 1,--Devuelto o no devuelto --1 es igual a si, y 0 es igual a no . Asigando por default = 0, 
+  FechaPrestamo datetime default getdate(),
   FechaDevolucion datetime null,--No especificaremos nada para que por default sea null (tiene un default null)
   DiasDePrestamo int not null default 7,--Regularmente una semana 7 dias
   Observaciones varchar(500) not null
 )--No tiene referencia (Se puede eliminar)
 go
-select * from prestamo
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
 	IdDetallePrestamo int primary key identity,
 	IdPrestamo int references Prestamo(IdPrestamo),

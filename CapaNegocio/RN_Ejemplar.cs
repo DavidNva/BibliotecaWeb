@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Text;
 using System.Threading.Tasks;
 using CapaDatos;
@@ -18,6 +19,10 @@ namespace CapaNegocio
         public List<EN_Ejemplar> ListarEjemplarLibro(int idlibro)
         {
             return objCapaDato.ListarEjemplarLibro(idlibro);
+        }
+        public bool ActualizarEjemplarActivo(int idLector, int idEjemplar)
+        {
+            return objCapaDato.ActualizarEjemplarActivo(idLector, idEjemplar);
         }
     }
 }

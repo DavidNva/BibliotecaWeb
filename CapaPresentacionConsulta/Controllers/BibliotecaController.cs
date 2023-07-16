@@ -371,6 +371,7 @@ namespace CapaPresentacionConsulta.Controllers
             detallePrestamo.Columns.Add("CantidadEjemplares", typeof(int));
             detallePrestamo.Columns.Add("Total", typeof(decimal));//Esta tabla viene a ser la representacion de la estructura creada en sql (EDetalle_Prestamo)
 
+
             foreach (EN_Carrito oCarrito in oListaCarrito)//por cada carrito en la lista carrito
             {
                 decimal subTotal = Convert.ToDecimal(oCarrito.Cantidad.ToString()) /** oCarrito.oId_Libro.Precio*/;
@@ -383,13 +384,26 @@ namespace CapaPresentacionConsulta.Controllers
                         oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
                         oCarrito.Cantidad,
                         subTotal
+
+                });
+               
+            }
+            //ESTE LISTADO INTENTAR PASARLO 
+            DataTable EjemplarActivo = new DataTable();
+            EjemplarActivo.Locale = new CultureInfo("es-MX");
+            EjemplarActivo.Columns.Add("IdEjemplar", typeof(int));
+            foreach (EN_Carrito oCarrito in oListaCarrito) {  
+                EjemplarActivo.Rows.Add(new object[]{
+                    oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro
                 });
             }
+
             oPrestamo.TotalLibro = (int)total;
             oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
 
             TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
+            TempData["EjemplarActivo"] = EjemplarActivo;
 
             return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
             //Enviamos dos parametros el id de transaccon y un status como true
@@ -462,11 +476,31 @@ namespace CapaPresentacionConsulta.Controllers
                                                                       //Lo convertimos en un objeto de Prestamo
 
             DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
+            
+            DataTable EjemplarActivo = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
+
+           
             //oPrestamo.IdLibro = idTransaccion;
             oPrestamo.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
                 //Estos eran IdTransaccion
             string mensaje = string.Empty;//Por defecto el mensaje es vacio
-            bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo, out mensaje);
+            
+            //AQUI POSIBLEMENTE MEJOR ACLARAR QUE EL ACTIVO DE EJEMPLAR SEA 1 SI O SI (pARA ESTO SE TENDRIA QUE MODIFICAR LAS COLUMNAS
+            //DE DETALLEPRESTAMOS AGREGANDO ACTIVO Y ADEMAS, MODIFICANDO DESDE EL PROCEDIMIENTO ALMACENADO
+
+                //O LA OTRA ES DESDE QUE AGREGAMMOS AL CARRITO, QUE ESE EJEMPLAR SE DESACTIVE
+
+
+            bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo,/* EjemplarActivo, */out mensaje);
+
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+
+            foreach (DataRow row in EjemplarActivo.Rows)
+            {
+              int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
+              bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
+            }
+            
 
             ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
         }

@@ -1649,7 +1649,11 @@ CREATE TYPE [dbo].[EDetalle_Prestamo] AS TABLE(
     [Total] decimal (18, 2) null
 )
 go
-create procedure usp_RegistrarPrestamo(
+CREATE TYPE [dbo].[Ejemplar_Activo] AS TABLE(
+    [IdEjemplar] int null
+)
+go
+create alter procedure usp_RegistrarPrestamo(
     @Id_Lector int,
     @TotalLibro int, 
     --@MontoTotal decimal(18,2),
@@ -1658,6 +1662,7 @@ create procedure usp_RegistrarPrestamo(
     -- el 1 significa prestamo activo o "No devuelto")
     @Observaciones nvarchar(500),
     @DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
+	--@EjemplarActivo [Ejemplar_Activo] READONLY,
     @Resultado bit output,
     @Mensaje varchar(500) output
 )
@@ -1675,6 +1680,8 @@ begin
 
         insert into DetallePrestamo(IdPrestamo, IDEjemplar, CantidadEjemplares, Total)
         select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
+
+		--update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
 
         DELETE FROM CARRITO WHERE IdLector = @Id_Lector
         commit transaction registro 
@@ -1704,32 +1711,32 @@ RETURN
     where p.Id_Lector = @idLector order by DP.IdDetallePrestamo DESC
 )
 go
-select * from libro
-select * from detalleprestamo
+create proc sp_ActualizarEjemplarActivo(
+    @IdLector int, 
+    @IdEjemplar int, 
+    @Resultado bit output
+)
+as 
+begin 
+    set @Resultado = 1 
+    BEGIN TRY --inicia una transaccion
+        BEGIN TRANSACTION OPERACION 
+        update Ejemplar set Activo = 0 where IDEjemplarLibro = @IdEjemplar --actualiza el activo a 0
+        --delete top(1) from Carrito where IdLector = @IdLector and IdLibro = @IdLibro --y eliminamos ese Libro en la tabla carrito
+        COMMIT TRANSACTION OPERACION 
+    END TRY 
+    BEGIN CATCH --si existe un error
+        set @Resultado = 0
+        ROLLBACK TRANSACTION OPERACION  --reestablece todo lo que hayamos hecho antes
+    END CATCH
+end
 
-select * from prestamo
-select *  from  prestamo
-select *  from detallePrestamo
-select * from carrito
-select * from ejemplar 
-
-select * delete from Prestamo
-select * from libro
-select * from ejemplar 
-
-INSERT into ejemplar(ID_Libro) 
-VALUES (1),(2),(3),(4)
+sp_ActualizarEjemplarActivo 1006,12,1
 
 
-select * from lector
 
-select * from libro
+update ejemplar set activo = 1
 
-update libro set ejemplares = 2
+delete prestamo
 
-
-select * from DetallePrestamo
-
-SELECT * FROM PRESTAMO
-
-SELECT * FROM CARRITO
+sele
