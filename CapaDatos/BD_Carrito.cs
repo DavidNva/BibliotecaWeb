@@ -44,7 +44,7 @@ namespace CapaDatos
             return resultado;
 
         }
-        public bool OperacionCarrito(int idLector, int idLibro, int idEjemplar, bool sumar, out string Mensaje)//out indica parametro de salida
+        public bool OperacionCarrito(int idLector, int idLibro, bool sumar, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = true;
 
@@ -56,7 +56,6 @@ namespace CapaDatos
                     SqlCommand cmd = new SqlCommand("sp_OperacionCarrito", oConexion);
                     cmd.Parameters.AddWithValue("IdLector", idLector);
                     cmd.Parameters.AddWithValue("IdLibro", idLibro);//ya tiene el id del libro, que ya estuve relacionado con el idejemplarlibro
-                    cmd.Parameters.AddWithValue("IdEjemplar", idEjemplar);//ya tiene el id del libro, que ya estuve relacionado con el idejemplarlibro
                     cmd.Parameters.AddWithValue("Sumar", sumar);
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;

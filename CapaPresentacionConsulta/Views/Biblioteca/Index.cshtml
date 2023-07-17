@@ -180,30 +180,21 @@
                                         //"$" + element.Ejemplares.toFixed(2) + "Ejemplares disponibles" //para devolver solo dos decimales
                                         element.Ejemplares + " Ejemplares disponibles" //para devolver solo dos decimales
 
-                                    ),
-                                    $("<button>").addClass("col-12 btn btn-outline-dark text-center btn-ejemplar").attr({}).text("Ejemplar: " + element.oId_Ejemplar.IdEjemplarLibro)
+                                    )
                                 ),
-                                $("<div>").addClass("col-sm-1 align-self-center").append(
-                                    //$("<span>").text("$" + item.oId_Libro.Ejemplares.toFixed(2))
-                                    $("<span>").addClass("span-cantidad").text(element.Cantidad)
-                                    .data("oId_Libro", element)
-                                    .val(element.Cantidad),
-                                ),
-                                $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
+                                 $("<div>").addClass("card-footer p-4 pt-0 border-top-0 bg-transparent").append(
 
                                             $("<div>").addClass("d-grid gap-2").append(//Esto es para mejora del diseño y que los elementos tomen todo el ancho y que se alineen los elementos
                                                 @if(Session["Lector"] != null){ //Si el usuario ha iniciado sesion, se muestra el boton  de agregar al carrito
-                                                    @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idLibro", element).text("Agregar a carrito"),//añadimos una propiedad interna el valor que va a tener sera el del elemento id
+                                                    @:$("<button>").addClass("btn btn-success mt-auto agregarcarrito").data("idLibro", element.IdLibro).text("Agregar a carrito"),//añadimos una propiedad interna el valor que va a tener sera el del elemento id
 
                                                 }
                                                 $("<a>").addClass("btn btn-dark mt-auto")//con margin-top de auto
                                                     .attr({ "href": "@Url.Action("DetalleLibro","Biblioteca")" + "?idLibro=" + element.IdLibro })//tiene el parametro idLibro
                                                     .text("Ver detalle")
-
-                                               
                                             )
 
-                                 )
+                                        )
                             )
                         ).appendTo("#contenedorLibro")
                     })
@@ -222,31 +213,13 @@
         })
 
         $(document).on("click", "button.agregarcarrito", function () {//boton agregar carrito
-
-            var listaCarrito = [];//Por defecto esta lista estará vacia
-
-            $("span.span-cantidad").each(function () {//Se hará un recorrido a todos los controllers con estas caracteristicas
-
-                var Libro = $(this).data("oId_Libro");
-                //var Libro = $("span.span-ejemplar").data("oId_Ejemplar2");
-                //var Libro = $("span.span-ejemplar").val()
-                var cantidad = $(this).val()
-
-                listaCarrito.push({//para agregar elementos a esta lisra
-                    oId_Libro: Libro,//Aqui tengo que darle el idEJEMPLAR
-
-                    Cantidad: cantidad
-                })
-            })
-
-
-            //console.log($(this).data("idLibro"))
+            console.log($(this).data("idLibro"))
             jQuery.ajax({
                 url: "@Url.Action("AgregarCarrito", "Biblioteca")",
                 type: "POST", //si categoria envia 0 muestra todas las marcas
                 //los parametros indicados deben ser igual a los nombrados en Biblioteca controller de su metodo
                 //el identificador idLibro debe ser igual al del metodo declaado en su parametro
-                data: JSON.stringify({ idLibro: $(this).data("idLibro").IdLibro, idEjemplar: $(this).data("idLibro").oId_Ejemplar.IdEjemplarLibro  }),//Se envia el valor para el parametro tipo int a utilizar
+                data: JSON.stringify({ idLibro: $(this).data("idLibro") }),//Se envia el valor para el parametro tipo int a utilizar
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {

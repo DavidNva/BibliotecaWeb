@@ -19,30 +19,13 @@ namespace CapaDatos
                 {
                    StringBuilder sb = new StringBuilder(); //Permite hacer saltos de linea
 
-                    //sb.AppendLine("select l.IdLibro, l.Codigo, l.Titulo, l.Paginas,c.IDCategoria, c.Descripcion[DesCategoria],");
-                    //sb.AppendLine("e.IDEditorial, e.Descripcion[DesEditorial], s.IDSala, s.Descripcion[DesSala],");
-                    //sb.AppendLine("l.Ejemplares,l.AñoEdicion, l.Volumen, l.RutaImagen, l.NombreImagen,l.Observaciones, l.Activo");
-                    //sb.AppendLine("from Libro l");
-                    //sb.AppendLine("inner join Categoria c on c.IDCategoria = l.Id_Categoria");
-                    //sb.AppendLine("inner join Editorial e on e.IDEditorial = l.ID_Editorial");
-                    //sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala order by l.IDLibro desc");
-
-                    sb.AppendLine("select IdLibro, Codigo, Titulo, Paginas,IDCategoria, [DesCategoria],");
-                    sb.AppendLine("IDEditorial,[DesEditorial], IDSala,[DesSala],[DesEjemplar],");
-                    sb.AppendLine("Ejemplares,AñoEdicion, Volumen, RutaImagen, NombreImagen,Observaciones, Activo");
-                    sb.AppendLine("FROM(");
-                    sb.AppendLine("SELECT l.IdLibro, l.Codigo, l.Titulo, l.Paginas,c.IDCategoria, c.Descripcion[DesCategoria],");
-                    sb.AppendLine("e.IDEditorial, e.Descripcion[DesEditorial], s.IDSala, s.Descripcion[DesSala],ej.IdEjemplarLibro[DesEjemplar],");
-                    sb.AppendLine("l.Ejemplares,l.AñoEdicion, l.Volumen, l.RutaImagen, l.NombreImagen,l.Observaciones, l.Activo,");
-                    sb.AppendLine("ROW_NUMBER() OVER (PARTITION BY l.IdLibro ORDER BY ej.IdEjemplarLibro) AS RowNum");
+                    sb.AppendLine("select l.IdLibro, l.Codigo, l.Titulo, l.Paginas,c.IDCategoria, c.Descripcion[DesCategoria],");
+                    sb.AppendLine("e.IDEditorial, e.Descripcion[DesEditorial], s.IDSala, s.Descripcion[DesSala],");
+                    sb.AppendLine("l.Ejemplares,l.AñoEdicion, l.Volumen, l.RutaImagen, l.NombreImagen,l.Observaciones, l.Activo");
                     sb.AppendLine("from Libro l");
                     sb.AppendLine("inner join Categoria c on c.IDCategoria = l.Id_Categoria");
                     sb.AppendLine("inner join Editorial e on e.IDEditorial = l.ID_Editorial");
-                    sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala ");
-                    sb.AppendLine("INNER JOIN Ejemplar ej ON ej.Id_libro = l.IdLibro and ej.Activo = 1");
-                    sb.AppendLine(")AS tbl");
-                    sb.AppendLine("WHERE tbl.RowNum = 1");
-                    
+                    sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala order by l.IDLibro desc");
                     //string query = "select IDLibro,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,Tipo,Reestablecer,Activo from Libro";                    //string query = "select IDLibro,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,tp.IdTipoPersona,tp.Descripcion[Tipo],Reestablecer,Activo from Libro inner join TipoPersona TP on tp.IdTipoPersona = Libro.Tipo";
 
                     SqlCommand cmd = new SqlCommand(sb.ToString(), oConexion);
@@ -64,7 +47,6 @@ namespace CapaDatos
                                     oId_Categoria = new EN_Categoria() { IdCategoria = dr["IDCategoria"].ToString(), Descripcion = dr["DesCategoria"].ToString() },
                                     oId_Editorial = new EN_Editorial() { IdEditorial = dr["IdEditorial"].ToString(), Descripcion = dr["DesEditorial"].ToString() },
                                     oId_Sala = new EN_Sala() { IdSala = dr["IdSala"].ToString(), Descripcion = dr["DesSala"].ToString() },
-                                    oId_Ejemplar = new EN_Ejemplar() { IdEjemplarLibro = Convert.ToInt32(dr["DesEjemplar"]) },
                                     Ejemplares = Convert.ToInt32(dr["Ejemplares"]),
                                     AñoEdicion = dr["AñoEdicion"].ToString(),
                                     Volumen = Convert.ToInt32(dr["Volumen"]),

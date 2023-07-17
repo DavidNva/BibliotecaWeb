@@ -23,9 +23,9 @@ namespace CapaNegocio
         //{
         //    return objCapaDato.OperacionCarrito(idLector, idLibros, idEjemplarLibro, sumar, out Mensaje);
         //}
-        public bool OperacionCarrito(int idLector, int idLibro, int idEjemplar, bool sumar, out string Mensaje)
+        public bool OperacionCarrito(int idLector, int idLibro, bool sumar, out string Mensaje)
         {
-            return objCapaDato.OperacionCarrito(idLector, idLibro, idEjemplar, sumar, out Mensaje);
+            return objCapaDato.OperacionCarrito(idLector, idLibro, sumar, out Mensaje);
         }
         public int CantidadEnCarrito(int idLector)
         {
