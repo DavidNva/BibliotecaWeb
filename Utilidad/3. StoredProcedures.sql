@@ -1529,9 +1529,10 @@ begin
         set @Resultado = 0
 end 
 go 
-create proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un Libro a un carrito
+create alter proc sp_OperacionCarrito( --servirá para validar que vamos a agregar un Libro a un carrito
     @IdLector int,
     @IdLibro int, 
+	@IdEjemplar int,
     @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
     @Mensaje varchar(500) output,
     @Resultado bit output
@@ -1556,7 +1557,8 @@ begin
                 else --y si todavia no exista en el carrito, insertamos un nuevo valor a carrito
                     insert into Carrito(IdLector, IdLibro, Cantidad) values (@IdLector, @IdLibro, 1)
                 
-                update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --si lo anterior fue bien, resta 1 a Ejemplares de la tabla Libro
+					update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --si lo anterior fue bien, resta 1 a Ejemplares de la tabla Libro
+					update Ejemplar set Activo = 0 where IDEjemplarLibro = @IdEjemplar --actualiza el activo a 0
             end 
             else --en el caso de que el Ejemplares del Libro no se mayor a 0
             begin --envia el siguiente error
@@ -1739,4 +1741,4 @@ update ejemplar set activo = 1
 
 delete prestamo
 
-sele
+select * from ejemplar

@@ -70,6 +70,7 @@ namespace CapaPresentacionConsulta.Controllers
                 oId_Categoria = l.oId_Categoria,
                 oId_Editorial = l.oId_Editorial,
                 oId_Sala = l.oId_Sala,
+                oId_Ejemplar = l.oId_Ejemplar,//nueva linea
                 Ejemplares = l.Ejemplares,
                 AñoEdicion = l.AñoEdicion,
                 Volumen = l.Volumen,
@@ -165,7 +166,7 @@ namespace CapaPresentacionConsulta.Controllers
         //    return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
         //}
         [HttpPost]
-        public JsonResult AgregarCarrito(int idLibro)
+        public JsonResult AgregarCarrito(/*List<EN_Carrito> oListaCarrito,*/ int idLibro, int idEjemplar)
         {
             //idLibros = idLibro;
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
@@ -180,29 +181,31 @@ namespace CapaPresentacionConsulta.Controllers
             }
             else
             {
-                respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, true, out mensaje);//true es igual sumar = 1
+                respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro,idEjemplar, true, out mensaje);//true es igual sumar = 1
+
+                
+                ////ESTE LISTADO INTENTAR PASARLO 
+                //DataTable EjemplarActivo = new DataTable();
+                //EjemplarActivo.Locale = new CultureInfo("es-MX");
+                //EjemplarActivo.Columns.Add("IdEjemplar", typeof(int));
+                //foreach (EN_Carrito oCarrito in oListaCarrito)
+                //{
+                //    EjemplarActivo.Rows.Add(new object[]{
+                //        oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro
+                //    });
+                //}
+
+                //TempData["EjemplarActivo"] = EjemplarActivo;
+
+                //foreach (DataRow row in EjemplarActivo.Rows)
+                //{
+                //    int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
+                //    bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
+                //}
             }
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
-        //[HttpPost]
-        //public JsonResult AgregarCarrito(int idLibros, int idEjemplarLibro)
-        //{
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
-        //    //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
-        //    bool existe = new RN_Carrito().ExisteCarrito(idLector, idEjemplarLibro); //Valida si existe el Libro dentro del carrito del Lector
 
-        //    bool respuesta = false;
-        //    string mensaje = string.Empty;
-        //    if (existe)
-        //    {
-        //        mensaje = "El Libro ya existe en el carrito";
-        //    }
-        //    else
-        //    {
-        //        respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibros,idEjemplarLibro, true, out mensaje);//true es igual sumar = 1
-        //    }
-        //    return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-        //}
 
         [HttpGet]
         public JsonResult CantidadEnCarrito()//devuelve la cantidad que tiene los Libros segun el carrito del Lector
@@ -247,14 +250,14 @@ namespace CapaPresentacionConsulta.Controllers
         }
 
         [HttpPost]
-        public JsonResult OperacionCarrito(int idLibro, bool sumar)//Va a permitir operar las cantidades del producto dentro del carrito
+        public JsonResult OperacionCarrito(int idLibro, int idEjemplar, bool sumar)//Va a permitir operar las cantidades del producto dentro del carrito
         {
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
             //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
 
             bool respuesta = false;
             string mensaje = string.Empty;
-            respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, sumar, out mensaje);//true es igual sumar = 1 = true, restar = 0 = false 
+            respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, idEjemplar, sumar, out mensaje);//true es igual sumar = 1 = true, restar = 0 = false 
 
             return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
@@ -388,22 +391,22 @@ namespace CapaPresentacionConsulta.Controllers
                 });
                
             }
-            //ESTE LISTADO INTENTAR PASARLO 
-            DataTable EjemplarActivo = new DataTable();
-            EjemplarActivo.Locale = new CultureInfo("es-MX");
-            EjemplarActivo.Columns.Add("IdEjemplar", typeof(int));
-            foreach (EN_Carrito oCarrito in oListaCarrito) {  
-                EjemplarActivo.Rows.Add(new object[]{
-                    oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro
-                });
-            }
+            ////ESTE LISTADO INTENTAR PASARLO 
+            //DataTable EjemplarActivo = new DataTable();
+            //EjemplarActivo.Locale = new CultureInfo("es-MX");
+            //EjemplarActivo.Columns.Add("IdEjemplar", typeof(int));
+            //foreach (EN_Carrito oCarrito in oListaCarrito) {  
+            //    EjemplarActivo.Rows.Add(new object[]{
+            //        oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro
+            //    });
+            //}
 
             oPrestamo.TotalLibro = (int)total;
             oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
 
             TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
-            TempData["EjemplarActivo"] = EjemplarActivo;
+            //TempData["EjemplarActivo"] = EjemplarActivo;
 
             return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
             //Enviamos dos parametros el id de transaccon y un status como true
@@ -495,11 +498,11 @@ namespace CapaPresentacionConsulta.Controllers
 
             int idLector = ((EN_Lector)Session["Lector"]).IdLector;
 
-            foreach (DataRow row in EjemplarActivo.Rows)
-            {
-              int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
-              bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
-            }
+            //foreach (DataRow row in EjemplarActivo.Rows)
+            //{
+            //  int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
+            //  bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
+            //}
             
 
             ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
