@@ -241,7 +241,20 @@
                             window.location.href = '@Url.Action("Carrito","Biblioteca")'
                         })
                     } else {
-                        swal("", data.mensaje, "warning");//el mensaje se esta obteniendo de data
+                        //swal("", data.mensaje, "warning");//el mensaje se esta obteniendo de data
+                        swal({
+                            title: data.mensaje,
+                            text: "¿Desea ir al carrito?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-primary",
+                            confirmButtonText: "Si",
+                            cancelButtonText: "No",
+                            closeOnConfirm: true
+                        }, function () {
+                            //redirige al carrito
+                            window.location.href = '@Url.Action("Carrito","Biblioteca")'
+                        })
                     }
                 }
             });
