@@ -55,6 +55,7 @@ namespace CapaPresentacionConsulta.Controllers
 
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
+
         [HttpPost]
         public JsonResult ListarLibros(string idCategoria, string idEditorial)//cambiamos de tipo int a string
         {
@@ -176,7 +177,7 @@ namespace CapaPresentacionConsulta.Controllers
             string mensaje = string.Empty;
             if (existe)
             {
-                mensaje = "El Libro ya existe en el carrito";
+                mensaje = "El libro ya existe en el carrito";
             }
             else
             {
@@ -361,7 +362,7 @@ namespace CapaPresentacionConsulta.Controllers
         //    }
         //}
         [HttpPost]
-        public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
+        public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo,int idLibro, int idEjemplar)//Con parametros
         {//los servicios de paypal obligan a trabajar de manera asincrona
             decimal total = 0;
 
@@ -405,7 +406,25 @@ namespace CapaPresentacionConsulta.Controllers
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
             TempData["EjemplarActivo"] = EjemplarActivo;
 
-            return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+            bool existe = new RN_Carrito().ExisteEjemplarInactivo(idLector, idLibro, idEjemplar); //Valida si existe el Libro dentro del carrito del Lector
+
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            if (existe)
+            {
+                mensaje = "El ejemplar ya fue prestado a otro lector, recarga la pagina y verifica si aun existe otro ejemplar disponible para el libro que seleccionaste";
+            }
+            else
+            {
+
+                //respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, true, out mensaje);//true es igual sumar = 1
+            }
+            //return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+
+
+            return Json(new { respuesta = respuesta, mensaje = mensaje, Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
             //Enviamos dos parametros el id de transaccon y un status como true
             //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
         }

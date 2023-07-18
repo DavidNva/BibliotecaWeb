@@ -1732,12 +1732,33 @@ begin
         ROLLBACK TRANSACTION OPERACION  --reestablece todo lo que hayamos hecho antes
     END CATCH
 end
+go
+create alter proc sp_ExisteEjemplarInactivo( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
+    @IdLector int, 
+    @IdLibro int, 
+	@IdEjemplarLibro int, 
+    @Resultado bit output
+)
+as 
+begin 
+    if exists(select IdCarrito, IdLector, l.IdLibro, Cantidad, IDEjemplarLibro, ej.Activo
+			FROM carrito c
+			INNER JOIN Libro l ON l.IdLibro = c.IdLibro
+			inner join ejemplar ej on ej.ID_Libro = c.IdLibro  and ej.Activo = 0
+			WHERE c.IdLector = @IdLector and l.IdLibro = @IdLibro and IDEjemplarLibro = @IdEjemplarLibro)
+        set @Resultado = 1
+    else 
+        set @Resultado = 0
+end 
+
 
 sp_ActualizarEjemplarActivo 1006,12,1
 
 
 
 update ejemplar set activo = 1
+
+update libro set ejemplares = 3
 
 delete prestamo
 
