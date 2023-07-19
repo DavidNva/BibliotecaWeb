@@ -19,10 +19,10 @@ namespace CapaNegocio
         {
             return objCapaDato.ExisteCarrito(idLector, idLibro); 
         }
-        public bool ExisteEjemplarInactivo(int idLector, int idLibro, int idEjemplar)
-        {
-            return objCapaDato.ExisteEjemplarInactivo(idLector, idLibro, idEjemplar);
-        }
+        //public bool ExisteEjemplarInactivo(int idLector, int idLibro, int idEjemplar)
+        //{
+        //    return objCapaDato.ExisteEjemplarInactivo(idLector, idLibro, idEjemplar);
+        //}
         //public bool OperacionCarrito(int idLector,int idLibros ,int idEjemplarLibro, bool sumar, out string Mensaje)
         //{
         //    return objCapaDato.OperacionCarrito(idLector, idLibros, idEjemplarLibro, sumar, out Mensaje);

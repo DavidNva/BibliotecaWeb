@@ -44,40 +44,6 @@ namespace CapaDatos
             return resultado;
 
         }
-
-        //Saber si hay un ejemplar inactivo al realizar un prestamo dentro de un carrito de un Lector
-        public bool ExisteEjemplarInactivo(int idLector, int idLibro, int idEjemplar)//out indica parametro de salida
-        {
-            bool resultado = true;
-
-            try
-            {
-                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
-                {
-                    SqlCommand cmd = new SqlCommand("sp_ExisteEjemplarInactivo", oConexion);
-                    cmd.Parameters.AddWithValue("IdLector", idLector);
-                    cmd.Parameters.AddWithValue("IdLibro", idLibro);
-                    cmd.Parameters.AddWithValue("IdLibro", idEjemplar);
-
-                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
-                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    //cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    oConexion.Open();
-                    cmd.ExecuteNonQuery();
-                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
-                    //Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                resultado = false;
-
-            }
-            return resultado;
-
-        }
         public bool OperacionCarrito(int idLector, int idLibro, bool sumar, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = true;

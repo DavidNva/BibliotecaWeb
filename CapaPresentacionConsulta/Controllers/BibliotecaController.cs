@@ -362,10 +362,10 @@ namespace CapaPresentacionConsulta.Controllers
         //    }
         //}
         [HttpPost]
-        public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo,int idLibro, int idEjemplar)//Con parametros
+        public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
         {//los servicios de paypal obligan a trabajar de manera asincrona
             decimal total = 0;
-
+            bool status = true;
             DataTable detallePrestamo = new DataTable();
             detallePrestamo.Locale = new CultureInfo("es-MX"); //Comenzamos a crear las columnas que necesita esta table
             detallePrestamo.Columns.Add("IdEjemplar", typeof(string));//antes era IdLibro
@@ -406,25 +406,64 @@ namespace CapaPresentacionConsulta.Controllers
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
             TempData["EjemplarActivo"] = EjemplarActivo;
 
-            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
-            bool existe = new RN_Carrito().ExisteEjemplarInactivo(idLector, idLibro, idEjemplar); //Valida si existe el Libro dentro del carrito del Lector
 
-            bool respuesta = false;
-            string mensaje = string.Empty;
-            if (existe)
+
+
+
+            string fechaPrestamo = oPrestamo.FechaPrestamo;
+            //string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
+            //bool status = Convert.ToBoolean(Request.QueryString["status"]);
+
+            ViewData["Status"] = status;//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
+
+            if (status) //si estatus es verdadero
             {
-                mensaje = "El ejemplar ya fue prestado a otro lector, recarga la pagina y verifica si aun existe otro ejemplar disponible para el libro que seleccionaste";
+                EN_Prestamo oPrestamo2 = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
+                                                                          //un mismo controlador, de esta forma podemos acceder a este temp data del metodo anterior
+                                                                          //Lo convertimos en un objeto de Prestamo
+
+                DataTable detallePrestamo2 = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
+
+                DataTable EjemplarActivo2 = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
+
+
+                //oPrestamo.IdLibro = idTransaccion;
+                oPrestamo2.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
+                                                        //Estos eran IdTransaccion
+                string mensaje = string.Empty;//Por defecto el mensaje es vacio
+
+                //AQUI POSIBLEMENTE MEJOR ACLARAR QUE EL ACTIVO DE EJEMPLAR SEA 1 SI O SI (pARA ESTO SE TENDRIA QUE MODIFICAR LAS COLUMNAS
+                //DE DETALLEPRESTAMOS AGREGANDO ACTIVO Y ADEMAS, MODIFICANDO DESDE EL PROCEDIMIENTO ALMACENADO
+
+                //O LA OTRA ES DESDE QUE AGREGAMMOS AL CARRITO, QUE ESE EJEMPLAR SE DESACTIVE
+
+
+                bool respuesta = new RN_Prestamo().Registrar(oPrestamo2, detallePrestamo2, EjemplarActivo2, out mensaje);
+
+                int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+
+                foreach (DataRow row in EjemplarActivo.Rows)
+                {
+                    int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
+                    bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
+                }
+
+                ViewData["Mensaje"] = mensaje;
+                ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
+            }
+
+
+            string mensajeN = ViewData["Mensaje"].ToString();//TODO
+
+            if (mensajeN == "")//INTENTA METER ESTO DIRECTAMENTE EN EL METODO DE ARRIBA PARA NO TENER QUE CREAR OTRA VARIABLE
+            {
+                return Json(new { mensaje = mensajeN, Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-
-                //respuesta = new RN_Carrito().OperacionCarrito(idLector, idLibro, true, out mensaje);//true es igual sumar = 1
+                return Json(new { mensaje = mensajeN }, JsonRequestBehavior.AllowGet);
             }
-            //return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
-
-
-
-            return Json(new { respuesta = respuesta, mensaje = mensaje, Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+            //return Json(new { mensaje = mensajeN, Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
             //Enviamos dos parametros el id de transaccon y un status como true
             //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
         }
@@ -483,46 +522,48 @@ namespace CapaPresentacionConsulta.Controllers
     [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
     public async Task<ActionResult> PrestamoEfectuado()//Para la vista
     {
-        string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
+        //string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
         bool status = Convert.ToBoolean(Request.QueryString["status"]);
+            //bool status2 = ViewData["Status"];
+        //bool 
+        //ViewData["StatusPrestamo"] = ViewData["Status"].ToString();//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
 
-        ViewData["Status"] = status;//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
+        ViewData["StatusPrestamo"] = status; 
+        //if (status) //si estatus es verdadero
+        //{
+        //    EN_Prestamo oPrestamo = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
+        //                                                              //un mismo controlador, de esta forma podemos acceder a este temp data del metodo anterior
+        //                                                              //Lo convertimos en un objeto de Prestamo
 
-        if (status) //si estatus es verdadero
-        {
-            EN_Prestamo oPrestamo = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
-                                                                      //un mismo controlador, de esta forma podemos acceder a este temp data del metodo anterior
-                                                                      //Lo convertimos en un objeto de Prestamo
-
-            DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
+        //    DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
             
-            DataTable EjemplarActivo = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
+        //    DataTable EjemplarActivo = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
 
            
-            //oPrestamo.IdLibro = idTransaccion;
-            oPrestamo.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
-                //Estos eran IdTransaccion
-            string mensaje = string.Empty;//Por defecto el mensaje es vacio
+        //    //oPrestamo.IdLibro = idTransaccion;
+        //    oPrestamo.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
+        //        //Estos eran IdTransaccion
+        //    string mensaje = string.Empty;//Por defecto el mensaje es vacio
             
-            //AQUI POSIBLEMENTE MEJOR ACLARAR QUE EL ACTIVO DE EJEMPLAR SEA 1 SI O SI (pARA ESTO SE TENDRIA QUE MODIFICAR LAS COLUMNAS
-            //DE DETALLEPRESTAMOS AGREGANDO ACTIVO Y ADEMAS, MODIFICANDO DESDE EL PROCEDIMIENTO ALMACENADO
+        //    //AQUI POSIBLEMENTE MEJOR ACLARAR QUE EL ACTIVO DE EJEMPLAR SEA 1 SI O SI (pARA ESTO SE TENDRIA QUE MODIFICAR LAS COLUMNAS
+        //    //DE DETALLEPRESTAMOS AGREGANDO ACTIVO Y ADEMAS, MODIFICANDO DESDE EL PROCEDIMIENTO ALMACENADO
 
-                //O LA OTRA ES DESDE QUE AGREGAMMOS AL CARRITO, QUE ESE EJEMPLAR SE DESACTIVE
+        //        //O LA OTRA ES DESDE QUE AGREGAMMOS AL CARRITO, QUE ESE EJEMPLAR SE DESACTIVE
 
 
-            bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo,/* EjemplarActivo, */out mensaje);
+        //    bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo, EjemplarActivo, out mensaje);
 
-            int idLector = ((EN_Lector)Session["Lector"]).IdLector;
+        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;
 
-            foreach (DataRow row in EjemplarActivo.Rows)
-            {
-              int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
-              bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
-            }
+        //    foreach (DataRow row in EjemplarActivo.Rows)
+        //    {
+        //      int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
+        //      bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
+        //    }
             
 
-            ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
-        }
+        //    ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
+        //}
 
         return View();
     }

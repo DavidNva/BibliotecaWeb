@@ -11,7 +11,7 @@ namespace CapaDatos
 {
     public class BD_Prestamo
     {
-        public bool Registrar(EN_Prestamo obj, DataTable DetallePrestamo,/* DataTable EjemplarActivo,*/ out string Mensaje)//out indica parametro de salida
+        public bool Registrar(EN_Prestamo obj, DataTable DetallePrestamo, DataTable EjemplarActivo, out string Mensaje)//out indica parametro de salida
         {
             bool respuesta = false;
 
@@ -28,7 +28,7 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("DetallePrestamo", DetallePrestamo);//El data table debe tener las mismas columnas de la estructura creada
                     //en sql (las 3 creadas: IdLibro, Cantidad, Total)
 
-                   // cmd.Parameters.AddWithValue("EjemplarActivo", EjemplarActivo);
+                    cmd.Parameters.AddWithValue("EjemplarActivo", EjemplarActivo);
 
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;

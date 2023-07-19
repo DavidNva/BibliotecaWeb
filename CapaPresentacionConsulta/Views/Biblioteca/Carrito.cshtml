@@ -402,27 +402,26 @@
                 //var Libro = $("span.span-ejemplar").data("oId_Ejemplar2");
                 //var Libro = $("span.span-ejemplar").val()
                 var cantidad = $(this).val()
-                
+
                 listaCarrito.push({//para agregar elementos a esta lisra
                     oId_Libro: Libro,//Aqui tengo que darle el idEJEMPLAR
 
                     Cantidad: cantidad
                 })
             })
-            var IdLibro = $("span.span-cantidad").data("oId_Libro").IdLibro;
-            var IdEjemplar = $("span.span-cantidad").data("oId_Libro").oId_Ejemplar.IdEjemplarLibro;
+
             jQuery.ajax({
                 url: '@Url.Action("ProcesarPrestamo", "Biblioteca")',
                 type: "POST",
                 //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
                 //pasamos la lista carrito creada  los datos de la Prestamo
-                data: JSON.stringify({ oListaCarrito: listaCarrito, oPrestamo: Prestamo, idLibro: IdLibro, idEjemplar: IdEjemplar }),
+                data: JSON.stringify({ oListaCarrito: listaCarrito, oPrestamo: Prestamo }),
                 //pasamos los parametros que necesita este metodo
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
                     $.LoadingOverlay("hide")
-                    if (data.Status && data.respuesta!== true) {//si la respuesta no es true
+                    if (data.Status) {//si la respuesta es true
                         window.location.href = data.Link//url que proporciona paypal para realizar el pago
                         //var jsonResult = data.Response;//Respuesta de la ejecucion del metodo procesar pago
 
@@ -434,22 +433,25 @@
 
                         //window.location.href = resultado.href//url que proporciona paypal para realizar el pago
                     } else {
-                        //swal("", "Vuelva a intentarlo más tarde", "warning");
+                        //swal("", data.mensaje, "warning");
                         swal({
-                            title: data.mensaje,
-                            text: "¿Volver a la biblioteca?",
-                            type: "warning",
+                            title:  "El ejemplar ya fué prestado a otro lector",
+                            text: data.mensaje + "\n¿Volver a la Biblioteca?",
+                            type: "error",
                             showCancelButton: true,
                             confirmButtonClass: "btn-primary",
                             confirmButtonText: "Si",
                             cancelButtonText: "No",
                             closeOnConfirm: true
-                        }, function () {
-                            //redirige al carrito
-                            window.location.href = '@Url.Action("Index","Biblioteca")'
+                            
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = '@Url.Action("Index","Biblioteca")';
+                            } else {
+                                location.reload();
+                            }
                         })
                     }
-
                 },
                 beforeSend: function () { $.LoadingOverlay("show") },//mientras este ejecutando las operaciones
                 error: function (error) { $.LoadingOverlay("hide") }

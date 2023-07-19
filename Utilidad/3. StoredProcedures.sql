@@ -1664,29 +1664,67 @@ create alter procedure usp_RegistrarPrestamo(
     -- el 1 significa prestamo activo o "No devuelto")
     @Observaciones nvarchar(500),
     @DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
-	--@EjemplarActivo [Ejemplar_Activo] READONLY,
+	@EjemplarActivo [Ejemplar_Activo] READONLY,
     @Resultado bit output,
     @Mensaje varchar(500) output
 )
 as 
 begin 
-    begin try 
+	declare @idEjemplarLibro int = (select IdEjemplar from @EjemplarActivo);
+	--declare @Activo bit = (select top(1) Activo from Ejemplar where IDEjemplarLibro = @idEjemplarLibro)   
+    
+	declare @ExisteInactivo bit;
+	if exists(
+	SELECT top(1) Activo
+	FROM (
+		SELECT ej.Activo,
+		ROW_NUMBER() OVER (PARTITION BY l.IdLibro ORDER BY ej.IdEjemplarLibro) AS RowNum
+		FROM carrito c
+		INNER JOIN Libro l ON l.IdLibro = c.IdLibro
+		INNER JOIN Ejemplar ej ON ej.Id_libro = l.IdLibro and ej.Activo = 0
+		WHERE c.IdLector = @Id_Lector
+		) AS tbl
+		WHERE tbl.RowNum = 1
+	
+		)
+        set @ExisteInactivo = 1
+    else 
+        set @ExisteInactivo = 0
+
+	begin try 
         declare @idPrestamo int = 0
-        set @Resultado = 1
+		set @Resultado = 1
         set @Mensaje = ''
+
         begin transaction registro
-        insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones )
-        values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones )
+		 if(@ExisteInactivo = 1) --Si el ejemplar si esta desactivado
+		  begin
+		  set @Resultado = 0
+            set @Mensaje = 'Vuelva a consultar en Biblioteca y verifique si existe otro ejemplar disponible para el libro saleccionado'
+			
+			DELETE FROM CARRITO WHERE IdLector = @Id_Lector --por lo pronto si vamos a eliminar todo del carrito
+			--aunque debiera ser solo el libro que se esta seleccionado
+		end
+		else --en la caso de que el ejemplar no este desactivado
+		begin
+		 insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones )
+           values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones )
 
-        set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
+           set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
+		   insert into DetallePrestamo(IdPrestamo, IDEjemplar, CantidadEjemplares, Total)
+		   select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
 
-        insert into DetallePrestamo(IdPrestamo, IDEjemplar, CantidadEjemplares, Total)
-        select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
-
-		--update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
-
-        DELETE FROM CARRITO WHERE IdLector = @Id_Lector
-        commit transaction registro 
+		  --declare @idEjemplarLibro int = (select IdEjemplar from @EjemplarActivo);
+		  --set @idEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
+		  --declare @Activo bit = (select Activo from Ejemplar where IDEjemplarLibro = @idEjemplarLibro)
+		  --declare @EjeActivo bit = (select Activo from Ejemplar where IdEjemplarLibro = @idEjemplarLibro)
+		
+		  --update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
+		
+			DELETE FROM CARRITO WHERE IdLector = @Id_Lector
+			
+		end
+		commit transaction registro 
     end try 
     begin catch --en el caso de algun error, reestablece todo
         set @Resultado = 0
@@ -1733,23 +1771,23 @@ begin
     END CATCH
 end
 go
-create alter proc sp_ExisteEjemplarInactivo( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
-    @IdLector int, 
-    @IdLibro int, 
-	@IdEjemplarLibro int, 
-    @Resultado bit output
-)
-as 
-begin 
-    if exists(select IdCarrito, IdLector, l.IdLibro, Cantidad, IDEjemplarLibro, ej.Activo
-			FROM carrito c
-			INNER JOIN Libro l ON l.IdLibro = c.IdLibro
-			inner join ejemplar ej on ej.ID_Libro = c.IdLibro  and ej.Activo = 0
-			WHERE c.IdLector = @IdLector and l.IdLibro = @IdLibro and IDEjemplarLibro = @IdEjemplarLibro)
-        set @Resultado = 1
-    else 
-        set @Resultado = 0
-end 
+--create proc sp_ExisteEjemplarInactivo( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
+--    @IdLector int, 
+--    @IdLibro int, 
+--	@IdEjemplarLibro int, 
+--    @Resultado bit output
+--)
+--as 
+--begin 
+--    if exists(select IdCarrito, IdLector, l.IdLibro, Cantidad, IDEjemplarLibro, ej.Activo
+--			FROM carrito c
+--			INNER JOIN Libro l ON l.IdLibro = c.IdLibro
+--			inner join ejemplar ej on ej.ID_Libro = c.IdLibro  and ej.Activo = 0
+--			WHERE c.IdLector = @IdLector and l.IdLibro = @IdLibro and IDEjemplarLibro = @IdEjemplarLibro)
+--        set @Resultado = 1
+--    else 
+--        set @Resultado = 0
+--end 
 
 
 sp_ActualizarEjemplarActivo 1006,12,1
@@ -1761,5 +1799,7 @@ update ejemplar set activo = 1
 update libro set ejemplares = 3
 
 delete prestamo
+delete detalleprestamo
 
 select * from ejemplar
+select * from Carrito
