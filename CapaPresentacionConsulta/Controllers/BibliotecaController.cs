@@ -55,7 +55,6 @@ namespace CapaPresentacionConsulta.Controllers
 
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public JsonResult ListarLibros(string idCategoria, string idEditorial)//cambiamos de tipo int a string
         {
@@ -177,7 +176,7 @@ namespace CapaPresentacionConsulta.Controllers
             string mensaje = string.Empty;
             if (existe)
             {
-                mensaje = "El libro ya existe en el carrito";
+                mensaje = "El Libro ya existe en el carrito";
             }
             else
             {
@@ -365,7 +364,7 @@ namespace CapaPresentacionConsulta.Controllers
         public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
         {//los servicios de paypal obligan a trabajar de manera asincrona
             decimal total = 0;
-            bool status = true;
+
             DataTable detallePrestamo = new DataTable();
             detallePrestamo.Locale = new CultureInfo("es-MX"); //Comenzamos a crear las columnas que necesita esta table
             detallePrestamo.Columns.Add("IdEjemplar", typeof(string));//antes era IdLibro
@@ -387,13 +386,14 @@ namespace CapaPresentacionConsulta.Controllers
                         subTotal
 
                 });
-               
+
             }
             //ESTE LISTADO INTENTAR PASARLO 
             DataTable EjemplarActivo = new DataTable();
             EjemplarActivo.Locale = new CultureInfo("es-MX");
             EjemplarActivo.Columns.Add("IdEjemplar", typeof(int));
-            foreach (EN_Carrito oCarrito in oListaCarrito) {  
+            foreach (EN_Carrito oCarrito in oListaCarrito)
+            {
                 EjemplarActivo.Rows.Add(new object[]{
                     oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro
                 });
@@ -406,29 +406,83 @@ namespace CapaPresentacionConsulta.Controllers
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
             TempData["EjemplarActivo"] = EjemplarActivo;
 
+            return Json(new { Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+            //Enviamos dos parametros el id de transaccon y un status como true
+            //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
+        }
 
+        //    PurchaseUnit purchaseUnit = new PurchaseUnit()
+        //    {
+        //        amount = new Amount()
+        //        {
+        //            currency_code = "USD",
+        //            value = total.ToString("G", new CultureInfo("es-MX")),
+        //            breakdown = new Breakdown()
+        //            {
+        //                item_total = new ItemTotal()
+        //                {
+        //                    currency_code = "USD",
+        //                    value = total.ToString("G", new CultureInfo("es-MX"))
+        //                }
+        //            }
+        //        },
+        //        description = "compra de articulo de mi tienda",
+        //        items = oListaItem
+        //    };
 
+        //    Checkout_Order oCheckOutOrder = new Checkout_Order()
+        //    {
+        //        intent = "CAPTURE",
+        //        purchase_units = new List<PurchaseUnit>() { purchaseUnit },
+        //        application_context = new ApplicationContext()
+        //        {
+        //            brand_name = "MiTiendaCode.com",
+        //            landing_page = "NO_PREFERENCE",
+        //            user_action = "PAY_NOW",//Accion para que paypal muestre el monto de pago
+        //            return_url = "https://localhost:44330/Tienda/PagoEfectuado",
+        //            cancel_url = "https://localhost:44330/Tienda/Carrito"
+        //        }
+        //    };
 
+        //oPrestamo.TotalLibro = total;
+        //oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
+        //TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
+        //TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
 
-            string fechaPrestamo = oPrestamo.FechaPrestamo;
-            //string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
-            //bool status = Convert.ToBoolean(Request.QueryString["status"]);
+        //    RN_Paypal oPaypal = new RN_Paypal();
+        //    Response_Paypal<Response_Checkout> response_paypal = new Response_Paypal<Response_Checkout>();
+
+        //    response_paypal = await oPaypal.CrearSolicitud(oCheckOutOrder);//Pasamos toda la configuracion que hemos creado
+
+        //    //return Json(new { Status = true, Link = "/Tienda/PagoEfectuado?IdTransaccion=code0001&status=true" }, JsonRequestBehavior.AllowGet);
+        //    return Json(response_paypal, JsonRequestBehavior.AllowGet);
+
+        //    //Enviamos dos parametros el id de transaccon y un status como true
+        //    //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
+        //}
+
+        [ValidarSession]
+        [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
+        public async Task<ActionResult> PrestamoEfectuado()//Para la vista
+        {
+            string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
+            bool status = Convert.ToBoolean(Request.QueryString["status"]);
 
             ViewData["Status"] = status;//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
 
             if (status) //si estatus es verdadero
             {
-                EN_Prestamo oPrestamo2 = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
+                EN_Prestamo oPrestamo = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
                                                                           //un mismo controlador, de esta forma podemos acceder a este temp data del metodo anterior
                                                                           //Lo convertimos en un objeto de Prestamo
 
-                DataTable detallePrestamo2 = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
+                DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
 
-                DataTable EjemplarActivo2 = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
+                DataTable EjemplarActivo = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
 
 
                 //oPrestamo.IdLibro = idTransaccion;
-                oPrestamo2.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
+                oPrestamo.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
                                                         //Estos eran IdTransaccion
                 string mensaje = string.Empty;//Por defecto el mensaje es vacio
 
@@ -438,7 +492,7 @@ namespace CapaPresentacionConsulta.Controllers
                 //O LA OTRA ES DESDE QUE AGREGAMMOS AL CARRITO, QUE ESE EJEMPLAR SE DESACTIVE
 
 
-                bool respuesta = new RN_Prestamo().Registrar(oPrestamo2, detallePrestamo2, EjemplarActivo2, out mensaje);
+                bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo,/* EjemplarActivo, */out mensaje);
 
                 int idLector = ((EN_Lector)Session["Lector"]).IdLector;
 
@@ -448,125 +502,12 @@ namespace CapaPresentacionConsulta.Controllers
                     bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
                 }
 
-                ViewData["Mensaje"] = mensaje;
+
                 ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
             }
 
-
-            string mensajeN = ViewData["Mensaje"].ToString();//TODO
-
-            if (mensajeN == "")//INTENTA METER ESTO DIRECTAMENTE EN EL METODO DE ARRIBA PARA NO TENER QUE CREAR OTRA VARIABLE
-            {
-                return Json(new { mensaje = mensajeN, Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { mensaje = mensajeN }, JsonRequestBehavior.AllowGet);
-            }
-            //return Json(new { mensaje = mensajeN, Status = true, Link = "/Biblioteca/PrestamoEfectuado?fechaPrestamo=code0001&status=true" }, JsonRequestBehavior.AllowGet);
-            //Enviamos dos parametros el id de transaccon y un status como true
-            //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
+            return View();
         }
-    
-    //    PurchaseUnit purchaseUnit = new PurchaseUnit()
-    //    {
-    //        amount = new Amount()
-    //        {
-    //            currency_code = "USD",
-    //            value = total.ToString("G", new CultureInfo("es-MX")),
-    //            breakdown = new Breakdown()
-    //            {
-    //                item_total = new ItemTotal()
-    //                {
-    //                    currency_code = "USD",
-    //                    value = total.ToString("G", new CultureInfo("es-MX"))
-    //                }
-    //            }
-    //        },
-    //        description = "compra de articulo de mi tienda",
-    //        items = oListaItem
-    //    };
-
-    //    Checkout_Order oCheckOutOrder = new Checkout_Order()
-    //    {
-    //        intent = "CAPTURE",
-    //        purchase_units = new List<PurchaseUnit>() { purchaseUnit },
-    //        application_context = new ApplicationContext()
-    //        {
-    //            brand_name = "MiTiendaCode.com",
-    //            landing_page = "NO_PREFERENCE",
-    //            user_action = "PAY_NOW",//Accion para que paypal muestre el monto de pago
-    //            return_url = "https://localhost:44330/Tienda/PagoEfectuado",
-    //            cancel_url = "https://localhost:44330/Tienda/Carrito"
-    //        }
-    //    };
-
-    //oPrestamo.TotalLibro = total;
-    //oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
-    //TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
-    //TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable
-
-    //    RN_Paypal oPaypal = new RN_Paypal();
-    //    Response_Paypal<Response_Checkout> response_paypal = new Response_Paypal<Response_Checkout>();
-
-    //    response_paypal = await oPaypal.CrearSolicitud(oCheckOutOrder);//Pasamos toda la configuracion que hemos creado
-
-    //    //return Json(new { Status = true, Link = "/Tienda/PagoEfectuado?IdTransaccion=code0001&status=true" }, JsonRequestBehavior.AllowGet);
-    //    return Json(response_paypal, JsonRequestBehavior.AllowGet);
-
-    //    //Enviamos dos parametros el id de transaccon y un status como true
-    //    //Por el momento la estructura es estatica (por lo pronto hasta aqui es una simulacion de paypal)
-    //}
-
-    [ValidarSession]
-    [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
-    public async Task<ActionResult> PrestamoEfectuado()//Para la vista
-    {
-        //string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
-        bool status = Convert.ToBoolean(Request.QueryString["status"]);
-            //bool status2 = ViewData["Status"];
-        //bool 
-        //ViewData["StatusPrestamo"] = ViewData["Status"].ToString();//ViewData sirve para poder almacenar informacion que se compartira con la misma vista en la que nos encontramos
-
-        ViewData["StatusPrestamo"] = status; 
-        //if (status) //si estatus es verdadero
-        //{
-        //    EN_Prestamo oPrestamo = (EN_Prestamo)TempData["Prestamo"];//TempData sirve para compartir informacion entre metodos que pertenecen o estan dentro de
-        //                                                              //un mismo controlador, de esta forma podemos acceder a este temp data del metodo anterior
-        //                                                              //Lo convertimos en un objeto de Prestamo
-
-        //    DataTable detallePrestamo = (DataTable)TempData["DetallePrestamo"];//La informaciion lo convertimos en datatable
-            
-        //    DataTable EjemplarActivo = (DataTable)TempData["EjemplarActivo"];//La informaciion lo convertimos en datatable
-
-           
-        //    //oPrestamo.IdLibro = idTransaccion;
-        //    oPrestamo.FechaPrestamo = fechaPrestamo;//Se convierte a int porque el id es de este tipo
-        //        //Estos eran IdTransaccion
-        //    string mensaje = string.Empty;//Por defecto el mensaje es vacio
-            
-        //    //AQUI POSIBLEMENTE MEJOR ACLARAR QUE EL ACTIVO DE EJEMPLAR SEA 1 SI O SI (pARA ESTO SE TENDRIA QUE MODIFICAR LAS COLUMNAS
-        //    //DE DETALLEPRESTAMOS AGREGANDO ACTIVO Y ADEMAS, MODIFICANDO DESDE EL PROCEDIMIENTO ALMACENADO
-
-        //        //O LA OTRA ES DESDE QUE AGREGAMMOS AL CARRITO, QUE ESE EJEMPLAR SE DESACTIVE
-
-
-        //    bool respuesta = new RN_Prestamo().Registrar(oPrestamo, detallePrestamo, EjemplarActivo, out mensaje);
-
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;
-
-        //    foreach (DataRow row in EjemplarActivo.Rows)
-        //    {
-        //      int idEjemplar = Convert.ToInt32(row["IdEjemplar"]);
-        //      bool respuestaEjemplarActivo = new RN_Ejemplar().ActualizarEjemplarActivo(idLector, idEjemplar);
-        //    }
-            
-
-        //    ViewData["IdPrestamo"] = oPrestamo.IdPrestamo;//eSTOS ERAN IdTransaccion
-        //}
-
-        return View();
-    }
         #endregion
         //public async Task<ActionResult> PagoEfectuado()//Para la vista
         //{

@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewBag.Title = "Carrito";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -24,89 +24,89 @@
                                             <div class="row">
                                                 <div class="col-sm-2 align-self-center d-flex justify-content-center">
                                                     @*para visualizar la imagen del Libro*@
-                                                <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" style="width:100px; height:100px" />
+                                                    <img class="rounded" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" style="width:100px; height:100px" />
 
-                                            </div>
+                                                </div>
 
-                                            <div class="col-sm-4 align-self-center">
-                                                @*para visualizar la marca del Libro*@
-                                                <span class="font-wight-bold d-block">Categoria</span>
-                                                <span>Título del Libro</span>
-                                            </div>
+                                                <div class="col-sm-4 align-self-center">
+                                                    @*para visualizar la marca del Libro*@
+                                                    <span class="font-wight-bold d-block">Categoria</span>
+                                                    <span>Título del Libro</span>
+                                                </div>
 
-                                            <div class="col-sm-1 align-self-center">
-                                                @*para visualizar el precio del Libro*@
-                                                <span>Cantidad: 0</span>
-                                            </div>
+                                                <div class="col-sm-1 align-self-center">
+                                                    @*para visualizar el precio del Libro*@
+                                                    <span>Cantidad: 0</span>
+                                                </div>
 
-                                            <!--<div class="col-sm-2 align-self-center">--> @*para aumentar la cantidad del Libro*@
-                                            <!--<div class="d-flex">
-                                                <button class="btn btn-outline-secondary btn-restar rounded-0">
-                                                    <i class="fas fa-minus"></i>
+                                                <!--<div class="col-sm-2 align-self-center">--> @*para aumentar la cantidad del Libro*@
+                                                <!--<div class="d-flex">
+                                                    <button class="btn btn-outline-secondary btn-restar rounded-0">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>-->
+                                                @*boton de restar*@
+
+                                                <!--<input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px" />-->@*para visualizar la cantidad de Libros*@
+
+                                                <!--<button class="btn btn-outline-secondary btn-sumar rounded-0">
+                                                    <i class="fas fa-plus"></i>
                                                 </button>-->
-                                            @*boton de restar*@
-
-                                            <!--<input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px" />-->@*para visualizar la cantidad de Libros*@
-
-                                            <!--<button class="btn btn-outline-secondary btn-sumar rounded-0">
-                                                <i class="fas fa-plus"></i>
-                                            </button>-->
-                                            @*boton de sumar*@
-                                            <!--</div>
-                                            </div>-->
-                                            @*<div class="mb-2">
-                                                    <label for="cmbProvincia" class="form-label">Provincia (Municipio): </label>
-                                                    <select class="form-select form-select-sm" id="cmbProvincia"></select>
-                                                </div>*@
-                                            <div class="col-sm-3 mt-2">
-                                                <label for="cbocategoria" class="form-label">Ejemplares disponibles:</label>
-                                                <select id="cbocategoria" class="form-select" name="categoria">
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-2 align-self-center mt-2">
-                                                @*para visualizar el precio del Libro*@
-                                                <button class="btn btn-outline-danger btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button> @*boton de eliminar*@
+                                                @*boton de sumar*@
+                                                <!--</div>
+                                                </div>-->
+                                                @*<div class="mb-2">
+                                                        <label for="cmbProvincia" class="form-label">Provincia (Municipio): </label>
+                                                        <select class="form-select form-select-sm" id="cmbProvincia"></select>
+                                                    </div>*@
+                                                <div class="col-sm-3 mt-2">
+                                                    <label for="cbocategoria" class="form-label">Ejemplares disponibles:</label>
+                                                    <select id="cbocategoria" class="form-select" name="categoria">
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 align-self-center mt-2">
+                                                    @*para visualizar el precio del Libro*@
+                                                    <button class="btn btn-outline-danger btn-eliminar"><i class="fas fa-trash-alt"></i> Eliminar</button> @*boton de eliminar*@
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="d-flex justify-content-end">
-                                <label class="align-self-center"><b>Total de Ejemplares: <span id="total">0</span></b></label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--Detalle de Envio-->
-                    <div class="col-sm-4 col-sm-12 col-md-3 mt-sm-1 mt-md-0">
-                        <div class="card">
-                            <div class="card-body bg-light">
-                                <h5 class="card-title">Detalle Préstamo</h5>
-                                <form>
-                                    <div class="mb-2">
-                                        <label for="txtDiasPrestamo" class="form-label">DÍas de Préstamo: </label>
-                                        <input type="number" class="form-control form-control-sm" id="txtDiasPrestamo" value="7" autocomplete="off">
-                                    </div>
-                                    <div class="mb-2">
-                                        <label for="txtObservaciones" class="form-label">Observaciones: </label>
-                                        <input type="text" class="form-control form-control-sm" id="txtObservaciones" value="NINGUNA" autocomplete="off">
-                                    </div>
-                                    <div class="d-grid">
-                                        <button class="btn btn-success" type="button" onclick="RealizarPrestamo()">
-                                            <i class="fas fa-check-circle"></i> Realizar Préstamo
-                                        </button>
-                                    </div>
-                                </form>
+                                <div class="d-flex justify-content-end">
+                                    <label class="align-self-center"><b>Total de Ejemplares: <span id="total">0</span></b></label>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
+                        <!--Detalle de Envio-->
+                        <div class="col-sm-4 col-sm-12 col-md-3 mt-sm-1 mt-md-0">
+                            <div class="card">
+                                <div class="card-body bg-light">
+                                    <h5 class="card-title">Detalle Préstamo</h5>
+                                    <form>
+                                        <div class="mb-2">
+                                            <label for="txtDiasPrestamo" class="form-label">DÍas de Préstamo: </label>
+                                            <input type="number" class="form-control form-control-sm" id="txtDiasPrestamo" value="7" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="txtObservaciones" class="form-label">Observaciones: </label>
+                                            <input type="text" class="form-control form-control-sm" id="txtObservaciones" value="NINGUNA" autocomplete="off">
+                                        </div>
+                                        <div class="d-grid">
+                                            <button class="btn btn-success" type="button" onclick="RealizarPrestamo()">
+                                                <i class="fas fa-check-circle"></i> Realizar Préstamo
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 @section scripts {
     <script>
@@ -433,24 +433,7 @@
 
                         //window.location.href = resultado.href//url que proporciona paypal para realizar el pago
                     } else {
-                        //swal("", data.mensaje, "warning");
-                        swal({
-                            title:  "El ejemplar ya fué prestado a otro lector",
-                            text: data.mensaje + "\n¿Volver a la Biblioteca?",
-                            type: "error",
-                            showCancelButton: true,
-                            confirmButtonClass: "btn-primary",
-                            confirmButtonText: "Si",
-                            cancelButtonText: "No",
-                            closeOnConfirm: true
-                            
-                        }, function (isConfirm) {
-                            if (isConfirm) {
-                                window.location.href = '@Url.Action("Index","Biblioteca")';
-                            } else {
-                                location.reload();
-                            }
-                        })
+                        swal("", "Vuelva a intentarlo más tarde", "warning");
                     }
                 },
                 beforeSend: function () { $.LoadingOverlay("show") },//mientras este ejecutando las operaciones
@@ -523,4 +506,3 @@
         //}
     </script>
 }
-

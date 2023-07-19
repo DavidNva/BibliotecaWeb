@@ -11,7 +11,7 @@ namespace CapaDatos
 {
     public class BD_Prestamo
     {
-        public bool Registrar(EN_Prestamo obj, DataTable DetallePrestamo, DataTable EjemplarActivo, out string Mensaje)//out indica parametro de salida
+        public bool Registrar(EN_Prestamo obj, DataTable DetallePrestamo,/* DataTable EjemplarActivo,*/ out string Mensaje)//out indica parametro de salida
         {
             bool respuesta = false;
 
@@ -26,9 +26,9 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
                     cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);
                     cmd.Parameters.AddWithValue("DetallePrestamo", DetallePrestamo);//El data table debe tener las mismas columnas de la estructura creada
-                    //en sql (las 3 creadas: IdLibro, Cantidad, Total)
+                                                                                    //en sql (las 3 creadas: IdLibro, Cantidad, Total)
 
-                    cmd.Parameters.AddWithValue("EjemplarActivo", EjemplarActivo);
+                    // cmd.Parameters.AddWithValue("EjemplarActivo", EjemplarActivo);
 
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
@@ -49,7 +49,7 @@ namespace CapaDatos
             return respuesta;
         }
 
-     
+
         public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         {
             List<EN_DetallePrestamo> lista = new List<EN_DetallePrestamo>();
@@ -73,7 +73,7 @@ namespace CapaDatos
                                 {
                                     oId_Libro = new EN_Libro()//Esto era EN_Libro (Recordar que se cambio a Ejemplar)
                                     {
-                                        
+
                                         Codigo = dr["Codigo"].ToString(),
                                         Titulo = dr["Titulo"].ToString(),
                                         //Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-MX")),//Indica que los decimales los trabaje con puntos

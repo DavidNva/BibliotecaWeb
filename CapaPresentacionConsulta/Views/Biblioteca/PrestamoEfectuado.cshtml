@@ -1,4 +1,4 @@
-﻿@{
+﻿﻿@{
     ViewBag.Title = "PrestamoEfectuado";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -9,7 +9,7 @@
     <div class="col-sm-12 text-center">
         <br /><br />
         @{
-            if ((bool)ViewData["StatusPrestamo"])
+            if ((bool)ViewData["Status"])
             {//Si el estatus es verdadero
                 <h1 class="text-success">¡En hora buena!</h1>
                 <i class="far fa-check-circle fa-9x text-success"></i>

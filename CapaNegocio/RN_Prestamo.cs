@@ -12,9 +12,9 @@ namespace CapaNegocio
     {
         private BD_Prestamo objCapaDato = new BD_Prestamo(); /*Instancia una clase de la capa datos */
 
-        public bool Registrar(EN_Prestamo obj, DataTable DetallePrestamo, DataTable EjemplarActivo, out string Mensaje)
+        public bool Registrar(EN_Prestamo obj, DataTable DetallePrestamo,/* DataTable EjemplarActivo,*/ out string Mensaje)
         {
-            return objCapaDato.Registrar(obj, DetallePrestamo, EjemplarActivo, out Mensaje);
+            return objCapaDato.Registrar(obj, DetallePrestamo, /*EjemplarActivo, */ out Mensaje);
         }
 
         public List<EN_DetallePrestamo> ListarPrestamos(int idLector)

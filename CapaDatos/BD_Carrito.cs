@@ -156,7 +156,7 @@ namespace CapaDatos
                             lista.Add(/*Agrega una nueva Libro la lista*/
                                 new EN_Carrito()
                                 {
-                                    oId_Libro = new EN_Libro()     
+                                    oId_Libro = new EN_Libro()
                                     {
                                         IdLibro = Convert.ToInt32(dr["IdLibro"]),
                                         Codigo = dr["Codigo"].ToString(),
@@ -217,4 +217,3 @@ namespace CapaDatos
         }
     }
 }
-
