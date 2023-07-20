@@ -57,11 +57,81 @@
                 </div>
             </div>
             <div class="col-sm-9">
-                @*la ottra seccion*@
-                <div id="contenedorLibro" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                <!-- Crea la barra de navegación con las pestañas -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" title="Ver lista de libros" id="vista1-tab" data-toggle="tab" href="#TablaLibros" role="tab" aria-controls="vista1" aria-selected="true">Ver libros <i class="fa fa-table"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Ver lista de libros con imagen"  id="vista2-tab" data-toggle="tab" href="#LibrosImage" role="tab" aria-controls="vista2" aria-selected="false">Ver libros <i class="fa fa-image"></i></a>
+                    </li>
+                </ul>
+
+                <!-- Crea el contenido de las pestañas -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="TablaLibros" role="tabpanel" aria-labelledby="vista1-tab">
+                        @*<h2>Vista 1</h2>*@
+                        <p></p>
+
+                        <div class="card">
+                            <div class="card-header">
+
+                                <i class="fas fa-book me-1"></i>Lista de Libros
+                            </div>
+                            <div class="card-body">
+                                @*boostrap es como manejar una hoja en excel*@
+                                <!--<div class="row">
+                                    <div class="col-12">-->
+                                        @*numero de filas*@
+                                        <!--<button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+                                    </div>
+                                </div>-->
+                                @*<hr />*@ 
+                                @*el id es para identificar la tabla*@
+                                <table id="tabla" class="display cell-border" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Num</th>
+                                            <th>Código</th>
+                                            <th>Título</th>
+                                            @*<th>Ubicación</th>*@
+                                            <th>Pág</th>
+                                            <th>Categoría</th>
+                                            <th>Editorial</th>
+                                            <th>Sala</th>
+                                            <th>Activo</th>
+                                            <th>Stock</th>
+                                            <th>Volumen</th>
+                                            <th>Año de Edición</th>
+                                            <th>Observaciones</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @*ajax va permitir por ejemplo, hacer la ejecuciion del metodo listarLibro llamada en el HomeControler*@
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </div>
 
 
+                    </div>
+                    <div class="tab-pane fade" id="LibrosImage" role="tabpanel" aria-labelledby="vista2-tab">
+                        @*<h2>Vista 2</h2>*@
+
+                        <p></p>
+                        @*la ottra seccion*@
+                        <div id="contenedorLibro" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+
+
+                        </div>
+                    </div>
                 </div>
+
+             
             </div>
         </div>
     </div>
@@ -75,6 +145,20 @@
             MostrarCategorias();
             MostrarLibros('T', 'T')//Anteriormente estaba en 0, pero al ser de codigo tipo string, se cambio a que fuera una T,
             //indicando Todos, de esta forma, no hay problema al mandar un ID y ya muestra todos los productos con solo iniciar la pagina
+        })
+        //function clickVista1() {
+        //    $('#myTab a:first').tab('show');
+        //}
+        //function clickVista2() {
+        //    $('#myTab a:last ').tab('show');
+        //}
+        $(document).on("click", "#vista1-tab", function () {
+            //la accion a realizar
+            $('#myTab a:first').tab('show');
+        })
+        $(document).on("click", "#vista2-tab", function () {
+            //la accion a realizar
+            $('#myTab a:last ').tab('show');
         })
 
         function MostrarCategorias() { /*muetsra todas las categorias dentro del mantenedor*/
@@ -260,6 +344,86 @@
                 }
             });
         })
+
+
+
+        //----------------------------------------TABLA LIBROS ------------------------------
+         tabladata = $("#tabla").DataTable({
+            responsive: true,/*Para que sea resposiva*/
+            ordering: false,
+            "ajax": {/*Como pinta la tabla, ajax solo trae todos los valores*/
+                url: '@Url.Action("ListarLibros", "Biblioteca")',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [/*Todas las columnas que vamos a usar*/
+                /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
+                 y el seguno valor es como se llama la columna*/
+                { "data": "IdLibro" },
+                { "data": "Codigo" },
+                { "data": "Titulo" },
+                { "data": "Paginas" },
+                {
+                    "data": "oId_Categoria", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "oId_Editorial", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "oId_Sala", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                        if (valor) {/*Si el valor es verdadero*/
+                            return '<span class="badge bg-success">Si</span>'
+                        } else {
+                            return '<span class="badge bg-danger">No</span>'
+                        }
+                    }
+
+                },
+                { "data": "Ejemplares" },
+                { "data": "Volumen" },
+                { "data": "AñoEdicion" },
+
+                { "data": "Observaciones" },
+
+                {
+                    "data": "IdLibro", "render": function (data, type, row, meta) {
+
+                        return $("<button>").addClass("btn btn-primary btn-editar btn-sm").append(
+                            $("<i>").addClass("fas fa-pen")
+                        ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                            +
+                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm ms-2").append(
+                                $("<i>").addClass("fas fa-trash")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+                    },
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+                //{/*Crea una columna por defecto*/
+                //    /*El btn-promary es el diseño, el btn-sm es el mamaño*/
+                //    "defaultContent": ' <button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                //        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash btn-eliminar"></i></button>',
+                //    "orderable": false,/*Que no sea ordenada, porque solo contiene botones*/
+                //    "searchable": false, /*Para que no haga la busqueda por estos botones de editar y eliminar, solo de las demas columnas*/
+                //    "width": "90px"
+                //}
+            ],/*Propiedad o atributos van dentro de las comillas ""*/
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+
+        });
 
 
     </script>

@@ -22,6 +22,10 @@ namespace CapaPresentacionConsulta.Controllers
         {
             return View();
         }
+        public ActionResult VistaLibros2()
+        {
+            return View();
+        }
         public ActionResult DetalleLibro(int idLibro = 0)//por default recibe 0
         {
             EN_Libro oLibro = new EN_Libro();
