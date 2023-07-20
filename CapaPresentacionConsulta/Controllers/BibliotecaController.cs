@@ -263,7 +263,7 @@ namespace CapaPresentacionConsulta.Controllers
             string mensaje = string.Empty;
             if (existe)
             {
-                mensaje = "El Libro ya existe en el carrito";
+                mensaje = "El libro ya existe en el carrito";
             }
             else
             {

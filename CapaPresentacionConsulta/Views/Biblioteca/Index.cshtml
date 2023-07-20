@@ -63,7 +63,7 @@
                         <a class="nav-link active" title="Ver lista de libros" id="vista1-tab" data-toggle="tab" href="#TablaLibros" role="tab" aria-controls="vista1" aria-selected="true">Ver libros <i class="fa fa-table"></i></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" title="Ver lista de libros con imagen" id="vista2-tab" data-toggle="tab" href="#LibrosImage" role="tab" aria-controls="vista2" aria-selected="false">Ver libros <i class="fa fa-image"></i></a>
+                        <a class="nav-link" title="Ver lista de libros con imagen" id="vista2-tab" data-toggle="tab" href="#LibrosImage" role="tab" aria-controls="vista2" aria-selected="false"> <i class="fa fa-image"></i></a>
                     </li>
                 </ul>
 
@@ -78,7 +78,7 @@
                         <table id="tabla" class="display cell-border" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th></th>
+                                    @*<th></th>*@
                                     @*<th>Código</th>*@
                                     <th>Título</th>
                                     @*<th>Ubicación</th>*@
@@ -220,10 +220,7 @@
                                 <select id="cbosala" class="form-select" disabled="disabled" name="sala">
                                 </select>
                             </div>
-                            @*<div class="mb-2">
-                                <label for="cmbDepartamento" class="form-label">Departamento (Estado): </label>
-                                <select class="form-select form-select-sm" id="cmbDepartamento"></select>
-                            </div>*@
+
 
                         </div>
 
@@ -411,7 +408,7 @@
                                                     .text("Ver detalle")
                                             )
 
-                                        )
+                                 )//BIEN
                             )
                         ).appendTo("#contenedorLibro")
                     })
@@ -496,7 +493,7 @@
             "columns": [/*Todas las columnas que vamos a usar*/
                 /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
                  y el seguno valor es como se llama la columna*/
-                { "data": "IdLibro" },
+               /* { "data": "IdLibro" },*/
                 /*{ "data": "Codigo" },*/
                 { "data": "Titulo" },
                 { "data": "Paginas" },
@@ -548,16 +545,18 @@
                         //        $("<i>").addClass("fas fa-trash")
                         //    ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
                         return $("<div>").append(
-                            $("<button>").addClass("btn btn-dark btn-editar btn-sm btn-block").append(
+                            @if(Session["Lector"] != null)
+                            {
+                                @:$("<button>").addClass("btn btn-success agregarcarrito btn-sm btn-block").append(
+                                @: $("<i>").addClass("fas fa-shopping-cart")
+                                @:).attr({ "title": "Agregar libro al carrito", "data-idlibro": JSON.stringify(row) })[0].outerHTML
+                            }
+                        ).append(
+                            $("<button>").addClass("btn btn-dark btn-editar btn-sm btn-block ms-2").append(
                                 $("<i>").addClass("fas fa-info-circle")
-                            ).attr({ "title":"Ver detalle del libro","data-idlibro": JSON.stringify(row) })[0].outerHTML
-                        )
-                            .append(
-                                $("<button>").addClass("btn btn-success agregarcarrito btn-sm btn-block ms-2").append(
-                                    $("<i>").addClass("fas fa-shopping-cart")
-                                ).attr({ "title": "Agregar libro al carrito", "data-idlibro": JSON.stringify(row) })[0].outerHTML
+                            ).attr({ "title": "Ver detalle del libro", "data-idlibro": JSON.stringify(row) })[0].outerHTML
                             )[0].outerHTML;
-
+                            //BIEN
                     },
                     "orderable": false,
                     "searchable": false,
