@@ -1769,3 +1769,6 @@ select * from ejemplar
 select * from Carrito
 select * from prestamo
 select * from detallePrestamo
+
+select * from libro 
+update libro set ejemplares = 3

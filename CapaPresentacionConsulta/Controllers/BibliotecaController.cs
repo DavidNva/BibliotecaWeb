@@ -51,6 +51,7 @@ namespace CapaPresentacionConsulta.Controllers
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
 
+
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarEditorial() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
@@ -79,6 +80,26 @@ namespace CapaPresentacionConsulta.Controllers
         }
 
 
+                /*Metodo para ver imagen de Libro en venta, x64*/
+        [HttpPost]
+        public JsonResult ImagenLibro(int id)
+        {
+            bool conversion;
+            /*Seleccionamos un Libro en especifico con where*/
+            EN_Libro oLibro = new RN_Libro().Listar().Where(p => p.IdLibro == id).FirstOrDefault();
+
+            /*Obtenemos la ruta de imagen convertida a base64*/
+            string textoBase64 = RN_Recursos.ConvertirBase64(Path.Combine(oLibro.RutaImagen, oLibro.NombreImagen), out conversion);
+
+            return Json(new
+            {
+                conversion = conversion,
+                textobase64 = textoBase64,
+                extension = Path.GetExtension(oLibro.NombreImagen) /*El nombre de la imagen ya tiene concatenada la extension*/
+            },
+                JsonRequestBehavior.AllowGet
+            );
+        }
 
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarTablaLibro() /*D este json se puede controlar que mas ver, igualar elementos, etc*/

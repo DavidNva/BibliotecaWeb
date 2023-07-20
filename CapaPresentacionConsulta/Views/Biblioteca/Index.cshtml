@@ -123,82 +123,111 @@
 
     <!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
         al momento de precionar el boton nuevo-->
-    <div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" @*data-bs-backdrop="static"*@>
         @*Esto ultimo de data-bs-backdrop es para*@
-        <div class="modal-dialog modal-xl">
-            @*tamaño xl*@
-        @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title" id="exampleModalLabel">Libro</h5>
-                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+        <div class="modal-dialog">
+            @*modal-xl tamaño xl*@
+            @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+            <div class="modal-content">
+                <div class="modal-header bg-light text-white">
+                    <h5 class="modal-title text-dark" id="exampleModalLabel">Información del libro <i class="fas fa-info-circle"></i></h5>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
 
-                <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Libro nuevo a ingresar o es valor ya existe pero si es diferente a 0 significa que ya existe y vamos a editar*@
+                    <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Libro nuevo a ingresar o es valor ya existe pero si es diferente a 0 significa que ya existe y vamos a editar*@
 
-                <form id="contenedor" class="row">
-                    @*Para visualizar la imagen*@
-                    <div class="col-sm-3">
-                        <div class="mb-2">
-                            @*las ultimas instrucciones (clases) es para que sea de bloque y la imagen responsive*@
-                            <img id="img_Libro" height="197" width="200" class="border rounded mx-auto d-block img-fluid" />
-                        </div>
-                        <div class="mb-2">
+                    <form id="contenedor" class="row">
+                        @*Para visualizar la imagen*@
+                        <div class="col-sm-3">
+                            <div class="mb-2">
+                                @*las ultimas instrucciones (clases) es para que sea de bloque y la imagen responsive*@
+                                <img id="img_Libro" height="197" width="200" class="border rounded mx-auto d-block img-fluid" />
+                            </div>
+                            @*<div class="mb-2">
                             <input class="form-control" type="file" id="fileLibro" accept="image/png, image/jpg, image/jpeg" onchange="mostrarImagen(this)" />
-                        </div>
-                    </div>
-
-                    <div class="col-sm-3">
-                        <div class="mb-3">
-                            <label for="txtCodigo" class="form-label">Código</label>
-                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off" />
-                            @*<input id="txtid" class="form-control" type="text" value="0" />*@
+                        </div>*@
                         </div>
 
-                        @*<div class="mb-3">
-                                <label for="txtTitulo" class="form-label">Título</label>
-                                <input type="text" class="form-control" id="txtTitulo" name="titulo" autocomplete="off" />
-                            </div>*@
-                        <div class="mb-3">
+                        <div class="col-sm-5">
+                            <div class="mb-3">
+                                @*<label for="txtCodigo" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off" />*@
+                                @*<input id="txtid" class="form-control" type="text" value="0" />*@
+                            </div>
+
+                            @*<div class="mb-3">
                             <label for="txtTitulo" class="form-label">Título</label>
-                            <textarea type="text" class="form-control" id="txtTitulo" name="titulo" style="height:125px;resize:none"></textarea>
+                            <input type="text" class="form-control" id="txtTitulo" name="titulo" autocomplete="off" />
+                        </div>*@
+                            <div class="mb-3">
+                                <label for="txtCodigo" class="form-label fw-bold">Código:</label>
+                                <label id="txtCodigo" class="form-label"></label>
+
+                                <label for="txtTitulo" class="form-label d-block fw-bold">Título</label>
+                                <label id="txtTitulo" class="form-label d-block"></label>
+
+                                <label for="txtPaginas" class="form-label fw-bold">Páginas: </label>
+                                <label id="txtPaginas" class="form-label"></label>
+                                <br />
+                                @*<label for="cbocategoria" class="form-label fw-bold">Categoria: </label>
+                            <label id="cbocategoria" class="form-label">Categoria</label>
+                            <br />
+                            <label for="cboeditorial" class="form-label fw-bold">Editorial: </label>
+                            <label id="cboeditorial" class="form-label">Editorial</label>
+                            <br />
+                            <label for="cbosala" class="form-label fw-bold">Sala: </label>
+                            <label id="cbosala" class="form-label">Sala</label>
+                            <br />*@
+                                <label for="txtEjemplares" class="form-label fw-bold">Disponibles: </label>
+                                <label id="txtEjemplares" class="form-label"></label>
+                                <br />
+                                <label for="txtVolumen" class="form-label fw-bold">Volumen:</label>
+                                <label id="txtVolumen" class="form-label"></label>
+
+                                <label for="txtAñoEdicion" class="form-label fw-bold">Año de Edición: </label>
+                                <label id="txtAñoEdicion" class="form-label"></label>
+                                <br />
+                                <label for="txtObservaciones" class="form-label fw-bold">Observaciones:</label>
+                                <label id="txtObservaciones" class="form-label"></label>
+
+                            </div>
+                            @*<div class="mb-3">
+                            <label for="txtUbicacion" class="form-label">Ubicación</label>
+                            <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
+                        </div>*@
+                            <div class="mb-3">
+                                @*<label for="txtPaginas" class="form-label">Páginas</label>
+                            <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off" />*@
+                            </div>
                         </div>
-                        @*<div class="mb-3">
-                                <label for="txtUbicacion" class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
+
+                        <div class="col-sm-4">
+
+                            <div class="mb-3">
+                                <label for="cbocategoria" class="form-label">Categoria</label>
+                                <select id="cbocategoria" class="form-select" disabled="disabled" name="categoria">
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cboeditorial" class="form-label">Editorial</label>
+                                <select id="cboeditorial" class="form-select" disabled="disabled" name="editorial">
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cbosala" class="form-label">Sala</label>
+                                <select id="cbosala" class="form-select" disabled="disabled" name="sala">
+                                </select>
+                            </div>
+                            @*<div class="mb-2">
+                                <label for="cmbDepartamento" class="form-label">Departamento (Estado): </label>
+                                <select class="form-select form-select-sm" id="cmbDepartamento"></select>
                             </div>*@
-                        <div class="mb-3">
-                            <label for="txtPaginas" class="form-label">Páginas</label>
-                            <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off" />
-                        </div>
-                    </div>
 
-                    <div class="col-sm-3">
+                        </div>
 
-                        <div class="mb-3">
-                            <label for="cbocategoria" class="form-label">Categoria</label>
-                            <select id="cbocategoria" class="form-select" name="categoria">
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cboeditorial" class="form-label">Editorial</label>
-                            <select id="cboeditorial" class="form-select" name="editorial">
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="cbosala" class="form-label">Sala</label>
-                            <select id="cbosala" class="form-select" name="sala">
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="txtEjemplares" class="form-label">Ejemplares</label>
-                            <input type="number" class="form-control" id="txtEjemplares" name="ejemplares" autocomplete="off" />
-                        </div>
-                    </div>
-
-                    <div class="col-sm-3">
+                        @*<div class="col-sm-3">
                         <div class="mb-3">
                             <label for="txtAñoEdicion" class="form-label">Año de Edición</label>
                             <input type="text" class="form-control" id="txtAñoEdicion" name="añoedicion" autocomplete="off" />
@@ -219,24 +248,24 @@
                                 <option value="0">No</option>
                             </select>
                         </div>
-                    </div>
+                    </div>*@
 
-                </form>
-                <!--mensaje de alerta-->
-                <div class="row mt-2">
-                    <div class="col-12">
-                        <div id="mensajeError" class="alert alert-danger" role="alert">
-                            @*A simple danger alert—check it out!*@
+                    </form>
+                    <!--mensaje de alerta-->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div id="mensajeError" class="alert alert-danger" role="alert">
+                                @*A simple danger alert—check it out!*@
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark col-12" data-bs-dismiss="modal">Aceptar</button>
+                    @*<button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>*@
+                </div>
             </div>
         </div>
-    </div>
 </div>
 
 </section>
@@ -521,12 +550,12 @@
                         return $("<div>").append(
                             $("<button>").addClass("btn btn-dark btn-editar btn-sm btn-block").append(
                                 $("<i>").addClass("fas fa-info-circle")
-                            ).attr({ "data-idlibro": JSON.stringify(row) })[0].outerHTML
+                            ).attr({ "title":"Ver detalle del libro","data-idlibro": JSON.stringify(row) })[0].outerHTML
                         )
                             .append(
                                 $("<button>").addClass("btn btn-success agregarcarrito btn-sm btn-block ms-2").append(
                                     $("<i>").addClass("fas fa-shopping-cart")
-                                ).attr({ "data-idlibro": JSON.stringify(row) })[0].outerHTML
+                                ).attr({ "title": "Agregar libro al carrito", "data-idlibro": JSON.stringify(row) })[0].outerHTML
                             )[0].outerHTML;
 
                     },
@@ -588,17 +617,17 @@
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
                 $("#txtId").val(json.IdLibro);
-                $("#txtCodigo").val(json.Codigo);
-                $("#txtTitulo").val(json.Titulo);
+                $("#txtCodigo").val(json.Codigo).text(json.Codigo);
+                $("#txtTitulo").val(json.Titulo).text(json.Titulo);
                 /* $("#txtUbicacion").val(json.Ubicacion);*/
-                $("#txtPaginas").val(json.Paginas);
+                $("#txtPaginas").val(json.Paginas).text(json.Paginas);
                 $("#cbocategoria").val(json.oId_Categoria.IdCategoria);
                 $("#cboeditorial").val(json.oId_Editorial.IdEditorial);
                 $("#cbosala").val(json.oId_Sala.IdSala);
-                $("#txtEjemplares").val(json.Ejemplares);
-                $("#txtVolumen").val(json.Volumen);
-                $("#txtAñoEdicion").val(json.AñoEdicion);
-                $("#txtObservaciones").val(json.Observaciones);
+                $("#txtEjemplares").val(json.Ejemplares).text(json.Ejemplares);
+                $("#txtVolumen").val(json.Volumen).text(json.Volumen);
+                $("#txtAñoEdicion").val(json.AñoEdicion).text(json.AñoEdicion);
+                $("#txtObservaciones").val(json.Observaciones).text(json.Observaciones);
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
 
@@ -633,6 +662,72 @@
 
             $("#FormModal").modal("show");
         }
+
+        /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
+          jQuery.ajax({
+            url: '@Url.Action("ListarCategorias", "Biblioteca")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+
+        /* ahora el ajax paa listar las editorial en el cmbeditorial*/
+
+        jQuery.ajax({
+            url: '@Url.Action("ListarEditorial", "Biblioteca")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0","disabled":"true" }).text("Seleccionar").appendTo("#cboeditorial");
+                $.each(data.data, function (index, item) {/*itera una lista*/
+                    /*attr significa atibuto*/
+                    /*Se crea una opcion para cmb obteniendo el valor del id y descripcion de la marca, y se asigna (appendTo)
+                     al #cmbMarca del modal*/
+                    $("<option>").attr({ "value": item.IdEditorial }).text(item.Descripcion).appendTo("#cboeditorial");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+         jQuery.ajax({
+            url: '@Url.Action("ListarSala", "Biblioteca")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0","disabled":"true" }).text("Seleccionar").appendTo("#cbosala");
+                $.each(data.data, function (index, item) {/*itera una lista*/
+                    /*attr significa atibuto*/
+                    /*Se crea una opcion para cmb obteniendo el valor del id y descripcion de la marca, y se asigna (appendTo)
+                     al #cmbMarca del modal*/
+                    $("<option>").attr({ "value": item.IdSala }).text(item.Descripcion).appendTo("#cbosala");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
         /*--------------- Al dar clic en el boton de editar-------------------------------*/
 
         /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
