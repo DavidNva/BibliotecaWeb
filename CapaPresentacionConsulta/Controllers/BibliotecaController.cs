@@ -22,6 +22,14 @@ namespace CapaPresentacionConsulta.Controllers
         {
             return View();
         }
+
+        [ValidarSession]
+        [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
+        public ActionResult Carrito()//Solo los que han iniciado sesión
+        {
+            return View();
+        }
+
         public ActionResult VistaLibros2()
         {
             return View();
@@ -78,9 +86,9 @@ namespace CapaPresentacionConsulta.Controllers
 
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
-
-
-                /*Metodo para ver imagen de Libro en venta, x64*/
+        //-----------------------------------------Metodos para LIBRO ---------------------------------------------
+        #region LIBRO
+        /*Metodo para ver imagen de Libro en venta, x64*/
         [HttpPost]
         public JsonResult ImagenLibro(int id)
         {
@@ -179,48 +187,9 @@ namespace CapaPresentacionConsulta.Controllers
             return jsonresult;
 
         }
-        //[HttpPost]
-        //public JsonResult ListarEjemplarLibros(string idCategoria, string idEditorial)//cambiamos de tipo int a string
-        //{
-        //    List<EN_Ejemplar> lista = new List<EN_Ejemplar>();
-        //    bool conversion;
+        #endregion
 
-        //    lista = new RN_Ejemplar().Listar().Select(l => new EN_Ejemplar()
-        //    {
-        //        IdEjemplarLibro = l.IdEjemplarLibro,
-        //        Id_Libro = l.Id_Libro,
-        //        IdLibro = l.IdLibro,
-        //        Codigo = l.Codigo,
-        //        Titulo = l.Titulo,
-        //        Paginas = l.Paginas,
-        //        oId_Categoria = l.oId_Categoria,
-        //        oId_Editorial = l.oId_Editorial,
-        //        oId_Sala = l.oId_Sala,
-        //        Ejemplares = l.Ejemplares,
-        //        AñoEdicion = l.AñoEdicion,
-        //        Volumen = l.Volumen,
-        //        RutaImagen = l.RutaImagen,
-        //        Base64 = RN_Recursos.ConvertirBase64(Path.Combine(l.RutaImagen, l.NombreImagen), out conversion),//como este metodo pide un parametro de salida, enviamos conversion
-        //        Extension = Path.GetExtension(l.NombreImagen),
-        //        Observaciones = l.Observaciones,
-        //        Activo = l.Activo
-        //    }).Where(l =>
-        //    //Si el id categoria es  = 0, entonces colocas el idcategoria y si no colocas el id dado en parametro (la del usuario), dependiendo de eso
-        //    //hara la busqueda por filtro, teniendo en cuenta el stock y si el Libros esta activo
-        //        l.oId_Categoria.IdCategoria == (idCategoria == "T" ? l.oId_Categoria.IdCategoria : idCategoria) &&
-        //        l.oId_Editorial.IdEditorial == (idEditorial == "T" ? l.oId_Editorial.IdEditorial : idEditorial) &&//Se cambia de 0 a T, ya que en este caso categoria y editorial tienen id tipo string
-        //        l.Ejemplares > 0 && l.Activo == true //Solo muestra Libros activos y con un stock mayor a 0
-        //        ).ToList();
-
-        //    var jsonresult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
-        //    jsonresult.MaxJsonLength = int.MaxValue; //Indica que este json result no va a tener ningun limite en su contenido
-
-        //    return jsonresult;
-
-        //}
-
-
-        //-----------------------------------------Metodos para carrito ---------------------------------------------
+        //-----------------------------------------Metodos para CARRITO ---------------------------------------------
         #region CARRITO
         //[HttpGet]
         //public JsonResult ListarejemplaresLibro()
@@ -388,12 +357,7 @@ namespace CapaPresentacionConsulta.Controllers
         //    return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
         //}
 
-        [ValidarSession]
-        [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
-        public ActionResult Carrito()//Solo los que han iniciado sesión
-        {
-            return View();
-        }
+
         //---------------------------------------------------PROCESAR PRESTAMO-----------------------------------------
         #region PROCESAR Prestamo
         ////Boton de procesar pago
@@ -595,7 +559,7 @@ namespace CapaPresentacionConsulta.Controllers
 
             return View();
         }
-        #endregion
+        
         //public async Task<ActionResult> PagoEfectuado()//Para la vista
         //{
         //    string token = Request.QueryString["token"];
@@ -624,46 +588,7 @@ namespace CapaPresentacionConsulta.Controllers
 
         //    return View();
         //}
-        //[ValidarSession]
-
-        //[ValidarSession]
-        //[Authorize]
-
-        //public ActionResult MisPrestamos()
-        //{
-
-        //    int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Se debe iniciar sesion para tener el id del Lector o dará error
-        //    List<EN_DetallePrestamo> oLista = new List<EN_DetallePrestamo>();
-        //    bool conversion;
-
-
-        //    //List<EN_Ejemplar> lista = new List<EN_Ejemplar>();//una lista para categorias posibles a filtrar
-        //    //lista = new RN_Ejemplar().ListarEjemplarLibro(idLibro);//Devuelve la lista de categorias actuales
-
-        //    //por cada en_carrito que encuentre en la lista crea un nuevo carrito
-        //    oLista = new RN_Prestamo().ListarPrestamos(idLector).Select(oc => new EN_DetallePrestamo()
-        //    {
-        //        oId_Libro = new EN_Libro()
-        //        {
-        //            IdLibro = oc.oId_Libro.IdLibro,
-        //            //Codigo = oc.oId_Libro.Codigo,
-        //            //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar,
-        //            Titulo = oc.oId_Libro.Titulo,
-
-        //            //Ejemplares = oc.oId_Libro.Ejemplares,//Esto se va a mostrar en el carrito de compras
-        //            //RutaImagen = oc.oId_Libro.RutaImagen,
-        //            Base64 = RN_Recursos.ConvertirBase64(Path.Combine(oc.oId_Libro.RutaImagen, oc.oId_Libro.NombreImagen), out conversion),
-        //            Extension = Path.GetExtension(oc.oId_Libro.NombreImagen)
-        //            //oId_Ejemplar = oc.oId_Libro.oId_Ejemplar
-
-        //        },
-        //        CantidadEjemplares = oc.CantidadEjemplares,
-        //        Total = oc.Total
-        //        //IdPrestamo = oc.IdPrestamo
-        //    }).ToList();
-        //    return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
-        //}
-
+       
         [ValidarSession]
         [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
         public ActionResult MisPrestamos()
@@ -690,5 +615,6 @@ namespace CapaPresentacionConsulta.Controllers
 
             return View(oLista);//devuelve toda la lista de Libros que pertenecen al carrito de un Lector
         }
+        #endregion
     }
 }

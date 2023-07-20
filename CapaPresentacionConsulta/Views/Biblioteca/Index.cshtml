@@ -17,11 +17,11 @@
 <section>
     <div class="container-fluid px-5 my-5">
 
-        <div class="row">
+        <!--<div class="row">
             <div class="col-sm-3">
-                <div class="row mb-3">
+                <div class="row mb-3">-->
                     @*para categorias*@
-                    <div class="col-sm-12">
+                    <!--<div class="col-sm-12">
                         <div class="card">
                             <div class="card-header bg-success text-white">
                                 Categorias
@@ -32,9 +32,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-3">-->
                     @*para Editoriales*@
-                    <div class="col-sm-12">
+                    <!--<div class="col-sm-12">
                         <div class="card">
                             <div class="card-header bg-success text-white">
                                 Editoriales
@@ -45,9 +45,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-3">-->
                     @*boton de filtrar*@
-                    <div class="col-sm-12">
+                    <!--<div class="col-sm-12">
                         <div class="d-grid gap-2">
                             <button id="btnAplicarFiltro" class="btn btn-outline-dark btn-block" type="button">
                                 <i class="fas fa-filter"></i>Aplicar filtros
@@ -55,8 +55,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-9">
+            </div>-->
+            <div class="col-sm-12">
                 <!-- Crea la barra de navegación con las pestañas -->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item">
@@ -87,7 +87,7 @@
                                     <th>Editorial</th>
                                     @*<th>Sala</th>*@
                                     @*<th>Activo</th>*@
-                                    <th></th>
+                                    <th><i class="fas fa-book"></i></th>
                                     @*<th>Volumen</th>
                     <th>Año de Edición</th>*@
                                     @*<th>Observaciones</th>*@
@@ -108,13 +108,52 @@
                         @*<h2>Vista 2</h2>*@
 
                         <p></p>
-                        @*la ottra seccion*@
-                        <div id="contenedorLibro" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="row mb-3">
+                                    @*para categorias*@
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header bg-success text-white">
+                                                Categorias
+                                            </div>
+                                            <div id="contenedorCategoria" class="card-body">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    @*para Editoriales*@
+                                    <div class="col-sm-12">
+                                        <div class="card">
+                                            <div class="card-header bg-success text-white">
+                                                Editoriales
+                                            </div>
+                                            <div id="contenedorEditorial" class="card-body">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    @*boton de filtrar*@
+                                    <div class="col-sm-12">
+                                        <div class="d-grid gap-2">
+                                            <button id="btnAplicarFiltro" class="btn btn-outline-dark btn-block" type="button">
+                                                <i class="fas fa-filter"></i>Aplicar filtros
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*la ottra seccion*@
+                            <div id="contenedorLibro" class="row gx-4 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-4 col-sm-9 justify-content-center">
 
 
+                            </div>
                         </div>
                     </div>
-                </div>
 
 
             </div>
@@ -275,6 +314,7 @@
             MostrarCategorias();
             MostrarLibros('T', 'T')//Anteriormente estaba en 0, pero al ser de codigo tipo string, se cambio a que fuera una T,
             //indicando Todos, de esta forma, no hay problema al mandar un ID y ya muestra todos los productos con solo iniciar la pagina
+            listadoTabla()
         })
         //function clickVista1() {
         //    $('#myTab a:first').tab('show');
@@ -482,6 +522,9 @@
         var filaSeleccionada;/*Son variables globales para se usada por lo que este dentro */
         //el hastash significa que se refiere a un id, entonces llama o igual la variable a una tabla declarada
         //anteriormente en el html de arriba con id que se llama tabla
+
+        function listadoTabla() { 
+
         tabladata = $("#tabla").DataTable({
             responsive: true,/*Para que sea resposiva*/
             ordering: false,
@@ -577,6 +620,7 @@
             }
 
         });
+        }
 
         function mostrarImagen(input) {
             if (input.files) {/*Si tiene un archivo selecciondo continuamos*/
