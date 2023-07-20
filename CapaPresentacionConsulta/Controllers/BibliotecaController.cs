@@ -51,6 +51,24 @@ namespace CapaPresentacionConsulta.Controllers
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarEditorial() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Editorial> oLista = new List<EN_Editorial>();
+            oLista = new RN_Editorial().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarSala() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Sala> oLista = new List<EN_Sala>();
+            oLista = new RN_Sala().Listar();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+
         [HttpPost]
         public JsonResult ListarEditorialPorCategoria(string idCategoria)
         {
@@ -59,6 +77,50 @@ namespace CapaPresentacionConsulta.Controllers
 
             return Json(new { data = lista }, JsonRequestBehavior.AllowGet);
         }
+
+
+
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarTablaLibro() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            //List<EN_Libro> oLista = new List<EN_Libro>();
+            //oLista = new RN_Libro().Listar();
+            //return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+            List<EN_Libro> lista = new List<EN_Libro>();
+            bool conversion;
+
+            lista = new RN_Libro().Listar().Select(l => new EN_Libro()
+            {
+                IdLibro = l.IdLibro,
+                Codigo = l.Codigo,
+                Titulo = l.Titulo,
+                Paginas = l.Paginas,
+                oId_Categoria = l.oId_Categoria,
+                oId_Editorial = l.oId_Editorial,
+                oId_Sala = l.oId_Sala,
+                Ejemplares = l.Ejemplares,
+                AñoEdicion = l.AñoEdicion,
+                Volumen = l.Volumen,
+                RutaImagen = l.RutaImagen,
+                Base64 = RN_Recursos.ConvertirBase64(Path.Combine(l.RutaImagen, l.NombreImagen), out conversion),//como este metodo pide un parametro de salida, enviamos conversion
+                Extension = Path.GetExtension(l.NombreImagen),
+                Observaciones = l.Observaciones,
+                Activo = l.Activo
+            }).Where(l =>
+            //Si el id categoria es  = 0, entonces colocas el idcategoria y si no colocas el id dado en parametro (la del usuario), dependiendo de eso
+            //hara la busqueda por filtro, teniendo en cuenta el stock y si el Libros esta activo
+               
+                l.Ejemplares > 0 && l.Activo == true //Solo muestra Libros activos y con un stock mayor a 0
+                ).ToList();
+
+            var jsonresult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
+            jsonresult.MaxJsonLength = int.MaxValue; //Indica que este json result no va a tener ningun limite en su contenido
+
+            return jsonresult;
+
+        }
+
         [HttpPost]
         public JsonResult ListarLibros(string idCategoria, string idEditorial)//cambiamos de tipo int a string
         {

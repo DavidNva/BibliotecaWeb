@@ -1,10 +1,8 @@
 ﻿
 @{
-    ViewBag.Title = "VistaLibros2";
+    ViewBag.Title = "Libros";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>VistaLibros2</h2>
 
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="#">Resumen</a></li>
@@ -64,7 +62,7 @@
             responsive: true,/*Para que sea resposiva*/
             ordering: false,
             "ajax": {/*Como pinta la tabla, ajax solo trae todos los valores*/
-                url: '@Url.Action("ListarLibro","Mantenedor")',
+                url: '@Url.Action("ListarTablaLibro", "Biblioteca")',
                 type: "GET",
                 dataType: "json"
             },
@@ -137,9 +135,7 @@
 
         });
 
-       
-
-
+        /*--------------- Al dar clic en el boton de editar-------------------------------*/
 
         /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
         $("#tabla tbody").on("click", '.btn-editar', function () {
@@ -190,7 +186,7 @@
             },
             function () {
                 jQuery.ajax({
-                    url: '@Url.Action("EliminarLibro", "Mantenedor")',
+                    url: '@Url.Action("EliminarLibro", "Biblioteca")',
                     type: "POST",
                     data: JSON.stringify({ id:json.IdLibro }),/*Paso de valores*/
                     /*el stringfy lo convierte a texto*/
@@ -221,5 +217,6 @@
         })
 
 
+        
     </script>
 }

@@ -1758,7 +1758,7 @@ sp_ActualizarEjemplarActivo 1006,12,1
 
 update ejemplar set activo = 1
 
-update libro set ejemplares = 3
+update libro set Activo = 0 where idlibro = 4
 
 delete carrito
 delete detalleprestamo
