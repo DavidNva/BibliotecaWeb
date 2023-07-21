@@ -140,7 +140,8 @@ namespace CapaPresentacionConsulta.Controllers
             //Si el id categoria es  = 0, entonces colocas el idcategoria y si no colocas el id dado en parametro (la del usuario), dependiendo de eso
             //hara la busqueda por filtro, teniendo en cuenta el stock y si el Libros esta activo
                
-                l.Ejemplares > 0 && l.Activo == true //Solo muestra Libros activos y con un stock mayor a 0
+               /* l.Ejemplares > 0 &&*/ 
+               l.Activo == true //Solo muestra Libros activos y con un stock mayor a 0
                 ).ToList();
 
             var jsonresult = Json(new { data = lista }, JsonRequestBehavior.AllowGet);
@@ -412,7 +413,7 @@ namespace CapaPresentacionConsulta.Controllers
         //    }
         //}
         [HttpPost]
-        public async Task<JsonResult> ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
+        public JsonResult ProcesarPrestamo(List<EN_Carrito> oListaCarrito, EN_Prestamo oPrestamo)//Con parametros
         {//los servicios de paypal obligan a trabajar de manera asincrona
             decimal total = 0;
 
@@ -514,7 +515,7 @@ namespace CapaPresentacionConsulta.Controllers
 
         [ValidarSession]
         [Authorize]//Aquellos lectores, usuarios que han iniciado sesion
-        public async Task<ActionResult> PrestamoEfectuado()//Para la vista
+        public ActionResult PrestamoEfectuado()//Para la vista
         {
             string fechaPrestamo = Request.QueryString["fechaPrestamo"];//Esto era idTransaccion
             bool status = Convert.ToBoolean(Request.QueryString["status"]);

@@ -19,12 +19,17 @@ namespace CapaDatos
                 {
                    StringBuilder sb = new StringBuilder(); //Permite hacer saltos de linea
 
-                    sb.AppendLine("select l.IdLibro, l.Codigo, l.Titulo, l.Paginas,c.IDCategoria, c.Descripcion[DesCategoria],");
+                    //En este punto (21-07-23) se agrega distinct y el inner join con Ejemplar para validar que 
+                    //cuando se liste los libros no se listen aquellos que aun no tienen relacion con ejemplar y idLibro
+                    //ya que estos dos van de la mano, por lo que el numero de ejemplares de libro debe ser igual 
+                    //al total de ejemplares referenciados de ese idLibro en la tabla ejemplar
+                    sb.AppendLine("select distinct l.IdLibro, l.Codigo, l.Titulo, l.Paginas,c.IDCategoria, c.Descripcion[DesCategoria],");
                     sb.AppendLine("e.IDEditorial, e.Descripcion[DesEditorial], s.IDSala, s.Descripcion[DesSala],");
                     sb.AppendLine("l.Ejemplares,l.AñoEdicion, l.Volumen, l.RutaImagen, l.NombreImagen,l.Observaciones, l.Activo");
                     sb.AppendLine("from Libro l");
                     sb.AppendLine("inner join Categoria c on c.IDCategoria = l.Id_Categoria");
                     sb.AppendLine("inner join Editorial e on e.IDEditorial = l.ID_Editorial");
+                    sb.AppendLine("inner join Ejemplar ej on ej.ID_Libro = l.IDLibro ");
                     sb.AppendLine("inner join Sala s on s.IDSala = l.ID_Sala order by l.IDLibro desc");
                     //string query = "select IDLibro,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,Tipo,Reestablecer,Activo from Libro";                    //string query = "select IDLibro,Nombres,Apellidos,Ciudad, Calle, Telefono, Correo,Clave,tp.IdTipoPersona,tp.Descripcion[Tipo],Reestablecer,Activo from Libro inner join TipoPersona TP on tp.IdTipoPersona = Libro.Tipo";
 

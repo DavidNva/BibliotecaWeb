@@ -20,22 +20,22 @@ go
 CREATE TABLE Categoria(--Tiene un trigger para autogenerar codigo
 	IdCategoria  nvarchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
-	Activo bit default 1,
+	Activo bit default 1 not null,
 	FechaRegistro datetime default getdate()
 )
 go
 CREATE TABLE Sala(--Tiene un trigger para autogenerar codigo
 	IdSala  nvarchar(10)  not null CONSTRAINT PK_Sala PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
-	Activo bit default 1,--Esta referenciado con libro (No se permite eliminar)
+	Activo bit default 1 not null,--Esta referenciado con libro (No se permite eliminar)
 	FechaRegistro datetime default getdate()
 )
 go
 CREATE TABLE Editorial(--Tiene un trigger para autogenerar codigo
 	IdEditorial  nvarchar(10)  not null CONSTRAINT PK_Editorial PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
-	Activo bit default 1,--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
-	FechaRegistro datetime default getdate()
+	Activo bit default 1 not null,--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
+	FechaRegistro datetime default getdate() 
 )
 go
 -- CREATE TABLE Sala(
@@ -52,8 +52,8 @@ CREATE TABLE Autor(--Tiene un trigger para autogenerar codigo
 	IdAutor  nvarchar(10)  not null CONSTRAINT PK_Autor PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Nombres nvarchar(100) not null,--Tiene indice compuesto con Apellidos
   Apellidos varchar(100) not null,--Tiene indice compuesto con Nombre
-	Activo bit default 1,
-	FechaRegistro datetime default getdate()
+	Activo bit default 1 not null,
+	FechaRegistro datetime default getdate() not null
 )----Esta referenciado con Libro autor (No se puede eliminar, o afectará a todos)
  --LA UNICA FORMA DE ELIMINAR A UN AUTOR, UNA SALA, UNA CATEGORIA, UN EDITORIAL ES QUE NO ESTEN REFERENCIADAS A NINGUNA TABLA
  --Por ejemplo si solo creamos una autor como prueba, pues mientras no lo referenciemos, si se puede eliminar
@@ -61,11 +61,11 @@ go
 CREATE TABLE LibroAutor(
     IDLibroAutor varchar(10)  not null CONSTRAINT PK_LibroAutor PRIMARY KEY,--Tiene un trigger para autogenerar codigo
     --Llaves foraneas
-    ID_Libro varchar(25) not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
+    ID_Libro int not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
     REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE,
     ID_Autor nvarchar(10) not null CONSTRAINT FK_Autor FOREIGN KEY(ID_Autor) 
     REFERENCES Autor(IDAutor),
-    Activo bit default 1,
+    Activo bit default 1 not null,
 	  FechaRegistro datetime default getdate() 
 );--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
     go
@@ -90,8 +90,8 @@ CREATE TABLE Usuario(
 	Clave nvarchar(150) not null, --Contrase�as encriptadas
   Tipo int not null CONSTRAINT FK_TipoPersona FOREIGN KEY(Tipo)
   REFERENCES TipoPersona(IdTipoPersona) DEFAULT 1,--El DEFAULT id 1, es para tipo lectores:
-	Reestablecer bit default 1, -- Por default 1
-	Activo bit default 1,
+	Reestablecer bit default 1 not null, -- Por default 1
+	Activo bit default 1 not null,
 	FechaRegistro datetime default getdate()
 )
 select * from lector  
@@ -160,14 +160,14 @@ CREATE TABLE Libro(
     REFERENCES Editorial(IDEditorial),
     ID_Sala nvarchar(10) not null CONSTRAINT FK_Sala FOREIGN KEY(ID_Sala) 
     REFERENCES Sala(IDSala) DEFAULT 'S0001',--Sala 
-    Ejemplares int,--En producto seria el stock
+    Ejemplares int not null,--En producto seria el stock
     -- NumEdicion varchar(60) not null,
     AñoEdicion varchar(5) not null,
     Volumen tinyint not null DEFAULT 1,
 	  RutaImagen varchar(100),
   	NombreImagen varchar(100),
     Observaciones varchar(500) not null default 'NINGUNA',--Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
-	  Activo bit default 1,
+	  Activo bit default 1 not null,
 	  FechaRegistro datetime default getdate()
     );--Esta referenciado con ejemplar y libroLutor (si se puede eliminar ya que estos como foreign key son delete y update cascade)
 go
@@ -178,21 +178,21 @@ CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso an
   REFERENCES Lector(IDLector) ON DELETE CASCADE,
   -- ID_Ejemplar varchar(10) not null CONSTRAINT FK_Ejemplar FOREIGN KEY(ID_Ejemplar) 
   -- REFERENCES Ejemplar(IDEjemplar) ON DELETE CASCADE,
-  TotalLibro int,--Total de libros, o total de ejemplares de ese libro --El lector pudo haber solicitado el prestamo de 3 libros
+  TotalLibro int not null,--Total de libros, o total de ejemplares de ese libro --El lector pudo haber solicitado el prestamo de 3 libros
 	-- MontoTotal decimal(10,2),--La suma total del precio de todos los productos
-  Activo bit default 1,--Devuelto o no devuelto --1 es igual a si, y 0 es igual a no . Asigando por default = 0, 
-  FechaPrestamo datetime default getdate(),
+  Activo bit default 1 not null,--Devuelto o no devuelto --1 es igual a si, y 0 es igual a no . Asigando por default = 0, 
+  FechaPrestamo datetime default getdate() not null,
   FechaDevolucion datetime null,--No especificaremos nada para que por default sea null (tiene un default null)
   DiasDePrestamo int not null default 7,--Regularmente una semana 7 dias
   Observaciones varchar(500) not null
 )--No tiene referencia (Se puede eliminar)
 go
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
-	IdDetallePrestamo int primary key identity,
-	IdPrestamo int references Prestamo(IdPrestamo),
+	IdDetallePrestamo int primary key identity not null,
+	IdPrestamo int references Prestamo(IdPrestamo) not null,
   --Este id libro,tendrá que ser el id del ejemplar (Pero primero lo manejaremos con el id de libro)
-	IDEjemplar int references Ejemplar(IdEjemplarLibro),--Posiblemente sea mejor el ejemplar id de ejemplar
-	CantidadEjemplares int,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
+	IDEjemplar int references Ejemplar(IdEjemplarLibro) not null,--Posiblemente sea mejor el ejemplar id de ejemplar
+	CantidadEjemplares int not null,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
 	Total decimal(10,2)--total del precio del producto
 )
 go
@@ -244,7 +244,7 @@ CREATE TABLE Ejemplar(
     --Llave foranea
     ID_Libro int not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
     REFERENCES Libro(IdLibro) ON DELETE CASCADE ON UPDATE CASCADE, --Tiene un indice unico: ID_Libro,
-    Activo bit default 1
+    Activo bit default 1 not null
     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
     -- /*
 --       Ocurre lo mismo con Ejemplar

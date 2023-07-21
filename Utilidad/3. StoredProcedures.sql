@@ -1655,7 +1655,7 @@ CREATE TYPE [dbo].[Ejemplar_Activo] AS TABLE(
     [IdEjemplar] int null
 )
 go
-create alter procedure usp_RegistrarPrestamo(
+create procedure usp_RegistrarPrestamo(
     @Id_Lector int,
     @TotalLibro int, 
     --@MontoTotal decimal(18,2),
@@ -1752,6 +1752,24 @@ go
 --end 
 
 
+
+insert libro(Codigo, Titulo, Paginas, ID_Categoria, ID_Editorial, ID_Sala, Ejemplares, AñoEdicion, Volumen, RutaImagen, NombreImagen, Observaciones)
+VALUES('6BIELI2837_Rfle093','Muñeca Billie Eilish',450,'C0002','ED0004','S0001',3,'2020',1,'C:\Users\David Nava\Pictures\Fotos_Biblioteca','7.jpg','NINGUNA')
+
+
+insert Ejemplar(ID_Libro) VALUEs (15)
+
+update ejemplar set activo = 1 where id_libro = 3
+update libro set ejemplares = 3
+
+select * from libro
+    delete libro where IDLibro BETWEEN 16 and 20
+    select * from ejemplar
+
+UPDATE LIBRO SET Titulo='Billie en el Atardecer' where IDLibro = 15
+
+
+
 sp_ActualizarEjemplarActivo 1006,12,1
 
 
@@ -1771,4 +1789,6 @@ select * from prestamo
 select * from detallePrestamo
 
 select * from libro 
-update libro set ejemplares = 3
+select * from fn_obtenerCarritoLector(20)
+
+delete carrito where idlibro = 1
