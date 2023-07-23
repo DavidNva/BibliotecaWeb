@@ -1583,10 +1583,7 @@ begin
 
 end 
 go
-select * from fn_obtenerCarritoLector(1006)
-go
-select * from categoria
-select * from lector
+select * from fn_obtenerCarritoLector(20)
 go
 ---------------------------------------FUNCION PARA OBTENER CARRITO CLIENTE 
 create function fn_obtenerCarritoLector(

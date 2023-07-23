@@ -119,6 +119,7 @@
             jQuery.ajax({
                 url: '@Url.Action("ListarLibrosCarrito", "Biblioteca")',
                 type: "POST",
+                data: null,
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {//una lista dentro de data

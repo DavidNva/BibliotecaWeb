@@ -20,6 +20,10 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View(); /*Retorna la vista con el nombre de Categoria (Dentro de la carpeta vista,, dentro de Mantenedor hay un "Categoria"*/
         }
+        public ActionResult CategoriaPruebaSelect() 
+        {
+            return View(); /*Retorna la vista con el nombre de Categoria (Dentro de la carpeta vista,, dentro de Mantenedor hay un "Categoria"*/
+        }
         public ActionResult Sala()
         {
             return View();
