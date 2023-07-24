@@ -3,6 +3,7 @@
     ViewBag.Title = "Libros";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="#">Resumen</a></li>
@@ -55,7 +56,8 @@
     al momento de precionar el boton nuevo-->
 <div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     @*Esto ultimo de data-bs-backdrop es para*@
-    <div class="modal-dialog modal-xl">@*tamaño xl*@
+    <div class="modal-dialog modal-xl">
+        @*tamaño xl*@
         @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
@@ -66,7 +68,7 @@
                 @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
 
                 <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Libro nuevo a ingresar o es valor ya existe pero si es diferente a 0 significa que ya existe y vamos a editar*@
-                
+
                 <form id="contenedor" class="row">
                     @*Para visualizar la imagen*@
                     <div class="col-sm-3">
@@ -87,17 +89,17 @@
                         </div>
 
                         @*<div class="mb-3">
-                            <label for="txtTitulo" class="form-label">Título</label>
-                            <input type="text" class="form-control" id="txtTitulo" name="titulo" autocomplete="off" />
-                        </div>*@
+                                <label for="txtTitulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="txtTitulo" name="titulo" autocomplete="off" />
+                            </div>*@
                         <div class="mb-3">
                             <label for="txtTitulo" class="form-label">Título</label>
                             <textarea type="text" class="form-control" id="txtTitulo" name="titulo" style="height:125px;resize:none"></textarea>
                         </div>
                         @*<div class="mb-3">
-            <label for="txtUbicacion" class="form-label">Ubicación</label>
-            <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
-        </div>*@
+                                <label for="txtUbicacion" class="form-label">Ubicación</label>
+                                <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
+                            </div>*@
                         <div class="mb-3">
                             <label for="txtPaginas" class="form-label">Páginas</label>
                             <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off" />
@@ -107,6 +109,9 @@
                     <div class="col-sm-3">
 
                         <div class="mb-3">
+                            @*<label for="cbocategoria" class="form-label">Categoria</label>
+                                <select id="cbocategoria" class="form-select" name="categoria">
+                                </select>*@
                             <label for="cbocategoria" class="form-label">Categoria</label>
                             <select id="cbocategoria" class="form-select" name="categoria">
                             </select>
@@ -169,6 +174,7 @@
 </div>
 
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         var tabladata;
         var filaSeleccionada;/*Son variables globales para se usada por lo que este dentro */
@@ -233,7 +239,7 @@
                 { "data": "AñoEdicion" },
 
                 { "data": "Observaciones" },
-                
+
                 {
                     "data": "IdLibro", "render": function (data, type, row, meta) {
 
@@ -266,7 +272,7 @@
         });
 
         /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
-          jQuery.ajax({
+          @*jQuery.ajax({
             url: '@Url.Action("ListarCategoria", "Mantenedor")',
             type: "GET",
             data: null,
@@ -283,6 +289,29 @@
             error: function (error) {
                 console.log(error)
             }
+        });*@
+           jQuery.ajax({
+            url: '@Url.Action("ListarCategoria", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+               //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $("#cbocategoria").append($("<option selected>").val("").text("Seleccionar"));
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
+                })
+                //dropdownParent: $('#FormModal')
+                $("#cbocategoria").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#FormModal') });
+                   /* .css("z-index", "1600");*/
+
+            },
+            error: function (error) {
+                console.log(error)
+              }
         });
 
 
@@ -405,7 +434,8 @@
             $("#txtTitulo").val("");
             /*("#txtUbicacion").val("");*/
             $("#txtPaginas").val("");
-            $("#cbocategoria").val($("#cbocategoria option:first").val());/*Dentro de las opciones de cmbMarca siempre selecciona el primero*/
+            $("#cbocategoria").append($("<option selected>").val("").text("Seleccionar"));
+            ///$("#cbocategoria").val($("#cbocategoria option:first").val());/*Dentro de las opciones de cmbMarca siempre selecciona el primero*/
             $("#cboeditorial").val($("#cboeditorial option:first").val());
             $("#cbosala").val($("#cbosala option:first").val());
 
@@ -419,12 +449,15 @@
             /*Llamamos al form modal*/
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
+
                 $("#txtId").val(json.IdLibro);
                 $("#txtCodigo").val(json.Codigo);
                 $("#txtTitulo").val(json.Titulo);
                 /* $("#txtUbicacion").val(json.Ubicacion);*/
                 $("#txtPaginas").val(json.Paginas);
-                $("#cbocategoria").val(json.oId_Categoria.IdCategoria);
+                $("#cbocategoria").val(json.oId_Categoria.IdCategoria).trigger('change');//Forma usando select2
+                //El trigger podemos traducirlo como un event
+                //$("#cbocategoria").val(json.oId_Categoria.IdCategoria);//Formal normal
                 $("#cboeditorial").val(json.oId_Editorial.IdEditorial);
                 $("#cbosala").val(json.oId_Sala.IdSala);
                 $("#txtEjemplares").val(json.Ejemplares);
