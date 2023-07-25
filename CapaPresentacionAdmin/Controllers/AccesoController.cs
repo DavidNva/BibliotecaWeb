@@ -48,7 +48,7 @@ namespace CapaPresentacionAdmin.Controllers
                 }
 
                 FormsAuthentication.SetAuthCookie(oUsuario.Correo, false);/*Se crea una autentificacion del usuario por su correo*/
-
+                Session["Usuario"] = oUsuario;
                 ViewBag.Error = null;
                 return RedirectToAction("Index", "Home"); /*Referencia al dashboard principal*/
             }
@@ -122,6 +122,7 @@ namespace CapaPresentacionAdmin.Controllers
         }
         public ActionResult CerrarSesion()
         {
+            Session["Usuario"] = null;
             FormsAuthentication.SignOut();//Eliminamos la autentificacion del usuario, por lo que deberá volver a iniciar sesion
             return RedirectToAction("Index", "Acceso");
         }
