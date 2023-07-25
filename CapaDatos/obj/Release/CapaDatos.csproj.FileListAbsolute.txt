@@ -1,0 +1,9 @@
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\bin\Release\CapaDatos.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\bin\Release\CapaDatos.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\bin\Release\CapaEntidad.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\bin\Release\CapaEntidad.pdb
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\obj\Release\CapaDatos.csproj.AssemblyReference.cache
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\obj\Release\CapaDatos.csproj.CoreCompileInputs.cache
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\obj\Release\CapaDatos.csproj.CopyComplete
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\obj\Release\CapaDatos.dll
+D:\Documentos\Proyectos Personales\SistemaWeb_Biblioteca\CapaDatos\obj\Release\CapaDatos.pdb

@@ -305,7 +305,7 @@
                     $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
                 })
                 //dropdownParent: $('#FormModal')
-                $("#cbocategoria").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#FormModal') });
+                $("#cbocategoria").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
                    /* .css("z-index", "1600");*/
 
             },
@@ -332,8 +332,10 @@
                     /*Se crea una opcion para cmb obteniendo el valor del id y descripcion de la marca, y se asigna (appendTo)
                      al #cmbMarca del modal*/
                     $("<option>").attr({ "value": item.IdEditorial }).text(item.Descripcion).appendTo("#cboeditorial");
-                })
-                $("#cboeditorial").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#FormModal') });
+                })//La solucion para no generar problemas con el select2 y el modal en dispositivos modiles es cambiar el
+                //valor de dropdownParetn en lugar de mandar atras al modal completo, solo aplicamos al contenedor formulario
+                //que contiene los input y select del modal. De esta forma funciona tanto para pc y movil
+                $("#cboeditorial").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
             },
             error: function (error) {
                 console.log(error)

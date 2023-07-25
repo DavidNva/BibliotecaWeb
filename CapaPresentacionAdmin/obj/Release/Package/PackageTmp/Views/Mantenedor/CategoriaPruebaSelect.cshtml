@@ -1,0 +1,189 @@
+﻿
+@{
+    ViewBag.Title = "CategoriaPruebaSelect";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
+<div class="container">
+    <h2>CategoriaPruebaSelect</h2>
+   
+</div>
+<!-- Botón para abrir el modal -->
+<button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="abrirModal()">
+    Abrir Modal
+</button>
+
+
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+    <div class="modal-dialog">
+        @*tamaño xl*@
+    @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+    <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="exampleModalLabel">Libro</h5>
+            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+            <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Libro nuevo a ingresar o es valor ya existe pero si es diferente a 0 significa que ya existe y vamos a editar*@
+
+        <form id="contenedor" class="row">
+            @*Para visualizar la imagen*@
+
+
+            <div class="col-sm-12">
+                <div class="mb-3">
+                    <label for="cboactivo" class="form-label">Activo</label>
+                    <select id="cboactivo" class="form-select">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="cbocategoria" class="form-label">Categoria</label>
+                    <select id="cbocategoria" class="form-select" name="categoria">
+                    </select>
+                </div>
+            </div>
+            @*<div class="mb-3">
+                <label class="form-label">Categoria</label>
+                <select class="w-100 form-select form-select-sm" id="datos" >
+                    <option value="0" disabled="disabled">Seleccionar</option>
+                </select>
+            </div>*@
+            
+        </form>
+            <!--mensaje de alerta-->
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div id="mensajeError" class="alert alert-danger" role="alert">
+                        @*A simple danger alert—check it out!*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+        </div>
+    </div>
+</div>
+</div>
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        //$(document).ready(function () {
+        //    $('#datos').select2({
+        //        dropdownParent: $('#FormModal')
+        //    });
+
+          
+        //});
+        
+
+///BIEN Bien
+          jQuery.ajax({
+            url: '@Url.Action("ListarCategoria", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+               //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $("#cbocategoria").append($("<option selected>").val("").text("Seleccionar"));
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
+                })
+                //dropdownParent: $('#FormModal')
+                $("#cbocategoria").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#FormModal') });
+                   /* .css("z-index", "1600");*/
+
+            },
+            error: function (error) {
+                console.log(error)
+              }
+        });
+        function abrirModal(json) /*json es el data del siguiente*/ {
+            $("#txtId").val(0); /*Con el # llama con el id del elemento chtml*/
+            $("#img_Libro").removeAttr("src");/*Limpia toda imagen que ya este mostrando la etiqueta de imagen antes*/
+            $("#fileLibro").val("");
+            $("#txtCodigo").val("");
+            $("#txtTitulo").val("");
+            /*("#txtUbicacion").val("");*/
+            $("#txtPaginas").val("");
+            //$("#cbocategoria").val(0);/*Dentro de las opciones de cmbMarca siempre selecciona el primero*/
+          
+            $("#cbocategoria").val($("#cbocategoria option:first").val());
+            $("#cbosala").val($("#cbosala option:first").val());
+
+            $("#txtEjemplares").val("");
+            $("#txtVolumen").val("");
+            $("#txtAñoEdicion").val("");
+            $("#txtObservaciones").val("");
+            $("#cboactivo").val(1);
+           // $("#datos").val($("#datos option:first").val());
+
+            $("#mensajeError").hide();
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+                $("#txtId").val(json.IdLibro);
+                $("#txtCodigo").val(json.Codigo);
+                $("#txtTitulo").val(json.Titulo);
+                /* $("#txtUbicacion").val(json.Ubicacion);*/
+                $("#txtPaginas").val(json.Paginas);
+                
+                $("#cbocategoria").val(json.oId_categoria.Idcategoria);
+                $("#cbosala").val(json.oId_Sala.IdSala);
+                $("#txtEjemplares").val(json.Ejemplares);
+                $("#txtVolumen").val(json.Volumen);
+                $("#txtAñoEdicion").val(json.AñoEdicion);
+                $("#txtObservaciones").val(json.Observaciones);
+                $("#cboactivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                 y si no es true de el valor de 0*/
+                $("#datos").val($("#datos option:first").val(json.oId_Categoria.IdCategoria));
+
+
+                 jQuery.ajax({/*Para visualizar la imagen al dar editar*/
+                    url: '@Url.Action("ImagenLibro", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id: json.IdLibro }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        $("#img_Libro").LoadingOverlay("hide");
+
+                        if (data.conversion) {/*Si es verdadero, si la conversion fue exitosa*/
+                            $("#img_Libro").attr({ "src": "data:image/" + data.extension + ";base64," + data.textobase64 });
+                        }
+                    },
+                    error: function (error) {
+                        $("#img_Libro").LoadingOverlay("hide");
+
+                        $("#mensajeError").show();
+                        $("#mensajeError").text("Error al mostrar imagen");
+
+                    },
+                    beforeSend: function () {
+                        $("#img_Libro").LoadingOverlay("show");
+                    },
+                });
+
+            }
+
+            $("#FormModal").modal("show");
+        }
+    </script>
+}
+

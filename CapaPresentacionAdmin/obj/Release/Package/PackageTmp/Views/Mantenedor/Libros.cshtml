@@ -1,0 +1,692 @@
+﻿
+@{
+    ViewBag.Title = "Libros";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="#">Resumen</a></li>
+    <li class="breadcrumb-item active">Libros</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+
+        <i class="fas fa-book me-1"></i>Lista de Libros
+    </div>
+    <div class="card-body">
+        @*boostrap es como manejar una hoja en excel*@
+        <div class="row">
+            <div class="col-12">
+                @*numero de filas*@
+                <button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+            </div>
+        </div>
+        <hr /> @*el id es para identificar la tabla*@
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Num</th>
+                    <th>Código</th>
+                    <th>Título</th>
+                    @*<th>Ubicación</th>*@
+                    <th>Pág</th>
+                    <th>Categoría</th>
+                    <th>Editorial</th>
+                    <th>Sala</th>
+                    <th>Activo</th>
+                    <th>Stock</th>
+                    <th>Volumen</th>
+                    <th>Año de Edición</th>
+                    <th>Observaciones</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @*ajax va permitir por ejemplo, hacer la ejecuciion del metodo listarLibro llamada en el HomeControler*@
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+    <div class="modal-dialog modal-xl">
+        @*tamaño xl*@
+        @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Libro</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+                <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Libro nuevo a ingresar o es valor ya existe pero si es diferente a 0 significa que ya existe y vamos a editar*@
+
+                <form id="contenedor" class="row">
+                    @*Para visualizar la imagen*@
+                    <div class="col-sm-3">
+                        <div class="mb-2">
+                            @*las ultimas instrucciones (clases) es para que sea de bloque y la imagen responsive*@
+                            <img id="img_Libro" height="197" width="200" class="border rounded mx-auto d-block img-fluid" />
+                        </div>
+                        <div class="mb-2">
+                            <input class="form-control" type="file" id="fileLibro" accept="image/png, image/jpg, image/jpeg" onchange="mostrarImagen(this)" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="mb-3">
+                            <label for="txtCodigo" class="form-label">Código</label>
+                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off" />
+                            @*<input id="txtid" class="form-control" type="text" value="0" />*@
+                        </div>
+
+                        @*<div class="mb-3">
+                                <label for="txtTitulo" class="form-label">Título</label>
+                                <input type="text" class="form-control" id="txtTitulo" name="titulo" autocomplete="off" />
+                            </div>*@
+                        <div class="mb-3">
+                            <label for="txtTitulo" class="form-label">Título</label>
+                            <textarea type="text" class="form-control" id="txtTitulo" name="titulo" style="height:125px;resize:none"></textarea>
+                        </div>
+                        @*<div class="mb-3">
+                                <label for="txtUbicacion" class="form-label">Ubicación</label>
+                                <input type="text" class="form-control" id="txtUbicacion" name="ubicacion" />
+                            </div>*@
+                        <div class="mb-3">
+                            <label for="txtPaginas" class="form-label">Páginas</label>
+                            <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+
+                        <div class="mb-3">
+                            @*<label for="cbocategoria" class="form-label">Categoria</label>
+                                <select id="cbocategoria" class="form-select" name="categoria">
+                                </select>*@
+                            <label for="cbocategoria" class="form-label">Categoria</label>
+                            <select id="cbocategoria" class="form-select" name="categoria">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cboeditorial" class="form-label">Editorial</label>
+                            <select id="cboeditorial" class="form-select" name="editorial">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cbosala" class="form-label">Sala</label>
+                            <select id="cbosala" class="form-select" name="sala">
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtEjemplares" class="form-label">Ejemplares</label>
+                            <input type="number" class="form-control" id="txtEjemplares" name="ejemplares" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="mb-3">
+                            <label for="txtAñoEdicion" class="form-label">Año de Edición</label>
+                            <input type="text" class="form-control" id="txtAñoEdicion" name="añoedicion" autocomplete="off" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="txtVolumen" class="form-label">Volumen</label>
+                            <input type="number" class="form-control" id="txtVolumen" name="volumen" autocomplete="off">
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtObservaciones" class="form-label">Observaciones</label>
+                            <input type="text" class="form-control" id="txtObservaciones" name="observaciones" autocomplete="off" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="cboactivo" class="form-label">Activo</label>
+                            <select id="cboactivo" class="form-select">
+                                <option value="1">Si</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </form>
+                <!--mensaje de alerta-->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                            @*A simple danger alert—check it out!*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        var tabladata;
+        var filaSeleccionada;/*Son variables globales para se usada por lo que este dentro */
+        function mostrarImagen(input) {
+            if (input.files) {/*Si tiene un archivo selecciondo continuamos*/
+
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    /*Pinta en la etiqueta img_Libro con su src y las medidas correspondientes*/
+                    $("#img_Libro").attr("src", e.target.result).width(200).height(197)
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+
+        }
+        //el hastash significa que se refiere a un id, entonces llama o igual la variable a una tabla declarada
+        //anteriormente en el html de arriba con id que se llama tabla
+        tabladata = $("#tabla").DataTable({
+            responsive: true,/*Para que sea resposiva*/
+            ordering: false,
+            "ajax": {/*Como pinta la tabla, ajax solo trae todos los valores*/
+                url: '@Url.Action("ListarLibro","Mantenedor")',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [/*Todas las columnas que vamos a usar*/
+                /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
+                 y el seguno valor es como se llama la columna*/
+                { "data": "IdLibro" },
+                { "data": "Codigo" },
+                { "data": "Titulo" },
+                { "data": "Paginas" },
+                {
+                    "data": "oId_Categoria", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "oId_Editorial", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "oId_Sala", "render": function (data) {
+                        return data.Descripcion
+                    }
+                },
+                {
+                    "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                        if (valor) {/*Si el valor es verdadero*/
+                            return '<span class="badge bg-success">Si</span>'
+                        } else {
+                            return '<span class="badge bg-danger">No</span>'
+                        }
+                    }
+
+                },
+                { "data": "Ejemplares" },
+                { "data": "Volumen" },
+                { "data": "AñoEdicion" },
+
+                { "data": "Observaciones" },
+
+                {
+                    "data": "IdLibro", "render": function (data, type, row, meta) {
+
+                        return $("<button>").addClass("btn btn-primary btn-editar btn-sm").append(
+                            $("<i>").addClass("fas fa-pen")
+                        ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                            +
+                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm ms-2").append(
+                                $("<i>").addClass("fas fa-trash")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+                    },
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+                //{/*Crea una columna por defecto*/
+                //    /*El btn-promary es el diseño, el btn-sm es el mamaño*/
+                //    "defaultContent": ' <button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                //        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash btn-eliminar"></i></button>',
+                //    "orderable": false,/*Que no sea ordenada, porque solo contiene botones*/
+                //    "searchable": false, /*Para que no haga la busqueda por estos botones de editar y eliminar, solo de las demas columnas*/
+                //    "width": "90px"
+                //}
+            ],/*Propiedad o atributos van dentro de las comillas ""*/
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+
+        });
+
+        /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
+          @*jQuery.ajax({
+            url: '@Url.Action("ListarCategoria", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });*@
+           jQuery.ajax({
+            url: '@Url.Action("ListarCategoria", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+               //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $("#cbocategoria").append($("<option selected>").val("").text("Seleccionar"));
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
+                })
+                //dropdownParent: $('#FormModal')
+                $("#cbocategoria").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#FormModal') });
+                   /* .css("z-index", "1600");*/
+
+            },
+            error: function (error) {
+                console.log(error)
+              }
+        });
+
+
+        /* ahora el ajax paa listar las editorial en el cmbeditorial*/
+
+        jQuery.ajax({
+            url: '@Url.Action("ListarEditorial", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                //$("<option>").attr({ "value": "0","disabled":"true" }).text("Seleccionar").appendTo("#cboeditorial");
+                $("#cboeditorial").append($("<option selected>").val("").text("Seleccionar"));
+                $.each(data.data, function (index, item) {/*itera una lista*/
+                    /*attr significa atibuto*/
+                    /*Se crea una opcion para cmb obteniendo el valor del id y descripcion de la marca, y se asigna (appendTo)
+                     al #cmbMarca del modal*/
+                    $("<option>").attr({ "value": item.IdEditorial }).text(item.Descripcion).appendTo("#cboeditorial");
+                })
+                $("#cboeditorial").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#FormModal') });
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+         jQuery.ajax({
+            url: '@Url.Action("ListarSala", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0","disabled":"true" }).text("Seleccionar").appendTo("#cbosala");
+                $.each(data.data, function (index, item) {/*itera una lista*/
+                    /*attr significa atibuto*/
+                    /*Se crea una opcion para cmb obteniendo el valor del id y descripcion de la marca, y se asigna (appendTo)
+                     al #cmbMarca del modal*/
+                    $("<option>").attr({ "value": item.IdSala }).text(item.Descripcion).appendTo("#cbosala");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+
+        /*Validaciones*/
+        /*El metodo se llama precioDecimal*/
+
+        jQuery.validator.addMethod("preciodecimal", function (value, element) {
+            return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
+        }, "El formato correcto es solo números");
+
+
+        $("#contenedor").validate({
+            rules: {
+                codigo: {/*Indica que el campo nombre es requerido*/
+                    required: true
+                },
+                titulo: {
+                    required: true
+                },
+                paginas: {
+                    required: true,
+                    preciodecimal: true
+                   /* number: true*/
+                },
+                categoria: {
+                    required: true
+                },
+                editorial: {
+                    required: true
+                },
+                sala: {
+                    required: true
+                },
+                ejemplares: {
+                    required: true,
+                    preciodecimal: true
+                },
+                añoedicion: {
+                    required: true
+                },
+                volumen: {
+                    required: true,
+                    /*number: true*/
+                    preciodecimal: true
+                },
+                observaciones: {
+                    required: true
+                }
+            },
+            messages: {
+                codigo: "- El campo código es obligatorio",
+                titulo: "- El campo título es obligatorio",
+                /*ubicacion: "- El campo ubicación es obligatorio",*/
+                paginas: { required: "- El campo paginas es obligario -> El valor debe ser mayor a 0 ", preciodecimal: "- - Debe ingresar solo numeros positivos en el campo páginas" },
+                categoria: "- Seleccionar una categoria es obligatorio",
+                editorial: "- Seleccionar una editorial es obligatorio",
+                sala: "- Seleccionar una sala es obligatorio",
+                ejemplares: { required: "- El campo ejemplares es obligario -> El valor debe ser mayor a 0", preciodecimal: "- Debe ingresar solo numeros positivos en el campo de ejemplares" },
+                añoedicion: "- El campo año de edición es obligatorio",
+                volumen: { required: "- El campo volumen es obligario -> El valor debe ser mayor a 0", preciodecimal: "- Debe ingresar solo numeros positivos en el campo volumen" },
+                observaciones: "- El campo observaciones es obligatorio"
+            },
+            errorElement: "div",
+            errorLabelContainer: ".alert-danger"
+        })
+
+
+
+
+
+        function abrirModal(json) /*json es el data del siguiente*/ {
+            $("#txtId").val(0); /*Con el # llama con el id del elemento chtml*/
+            $("#img_Libro").removeAttr("src");/*Limpia toda imagen que ya este mostrando la etiqueta de imagen antes*/
+            $("#fileLibro").val("");
+            $("#txtCodigo").val("");
+            $("#txtTitulo").val("");
+            /*("#txtUbicacion").val("");*/
+            $("#txtPaginas").val("");
+            $("#cbocategoria").append($("<option selected>").val("").text("Seleccionar"));
+            ///$("#cbocategoria").val($("#cbocategoria option:first").val());/*Dentro de las opciones de cmbMarca siempre selecciona el primero*/
+            //$("#cboeditorial").val($("#cboeditorial option:first").val());
+            $("#cboeditorial").append($("<option selected>").val("").text("Seleccionar"));
+            $("#cbosala").val($("#cbosala option:first").val());
+
+            $("#txtEjemplares").val("");
+            $("#txtVolumen").val("");
+            $("#txtAñoEdicion").val("");
+            $("#txtObservaciones").val("");
+            $("#cboactivo").val(1);
+
+            $("#mensajeError").hide();
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+
+                $("#txtId").val(json.IdLibro);
+                $("#txtCodigo").val(json.Codigo);
+                $("#txtTitulo").val(json.Titulo);
+                /* $("#txtUbicacion").val(json.Ubicacion);*/
+                $("#txtPaginas").val(json.Paginas);
+                $("#cbocategoria").val(json.oId_Categoria.IdCategoria).trigger('change');//Forma usando select2
+                //El trigger podemos traducirlo como un event
+                //$("#cbocategoria").val(json.oId_Categoria.IdCategoria);//Formal normal
+                //$("#cboeditorial").val(json.oId_Editorial.IdEditorial);
+                $("#cboeditorial").val(json.oId_Editorial.IdEditorial).trigger('change');
+                $("#cbosala").val(json.oId_Sala.IdSala);
+                $("#txtEjemplares").val(json.Ejemplares);
+                $("#txtVolumen").val(json.Volumen);
+                $("#txtAñoEdicion").val(json.AñoEdicion);
+                $("#txtObservaciones").val(json.Observaciones);
+                $("#cboactivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                 y si no es true de el valor de 0*/
+
+
+                 jQuery.ajax({/*Para visualizar la imagen al dar editar*/
+                    url: '@Url.Action("ImagenLibro", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id: json.IdLibro }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        $("#img_Libro").LoadingOverlay("hide");
+
+                        if (data.conversion) {/*Si es verdadero, si la conversion fue exitosa*/
+                            $("#img_Libro").attr({ "src": "data:image/" + data.extension + ";base64," + data.textobase64 });
+                        }
+                    },
+                    error: function (error) {
+                        $("#img_Libro").LoadingOverlay("hide");
+
+                        $("#mensajeError").show();
+                        $("#mensajeError").text("Error al mostrar imagen");
+
+                    },
+                    beforeSend: function () {
+                        $("#img_Libro").LoadingOverlay("show");
+                    },
+                });
+
+            }
+
+            $("#FormModal").modal("show");
+        }
+        /*--------------- Al dar clic en el boton de editar-------------------------------*/
+
+        /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            /*This es la misma tabla, se llama
+             tr es el row o la fila seleccionado de la tabla */
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            //var json = $(this).data("informacion")
+            //console.log(json);
+            var json = $(this).data("informacion")
+            abrirModal(json)
+
+        })
+        /*Tambien lo podemos hacer de esta forma*/
+        //$(document).on('click', '.btn-editar', function (event) {
+        //    var json = $(this).data("informacion")
+
+        //    abrirModal(json)
+        //});
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+
+            //var Libroseleccionado = $(this).closest("tr");
+            //console.log(Libroseleccionado)
+
+            var json = $(this).data("informacion")
+            //var idLibro = json.IdLibro
+            //console.log(json.IdLibro);
+            //console.log(data);
+            //if (typeof json !== "undefined" && json !== null) {
+            //    // Ahora puedes acceder a las propiedades de data de forma segura
+            //    var id = json.IdLibro;
+            //    // resto del código aquí
+            //} else {
+            //    console.log("La variable data es undefined o null");
+            //}
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Desea eliminar el Libro?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+            function () {
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarLibro", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id:json.IdLibro }),/*Paso de valores*/
+                    /*el stringfy lo convierte a texto*/
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Libro
+                     * hecho en homeController*/
+                        //ELIMINAR Libro
+
+                        if (data.resultado) { /*si el resultado es verdadera)*/
+                            //tabladata.row(Libroseleccionado).remove().draw();
+                            tabladata.ajax.reload();
+                        }else {
+                            swal("No se pudo eliminar", data.mensaje, "error")
+                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
+
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+
+                });
+            });
+
+            //console.log(data);
+
+
+        })
+
+
+        function Guardar() {
+            /* Si no se han completado los campos */
+            if (!$("#contenedor").valid()) {
+                return;//Termina el metodo de guardar, ya no continua
+            }
+
+            var ImagenSeleccionada = $("#fileLibro")[0].files[0];/*Al primer archivo de la lista que pueda tener el control de fileLibro*/
+
+
+            var Libro = {
+                IdLibro: $("#txtId").val(),
+                /*Los dos puntos de la condicion es "si es diferente es:"
+                 el signo de interrogacion es un entonces
+                 leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
+                 pero si es diferentes es falso*/
+                Codigo: $("#txtCodigo").val(),
+                Titulo: $("#txtTitulo").val(),
+                /*  Ubicación: $("#txtUbicacion").val(),*/ /*El punto val sirve para obtener un valor y para establecer un valor*/
+                Paginas: $("#txtPaginas").val(),
+                oId_Categoria: {
+                    IdCategoria: $("#cbocategoria option:selected").val(),
+                    Descripcion: $("#cbocategoria option:selected").text()
+                },
+                oId_Editorial: {
+                    IdEditorial: $("#cboeditorial option:selected").val(),
+                    Descripcion: $("#cboeditorial option:selected").text()
+                },
+                oId_Sala: {
+                    IdSala: $("#cbosala option:selected").val(),
+                    Descripcion: $("#cbosala option:selected").text()
+                },
+                Ejemplares: $("#txtEjemplares").val(),
+                Volumen: $("#txtVolumen").val(),
+                AñoEdicion: $("#txtAñoEdicion").val(),
+                Observaciones: $("#txtObservaciones").val(),
+                Activo: $("#cboactivo").val() == 1 ? true : false,/*Para saber si se esta seleccionado un Si (Si = 0)
+                 * o un no (No = 0*/
+            }
+            /*Para poder pasar archivos a metodos debemos usar: FormData*/
+            var request = new FormData();
+            request.append("objeto", JSON.stringify(Libro))/*Todo lo de Libro anterior lo pasa a formato de texto*/
+            /*Dentro de formData se crea el objeto (debe ser el mismo nombre, a como se creo el parametro en el metodo guardar (con parametro string = objeto) de mantenedor controller*/
+            request.append("archivoImagen", ImagenSeleccionada)
+
+            jQuery.ajax({/*Llama al metodo de guardar Libro, que dependiendo de la accion va a crear nuevo
+             o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
+                url: '@Url.Action("GuardarLibro", "Mantenedor")',
+                type: "POST",
+                data: request,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    //Libro NUEVO
+                    if (Libro.IdLibro == 0) { /*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+                        un Libro nuevo, por lo que se ha dado dando clic con el boton de crear*/
+                        /*alert("Crear Libro")*/
+
+                        if (data.idGenerado != 0) {
+                            Libro.IdLibro = data.idGenerado;
+                            tabladata.ajax.reload();
+                            //tabladata.row.add(Libro).draw(false);
+
+                            $("#FormModal").modal("hide");
+                        } else {
+
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+                    }
+                    //Libro Editar
+                    else {
+                        /* alert("Editar Libro")*/
+                        /*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                         a un Libro, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                         con los alert comentados*/
+
+                        if (data.operacionExitosa) {
+                            tabladata.ajax.reload();
+                            /*tabladata.row(filaSeleccionada).data(Libro).draw(false);*/
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+                    }
+                },
+                error: function (error) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    $("#mensajeError").text("Error Ajax");
+                    $("#mensajeError").show();
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando...",
+                        size: 14
+                    });
+                }
+            });
+
+        }
+    </script>
+}

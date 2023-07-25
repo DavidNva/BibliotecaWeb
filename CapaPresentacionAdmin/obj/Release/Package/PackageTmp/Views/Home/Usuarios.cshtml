@@ -1,0 +1,456 @@
+﻿
+@{
+    ViewBag.Title = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="#">Resumen</a></li>
+    <li class="breadcrumb-item active">Usuarios</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+
+        <i class="fas fa-users me-1"></i>Lista de Usuarios
+    </div>
+    <div class="card-body">
+        @*boostrap es como manejar una hoja en excel*@
+        <div class="row">
+            <div class="col-12">
+                @*numero de filas*@
+                <button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+            </div>
+        </div>
+        <hr /> @*el id es para identificar la tabla*@
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Ciudad</th>
+                    <th>Calle</th>
+                    <th>Telefono</th>
+                    <th>Tipo</th>
+                    <th>Correo</th>
+                    <th>Activo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @*ajax va permitir por ejemplo, hacer la ejecuciion del metodo listarUsuario llamada en el HomeControler*@
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+<div class="modal-dialog">
+    @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+<div class="modal-content">
+    <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Usuario</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close" ></button>
+    </div>
+    <div class="modal-body">
+        @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+    <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un usuario nuevo a ingresar o es valor ya existe
+        pero si es diferente a 0 significa que ya existe y vamos a editar*@
+    <div class="row g-2">
+
+        <div class="col-sm-6">
+            <label for="txtNombres" class="form-label">Nombres</label>
+            <input type="text" class="form-control" id="txtNombres" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+            <label for="txtApellidos" class="form-label">Apellidos</label>
+            <input type="text" class="form-control" id="txtApellidos" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+            <label for="txtCiudad" class="form-label">Ciudad</label>
+            <input type="text" class="form-control" id="txtCiudad" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+            <label for="txtCalle" class="form-label">Calle</label>
+            <input type="text" class="form-control" id="txtCalle" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+            <label for="txtTelefono" class="form-label">Telefono</label>
+            <input type="tel" class="form-control" id="txtTelefono" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+            <label for="txtCorreo" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="txtCorreo" autocomplete="off">
+        </div>
+        @*<div class="col-sm-6">
+            <label for="txtTipo" class="form-label">Tipo</label>
+            <input type="text" class="form-control" id="txtTipo" autocomplete="off">
+        </div>*@
+        <div class="col-sm-6">
+            <label class="form-label">Tipo</label>
+            <select id="cmbTipoPersona" class="form-select">
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <label for="cmbActivo" class="form-label">Activo</label>
+            <select id="cmbActivo" class="form-select">
+                <option value="1">Si</option>
+                <option value="0">No</option>
+            </select>
+        </div>
+    </div>
+    <!--mensaje de alerta-->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div id="mensajeError" class="alert alert-danger" role="alert">
+                A simple danger alert—check it out!
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+</div>
+</div>
+</div>
+</div>
+
+@section scripts{
+    <script>
+        var tabladata;
+        var filaSeleccionada;/*Son variables globales para se usada por lo que este dentro */
+
+        //el hastash significa que se refiere a un id, entonces llama o igual la variable a una tabla declarada
+        //anteriormente en el html de arriba con id que se llama tabla
+        tabladata = $("#tabla").DataTable({
+            responsive: true,/*Para que sea resposiva*/
+            ordering: false,
+            "ajax": {/*Como pinta la tabla, ajax solo trae todos los valores*/
+                url: '@Url.Action("ListarUsuarios","Home")',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [/*Todas las columnas que vamos a usar*/
+                /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
+                 y el seguno valor es como se llama la columna*/
+                { "data": "Nombres" },
+                { "data": "Apellidos" },
+                { "data": "Ciudad" },
+                { "data": "Calle" },
+
+               /* { "data": "Tipo" },*/
+                { "data": "Telefono" },
+
+                {
+                    "data": "oId_TipoPersona", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.Descripcion
+                    }
+                },
+                { "data": "Correo" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
+                {
+                    "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                        if (valor) {/*Si el valor es verdadero*/
+                            return '<span class="badge bg-success">Si</span>'
+                        } else {
+                            return '<span class="badge bg-danger">No</span>'
+                        }
+                    }
+
+                },
+                {
+                    "data": "IdUsuario", "render": function (data, type, row, meta) {
+
+                        return $("<button>").addClass("btn btn-primary btn-editar btn-sm").append(
+                            $("<i>").addClass("fas fa-pen")
+                        ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                            +
+                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm ms-2").append(
+                                $("<i>").addClass("fas fa-trash")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+                    },
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+                //{/*Crea una columna por defecto*/
+                //    /*El btn-promary es el diseño, el btn-sm es el mamaño*/
+                //    "defaultContent": ' <button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                //        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash btn-eliminar"></i></button>',
+                //    "orderable": false,/*Que no sea ordenada, porque solo contiene botones*/
+                //    "searchable": false, /*Para que no haga la busqueda por estos botones de editar y eliminar, solo de las demas columnas*/
+                //    "width": "90px"
+                //}
+            ],/*Propiedad o atributos van dentro de las comillas ""*/
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+
+        });
+        /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
+          jQuery.ajax({
+            url: '@Url.Action("ListarTipoPersona", "Mantenedor")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+                $("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cmbTipoPersona");
+                $.each(data.data, function (index, item) {
+
+                    $("<option>").attr({ "value": item.IdTipoPersona }).text(item.Descripcion).appendTo("#cmbTipoPersona");
+                })
+            },
+            error: function (error) {
+                console.log(error)
+            }
+          });
+
+        function abrirModal(json) /*json es el data del siguiente*/ {
+            $("#txtId").val(0);
+            $("#txtNombres").val("");
+            $("#txtApellidos").val("");
+            $("#txtCiudad").val("");
+            $("#txtCalle").val("");
+            $("#txtTelefono").val("");
+            $("#txtCorreo").val("");
+            $("#cmbTipoPersona").val(1);
+            $("#cmbActivo").val(1);
+
+
+            $("#mensajeError").hide();
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+                $("#txtId").val(json.IdUsuario);/*Traerá el codigo pero no lo mostrará al usuario*/
+                $("#txtNombres").val(json.Nombres); /*El json o data, trae una propieadad llamada nombres*/
+                $("#txtApellidos").val(json.Apellidos);
+                $("#txtCiudad").val(json.Ciudad);
+                $("#txtCalle").val(json.Calle);
+                $("#txtTelefono").val(json.Telefono);
+                $("#cmbTipoPersona").val(json.oId_TipoPersona.IdTipoPersona);
+                $("#txtCorreo").val(json.Correo);
+                $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                 y si no es true de el valor de 0*/
+
+            }
+
+            $("#FormModal").modal("show");
+        }
+        /*--------------- Al dar clic en el boton de editar-------------------------------*/
+
+        /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            /*This es la misma tabla, se llama
+             tr es el row o la fila seleccionado de la tabla */
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            var json = $(this).data("informacion")
+            //console.log(json);
+            abrirModal(json)
+
+        })
+        /*Tambien lo podemos hacer de esta forma*/
+        //$(document).on('click', '.btn-editar', function (event) {
+        //    var json = $(this).data("informacion")
+
+        //    abrirModal(json)
+        //});
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+
+            //var usuarioSeleccionado = $(this).closest("tr");
+            //console.log(usuarioSeleccionado)
+            
+            var json = $(this).data("informacion")
+            //var idUsuario = json.IdUsuario 
+            //console.log(json.IdUsuario);
+            //console.log(data);
+            //if (typeof json !== "undefined" && json !== null) {
+            //    // Ahora puedes acceder a las propiedades de data de forma segura
+            //    var id = json.IdUsuario;
+            //    // resto del código aquí
+            //} else {
+            //    console.log("La variable data es undefined o null");
+            //}
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Desea eliminar el usuario?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+            function () {
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarUsuario", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id:json.IdUsuario }),/*Paso de valores*/
+                    /*el stringfy lo convierte a texto*/
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar usuario
+                     * hecho en homeController*/
+                        //ELIMINAR USUARIO
+
+                        if (data.resultado) { /*si el resultado es verdadera)*/
+                            //tabladata.row(usuarioSeleccionado).remove().draw();
+                            tabladata.ajax.reload();
+                        }else {
+                            swal("No se pudo eliminar", data.mensaje, "error")
+                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
+
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+
+                });
+            });
+
+            //console.log(data);
+
+
+        })
+
+        @*$("#tabla tbody").on("click", '.btn-eliminar', function () {
+
+            var usuarioSeleccionado = $(this).closest("tr");
+            var data = tabladata.row(usuarioSeleccionado).data();
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Desea eliminar el usuario?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+            function () {
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarUsuario", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id: data.IdUsuario }),/*Paso de valores*/
+                    /*el stringfy lo convierte a texto*/
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar usuario
+                     * hecho en homeController*/
+                        //ELIMINAR USUARIO
+
+                        if (data.resultado) { /*si el resultado es verdadera)*/
+                            tabladata.row(usuarioSeleccionado).remove().draw();
+                        }else {
+                            swal("No se pudo eliminar", data.mensaje, "error")
+                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
+
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+
+                });
+            });
+
+            //console.log(data);
+
+
+        })*@
+
+        function Guardar() {
+            var Usuario = {
+                IdUsuario: $("#txtId").val(), /*Los dos puntos de la condicion es "si es diferente es:"
+                 el signo de interrogacion es un entonces
+                 leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
+                 pero si es diferentes es falso*/
+                Nombres: $("#txtNombres").val(),
+
+                Apellidos: $("#txtApellidos").val(),/*El punto val sirve para obtener un valor y para establecer un valor*/
+                Ciudad: $("#txtCiudad").val(),
+                Calle: $("#txtCalle").val(),
+                Telefono: $("#txtTelefono").val(),
+                oId_TipoPersona: {
+                    IdTipoPersona: $("#cmbTipoPersona option:selected").val(),
+                    Descripcion: $("#cmbTipoPersona option:selected").text()
+                },
+                Correo: $("#txtCorreo").val(),
+                Activo: $("#cmbActivo").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
+                 * o un no (No = 0*/
+                Reestablecer: true
+            }
+            jQuery.ajax({/*Llama al metodo de guardar usuario, que dependiendo de la accion va a crear nuevo
+             o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
+                url: '@Url.Action("GuardarUsuario", "Home")',
+                type: "POST",
+                data: JSON.stringify({ objeto: Usuario}),/*Paso de valores
+                 el stringfy lo convierte a texto*/
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    //USUARIO NUEVO
+                    if (Usuario.IdUsuario == 0) { /*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+                        un usuario nuevo, por lo que se ha dado dando clic con el boton de crear*/
+                        /*alert("Crear usuario")*/
+
+                        if (data.resultado != 0) {
+                            Usuario.IdUsuario = data.resultado;
+                            tabladata.row.add(Usuario).draw(false);
+                           
+                            $("#FormModal").modal("hide");
+                        } else {
+
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+                    }
+                    //USUARIO Editar
+                    else {
+                        /* alert("Editar Usuario")*/
+                        /*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                         a un usuario, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                         con los alert comentados*/
+
+                        if (data.resultado) {
+                            tabladata.ajax.reload();
+                            /*tabladata.row(filaSeleccionada).data(Usuario).draw(false);*/
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+                    }
+                },
+                error: function (error) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    $("#mensajeError").text("Error Ajax");
+                    $("#mensajeError").show();
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando...",
+                        size: 14
+                    });
+                }
+            });
+
+        }
+    </script>
+}

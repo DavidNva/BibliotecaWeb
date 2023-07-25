@@ -71,7 +71,6 @@ begin
         set @Mensaje = 'La categoria ya existe'
 end
 go
-
 create proc sp_EliminarCategoria( --Trabajo como un booleano
     @IdCategoria nvarchar(10),
     @Mensaje varchar(500) output,
