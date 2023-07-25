@@ -88,7 +88,7 @@ namespace CapaDatos
                                     Libro = dr["Libro"].ToString(),
                                     //Precio = Convert.ToDecimal(dr["Precio"], new CultureInfo("es-MX")),
                                     CantidadEjemplares = Convert.ToInt32(dr["CantidadEjemplares"]),//Checar este .tostring();
-                                    Estado = Convert.ToBoolean(dr["Estado"]),//Devuelto = 1 o no devuelto = 0
+                                    Estado = Convert.ToBoolean(dr["Activo"]),//Devuelto = 1 o no devuelto = 0
                                     //Total = Convert.ToDecimal(dr["Total"], new CultureInfo("es-MX")),
                                     Codigo = dr["Codigo"].ToString()
                                 }

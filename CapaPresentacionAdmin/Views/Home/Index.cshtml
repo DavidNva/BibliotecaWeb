@@ -150,6 +150,31 @@
             $("#txtFechaInicio").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
             $("#txtFechaFin").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
 
+
+            // Determina la fecha inicial como el primer día del mes en curso
+            //var fechaInicio = new Date();
+            //fechaInicio.setDate(1);
+
+            //// Define la fecha de finalización como el último día del mes siguiente
+            //var fechaFin = new Date();
+            //fechaFin.setMonth(fechaInicio.getMonth() + 2);
+            //fechaFin.setDate(0);
+
+            //// Configura el datepicker de la fecha de inicio para que tenga la fecha mínima y el formato de fecha deseado; establece la fecha mediante setDate
+            //$("#txtFechaInicio").datepicker({
+            //    dateFormat: 'dd/mm/yy',
+            //    minDate: fechaInicio,
+            //    maxDate: fechaFin
+            //}).datepicker('setDate', fechaInicio);
+
+            //// Configura el datepicker de la fecha de finalización para que tenga la fecha máxima y el formato de fecha deseado; establece la fecha mediante setDate
+            //$("#txtFechaFin").datepicker({
+            //    dateFormat: 'dd/mm/yy',
+            //    minDate: fechaInicio,
+            //    maxDate: fechaFin
+            //}).datepicker('setDate', fechaFin);
+
+
             /*Para mostrar totales en las tarjetas del dashboard*/
             jQuery.ajax({
                 url: '@Url.Action("VistaDashBoard", "Home")',

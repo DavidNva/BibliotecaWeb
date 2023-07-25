@@ -1470,16 +1470,17 @@ end
 go
 
 
+select * from prestamo
+
 select * from Detalleprestamo
 
-select * from prestamo
 --
 go
 SELECT * FROM LIBRO
 GO
-sp_ReportePrestamos '01/06/2023', '27/06/2023','LOBVA'
+sp_ReportePrestamos '01/06/2023', '27/07/2023',''
 GO  
-create proc sp_ReportePrestamos(
+create  proc sp_ReportePrestamos(
     @fechaInicio varchar(40),
     @fechaFin varchar(40),
     @codigo varchar(50)
@@ -1489,9 +1490,11 @@ begin
     set dateformat dmy; /*Indicamos el formato que queremos si o si*/
     --el formato 103, muestra solo la fecha
     select CONVERT(char(10), p.FechaPrestamo,103) [FechaPrestamo] , CONCAT(lc.Nombres,' ', lc.Apellidos)[Lector],
-    l.Titulo[Libro], dp.CantidadEjemplares, p.Estado, dp.Total,l.Codigo
-    from DetallePrestamo dp
-    inner join Libro l on l.Codigo = dp.IDLibro
+    l.Titulo[Libro], dp.CantidadEjemplares, p.Activo, dp.Total,l.Codigo
+    from Libro l
+    inner join Ejemplar ej on ej.ID_Libro = l.IDLibro
+    --inner join Libro l on l.IDLibro = ej.ID_Libro
+    inner join DetallePrestamo dp on dp.IDEjemplar = ej.IDEjemplarLibro
     inner join Prestamo p on p.IdPrestamo = dp.IdPrestamo
     inner join Lector lc on lc.IdLector = p.Id_Lector
     where CONVERT(date, p.FechaPrestamo) BETWEEN @fechaInicio and @fechaFin 

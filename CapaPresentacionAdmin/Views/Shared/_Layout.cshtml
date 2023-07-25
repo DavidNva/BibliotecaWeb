@@ -8,6 +8,8 @@
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
+@if (Session["Usuario"] != null)
+{@*Para que tome en cuenta la validaciones de Autorizace y rediriga automaticamente si es null, en cambio si no es null pues muestra la vista normalmente*@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="#">CuboRubikCode</a>
@@ -22,11 +24,12 @@
                     {
                         <li><a class="dropdown-item" href="#!"><i class="fas fa-mail-bulk"></i>  @User.Identity.Name</a></li>
                     }
+                    else { }
                     @*<li><a class="dropdown-item" href="#!"><b>@User.Identity.Name</b></a></li>*@
                     @*valor de la cookie de la sesion creada, la cookie creada fue por correo, con esta linea de codigo estamos mostrando el correo con el que se inicio sesión*@
                     @*<li><a class="dropdown-item" href="#!">Activity Log</a></li>*@
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="@Url.Action("CerrarSesion","Acceso")"><i class="fas fa-lock"></i>  Cerrar Sesión</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("CerrarSesion", "Acceso")"><i class="fas fa-lock"></i>  Cerrar Sesión</a></li>
                 </ul>
             </li>
         </ul>
@@ -37,25 +40,25 @@
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Resumen</div>
-                        <a class="nav-link" href="@Url.Action("Index","Home")">
+                        <a class="nav-link" href="@Url.Action("Index", "Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
                         @*primero es el nombre de la accion, el segundo es el nombre del controlador*@
-                        <a class="nav-link" href="@Url.Action("Prestamos","Mantenedor")">
+                        <a class="nav-link" href="@Url.Action("Prestamos", "Mantenedor")">
                             <div class="sb-nav-link-icon"><i class="fas fa-landmark"></i></div>
                             Prestamos
                         </a>
-                        <a class="nav-link" href="@Url.Action("Lectores","Home")">
+                        <a class="nav-link" href="@Url.Action("Lectores", "Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
                             Lectores
                         </a>
                         <div class="sb-sidenav-menu-heading">Administrador</div>
-                        <a class="nav-link" href="@Url.Action("Libros","Mantenedor")">
+                        <a class="nav-link" href="@Url.Action("Libros", "Mantenedor")">
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                             Libros
                         </a>
-                        <a class="nav-link" href="@Url.Action("Usuarios","Home")">
+                        <a class="nav-link" href="@Url.Action("Usuarios", "Home")">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Usuarios
                         </a>
@@ -67,20 +70,20 @@
                         <div class="collapse" id="collapseMantenedores">
                             <nav class="sb-sidenav-menu-nested nav">
 
-                                <a class="nav-link" href="@Url.Action("Sala","Mantenedor")">
+                                <a class="nav-link" href="@Url.Action("Sala", "Mantenedor")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                     Salas
                                 </a>
-                                <a class="nav-link" href="@Url.Action("Autor","Mantenedor")">
+                                <a class="nav-link" href="@Url.Action("Autor", "Mantenedor")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-user-edit"></i></div>
                                     Autores
                                 </a>
-                                <a class="nav-link" href="@Url.Action("Editorial","Mantenedor")">
+                                <a class="nav-link" href="@Url.Action("Editorial", "Mantenedor")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-laptop-house"></i></div>
                                     Editoriales
                                 </a>
 
-                                <a class="nav-link" href="@Url.Action("Categoria","Mantenedor")">
+                                <a class="nav-link" href="@Url.Action("Categoria", "Mantenedor")">
                                     <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                     Categorias
                                 </a>
@@ -91,18 +94,18 @@
                 <div class="sb-sidenav-footer py-2">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Acerca de <i class="fas fa-info-circle"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="@Url.Action("AcercaDeBiblioteca","Home")"><i class="fas fa-book-reader"></i> Biblioteca</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("AcercaDeBiblioteca", "Home")"><i class="fas fa-book-reader"></i> Biblioteca</a></li>
                         @*<li><a class="dropdown-item" href="#!">Activity Log</a></li>*@
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="@Url.Action("Desarrolladores","Home")"><i class="fas fa-laptop-code" ></i> Desarrolladores</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Desarrolladores", "Home")"><i class="fas fa-laptop-code"></i> Desarrolladores</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="@Url.Action("Contacto","Home")"><i class="fas fa-phone"></i> Contacto</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Contacto", "Home")"><i class="fas fa-phone"></i> Contacto</a></li>
                     </ul>
                     @*<a class="nav-link" href="@Url.Action("AcerceDe","Home")">
-                        <div class="small">CuboRubikCode  <i class="fas fa-info-circle"></i></div>
-                      </a>*@
+                          <div class="small">CuboRubikCode  <i class="fas fa-info-circle"></i></div>
+                        </a>*@
 
-                       @*CuboRubikCode*@
+                    @*CuboRubikCode*@
                 </div>
             </nav>
         </div>
@@ -138,6 +141,13 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false) @*esto va a permitir ubicar todos los scrips que deseamos dentro de la pagina o master page*@
     @*por eso por ejemplo, para usuarios se referencia desde la vista usuarios a este layout*@
-
+    @*<script>
+                $(document).ready(function() {
+                    if (!('@Session["Usuario"]' || '').trim()) {
+                        window.location.href = '@Url.Action("Index", "Acceso")';
+                    }
+                });
+        </script>*@
 </body>
+}
 </html>

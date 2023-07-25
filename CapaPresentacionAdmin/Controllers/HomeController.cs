@@ -16,14 +16,17 @@ namespace CapaPresentacionAdmin.Controllers
 
     public class HomeController : Controller
     {
+        [Authorize]
         public ActionResult Index()
         {
             return View();/*Retorna la vista con el nombre de Index (Dentro de la carpeta vista, hay un Index*/
         }
+        [Authorize]
         public ActionResult Usuarios()
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
+        [Authorize]
         public ActionResult Lectores()
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
