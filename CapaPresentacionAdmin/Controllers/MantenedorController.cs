@@ -231,6 +231,7 @@ namespace CapaPresentacionAdmin.Controllers
         #endregion
         /*-----------------------LIBRO----------------*/
         #region LIBRO
+
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarLibro() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
@@ -240,6 +241,23 @@ namespace CapaPresentacionAdmin.Controllers
             /*El json da los datos, jala los datos de esa lista, en data*/
         }
 
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarCategoriaEnLibro() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Categoria> oLista = new List<EN_Categoria>();
+            oLista = new RN_Categoria().ListarCategoriaEnLibro();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarEditorialEnLibro() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Editorial> oLista = new List<EN_Editorial>();
+            oLista = new RN_Editorial().ListarEditorialEnLibro();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
         [HttpPost]
         public JsonResult GuardarLibro(string objeto, HttpPostedFileBase archivoImagen) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
         {

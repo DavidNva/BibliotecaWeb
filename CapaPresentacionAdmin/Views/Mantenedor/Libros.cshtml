@@ -291,7 +291,7 @@
             }
         });*@
            jQuery.ajax({
-            url: '@Url.Action("ListarCategoria", "Mantenedor")',
+            url: '@Url.Action("ListarCategoriaEnLibro", "Mantenedor")',
             type: "GET",
             data: null,
             dataType: "json",
@@ -318,7 +318,7 @@
         /* ahora el ajax paa listar las editorial en el cmbeditorial*/
 
         jQuery.ajax({
-            url: '@Url.Action("ListarEditorial", "Mantenedor")',
+            url: '@Url.Action("ListarEditorialEnLibro", "Mantenedor")',
             type: "GET",
             data: null,
             dataType: "json",

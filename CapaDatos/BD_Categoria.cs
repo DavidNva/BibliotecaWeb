@@ -44,7 +44,40 @@ namespace CapaDatos
 
             return lista;
         }
+        public List<EN_Categoria> ListarCategoriaEnLibro()
+        {
+            List<EN_Categoria> lista = new List<EN_Categoria>();
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    string query = "SELECT IdCategoria, Descripcion, Activo FROM CATEGORIA where Activo = 1";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
 
+                    oConexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
+                    {
+                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
+                        {
+                            lista.Add(/*Agrega una nueva categorias a la lista*/
+                                new EN_Categoria()
+                                {
+                                    IdCategoria = dr["IdCategoria"].ToString(),
+                                    Descripcion = dr["Descripcion"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"])
+                                });
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lista = new List<EN_Categoria>();
+            }
+
+            return lista;
+        }
         public string Registrar(EN_Categoria obj, out string Mensaje)//out indica parametro de salida
         {
             string IdAutogenerado = "0"; /*Recibe el id autogenerado*/

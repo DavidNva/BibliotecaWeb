@@ -15,6 +15,10 @@ namespace CapaNegocio
         {
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
+        public List<EN_Editorial> ListarEditorialEnLibro()
+        {
+            return objCapaDato.ListarEditorialEnLibro();
+        }
 
         public string Registrar(EN_Editorial obj, out string Mensaje)
         {

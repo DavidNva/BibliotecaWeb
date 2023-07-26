@@ -44,6 +44,40 @@ namespace CapaDatos
 
             return lista;
         }
+        public List<EN_Editorial> ListarEditorialEnLibro()
+        {
+            List<EN_Editorial> lista = new List<EN_Editorial>();
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    string query = "SELECT IdEditorial, Descripcion, Activo FROM Editorial where Activo = 1";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
+
+                    oConexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
+                    {
+                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
+                        {
+                            lista.Add(/*Agrega una nueva Editorials a la lista*/
+                                new EN_Editorial()
+                                {
+                                    IdEditorial = dr["IdEditorial"].ToString(),
+                                    Descripcion = dr["Descripcion"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"])
+                                });
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lista = new List<EN_Editorial>();
+            }
+
+            return lista;
+        }
 
         public string Registrar(EN_Editorial obj, out string Mensaje)//out indica parametro de salida
         {

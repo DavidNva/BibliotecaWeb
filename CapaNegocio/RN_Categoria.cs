@@ -16,6 +16,10 @@ namespace CapaNegocio
         {
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
+        public List<EN_Categoria> ListarCategoriaEnLibro() /*Usa una clase de la capa entidad*/
+        {
+            return objCapaDato.ListarCategoriaEnLibro();/*Retorna el metodo listar de la instancia de la capa Datos*/
+        }
 
         public string Registrar(EN_Categoria obj, out string Mensaje)
         {

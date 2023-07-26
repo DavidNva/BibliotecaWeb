@@ -47,7 +47,45 @@ begin
         SET @Mensaje = 'La categoria ya existe'
 end
 go
-
+--POSIBLE MODIFICACION DE sp EditarCategoria: Para no actualizar a inactivo si la categoria esta relacionada con un libro
+--O quizas la mejr opcion sea inabilitar la seleccion de activo para no dejar al usuario admin actualizar ese valo a inactivo
+--y no generar problemas de logico relacionando un libro con categoria que quizas este inactiva
+--aunque es listado de libro tambien tiene la validacion de solo listar categorias que estan si o si activas
+/*
+    
+create proc sp_EditarCategoria( --Trabajo como un booleano
+    @IdCategoria nvarchar(10),
+    @Descripcion varchar(100),--Tiene índice único
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    IF NOT EXISTS (SELECT * FROM CATEGORIA WHERE Descripcion = @Descripcion and IDCategoria != @IdCategoria)
+    begin 
+        if not exists(Select * from categoria c inner join Libro l on l.Id_Categoria = c.IdCategoria where c.IDCategoria = @IdCategoria and @Activo = 0)
+        begin
+            update top(1) CATEGORIA set 
+            Descripcion = @Descripcion,
+            Activo = @Activo
+            where IDCategoria = @IdCategoria
+        end
+        else
+        begin
+            update top(1) CATEGORIA set Descripcion =  @Descripcion where IDCategoria = @IdCategoria
+              set @Mensaje = 'Solo se actualizó la descripcion de la categoria. No se puede actualizar a inactivo'
+           
+        end
+        set @Resultado = 1 --true
+    end 
+    else 
+    
+        set @Mensaje = 'La categoria ya existe'
+end
+go
+*/
 create  proc sp_EditarCategoria( --Trabajo como un booleano
     @IdCategoria nvarchar(10),
     @Descripcion varchar(100),--Tiene índice único
@@ -1078,7 +1116,7 @@ GO
     --A UN DETALLEPRESTAMO CUYO A SU VEZ ESTA RELACIONADO CON PRESTAMO Y ESTE ACTIVO DICHO PRESTAMO. ENTONCES PARA PODER ELMINAR
     --NO DEBE ESTAR UN ID CON UN EJEMPLAR EN DETALLE PRESTAMO QUE AUN ESTE ACTIVO.
     GO
-create  procedure sp_EliminarLibro(
+create   procedure sp_EliminarLibro(
     @IdLibro int,
     @Mensaje varchar(500) output,
     @Resultado int output

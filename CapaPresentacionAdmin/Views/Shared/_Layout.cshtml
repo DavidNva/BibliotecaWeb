@@ -8,8 +8,8 @@
     @Styles.Render("~/Content/css")
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
-@if (Session["Usuario"] != null)
-{@*Para que tome en cuenta la validaciones de Autorizace y rediriga automaticamente si es null, en cambio si no es null pues muestra la vista normalmente*@
+@*@if (Session["Usuario"] != null){*@
+@*Para que tome en cuenta la validaciones de Autorizace y rediriga automaticamente si es null, en cambio si no es null pues muestra la vista normalmente*@
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="#">CuboRubikCode</a>
@@ -141,13 +141,5 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false) @*esto va a permitir ubicar todos los scrips que deseamos dentro de la pagina o master page*@
     @*por eso por ejemplo, para usuarios se referencia desde la vista usuarios a este layout*@
-    @*<script>
-                $(document).ready(function() {
-                    if (!('@Session["Usuario"]' || '').trim()) {
-                        window.location.href = '@Url.Action("Index", "Acceso")';
-                    }
-                });
-        </script>*@
 </body>
-}
 </html>
