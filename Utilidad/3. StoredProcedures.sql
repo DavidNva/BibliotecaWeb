@@ -987,6 +987,12 @@ go
 --               Libro esta referenciado a ejemplar, y ejemplar esta referenciado a prestamo
 --               Por eso para poder eliminar libro, las foreign key de estos debe ser cascade
 -- */
+
+
+SELECT * from  Libro
+
+delete from libro where idLibro = 19
+go
 --PROCEDIMIENTOS PARA LIBRO
 create procedure sp_RegistrarLibro(
     @Codigo varchar(25),--Es asignado por administrador al insertar
@@ -1061,7 +1067,18 @@ begin
      SET @Mensaje = 'El código del libro ya existe'
 end 
 go
-create procedure sp_EliminarLibro(
+SELECT * FROM LIBRO
+select * from detalleprestamo
+select * from ejemplar
+GO
+--PARA QUE ESTO FUNCIONE BIEN, ENTONCES EL DETALLEPRESTAMO EN SU COLUMNA ACTIVO
+    --CUANDO EL ADMIN ACTUALICE UN PRESTAMO DE ACTIVO A INACTIVO (ES DECIR QUE VA A DEVOLVER EL LIBRO Y YA NO VA ESTAR EN PRESTAMO)
+    --EL ACTIVO DE PRESTAMO SE ACTUALIZA A 0 Y ENTONCES AUTOMAICAMENTE TAMBIEN EL ACTIVO DE DETALLE PRESTAMO DEBE SER 0
+    --CON ESO VALIDAREMOS ESTA SELECCION PARA ELIMINAR UN LIBRO NO DEBE HABER UN LIBRO RELACIONADO CON EJEMPLAR CUYO EJEMPLAR ESTE RELACIONADO 
+    --A UN DETALLEPRESTAMO CUYO A SU VEZ ESTA RELACIONADO CON PRESTAMO Y ESTE ACTIVO DICHO PRESTAMO. ENTONCES PARA PODER ELMINAR
+    --NO DEBE ESTAR UN ID CON UN EJEMPLAR EN DETALLE PRESTAMO QUE AUN ESTE ACTIVO.
+    GO
+create  procedure sp_EliminarLibro(
     @IdLibro int,
     @Mensaje varchar(500) output,
     @Resultado int output
@@ -1069,18 +1086,23 @@ create procedure sp_EliminarLibro(
 as
 begin
     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
-    IF NOT EXISTS (select * from DetallePrestamo dp
-    inner join Libro l on l.Codigo = dp.Codigo
+    IF NOT EXISTS (select * from Ejemplar ej
+    inner join Libro l on l.IDLibro = ej.ID_Libro
+    inner join DetallePrestamo dp on dp.IDEjemplar = ej.IDEjemplarLibro
+    inner join Prestamo p on p.IdPrestamo = dp.IdPrestamo and p.Activo = 1
     where l.IdLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
     begin 
         delete top(1) from Libro where IdLibro = @IdLibro
+        --Como el ejemplar tiene una relacion con idLibro y un deletecascade se eliminará automaticamente al eliminar el libro
         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
         SET @Resultado = 1 --true
     end 
     else 
-     SET @Mensaje = 'El libro se encuentra relacionado a una préstamo'
+     SET @Mensaje = 'El libro se encuentra relacionado a un ejemplar en préstamo'
 end 
 go
+
+select * from carrito
 -- CREATE PROCEDURE sp_RegistrarLibro (
 --     @IDLibro varchar(25),--Es asignado por administrador al insertar
 --     @Titulo nvarchar(130),

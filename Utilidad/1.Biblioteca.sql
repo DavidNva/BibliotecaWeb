@@ -188,10 +188,11 @@ CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso an
 )--No tiene referencia (Se puede eliminar)
 go
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
-	IdDetallePrestamo int primary key identity not null,
-	IdPrestamo int references Prestamo(IdPrestamo) not null,
+	IdDetallePrestamo int identity  not null  CONSTRAINT PK_DetallePrestamo primary key,
+	IdPrestamo int references Prestamo(IdPrestamo) not null,--este debe tener un cascade delete y update !IMPORTANTE
   --Este id libro,tendrá que ser el id del ejemplar (Pero primero lo manejaremos con el id de libro)
-	IDEjemplar int references Ejemplar(IdEjemplarLibro) not null,--Posiblemente sea mejor el ejemplar id de ejemplar
+	IDEjemplar int references Ejemplar(IdEjemplarLibro) not null,--Posiblemente que tenga un DELETE CASCADE POR SI SE ELIMINA UN LIBRO CON SUS EJEMPLARES
+  --Posiblemente sea mejor el ejemplar id de ejemplar
 	CantidadEjemplares int not null,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
 	Total decimal(10,2)--total del precio del producto
 )
