@@ -15,6 +15,13 @@ namespace CapaNegocio
         {
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
+
+        public List<EN_Lector> ListarLectorParaPrestamo()
+        {
+            return objCapaDato.ListarLectorParaPrestamo();
+        }
+
+
         public int Registrar(EN_Lector obj, out string Mensaje)
         {
             Mensaje = string.Empty;

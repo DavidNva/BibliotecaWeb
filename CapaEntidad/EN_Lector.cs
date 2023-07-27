@@ -11,6 +11,7 @@ namespace CapaEntidad
 		public int IdLector { get; set; }
 		public string Nombres { get; set; }
 		public string Apellidos { get; set; }
+		public string NombreCompletoLector { get; set; }
 		public int  Edad { get; set; }
 		public bool Genero { get; set; }
 		public string Escuela { get; set; }

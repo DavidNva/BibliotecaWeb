@@ -9,8 +9,9 @@ namespace CapaEntidad
     public class EN_Prestamo
     {
 		public int IdPrestamo { get; set; }
-		public int Id_Lector { get; set; }
-		public int TotalLibro { get; set; }
+		//public int Id_Lector { get; set; }
+        public EN_Lector oId_Lector { get; set; }
+        public int TotalLibro { get; set; }
 		//public decimal MontoTotal { get; set; }
 		public bool Activo { get; set; }//o activo
 		

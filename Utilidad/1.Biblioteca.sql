@@ -628,3 +628,20 @@ CREATE TABLE Ejemplar(
 -- SELECT * FROM Prestamo;
 -- SELECT * FROM Categoria;
 -- SELECT * FROM HLibrosActualizados; 
+
+SELECT p.IdPrestamo, lec.IDLector, CONCAT(lec.Nombres,' ',lec.Apellidos) [NombreLector], 
+p.TotalLibro, p.FechaPrestamo, p.FechaDevolucion,
+p.DiasDePrestamo, p.Observaciones, p.Activo, 
+--l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,
+--DP.CantidadEjemplares, DP.Total, DP.IdDetallePrestamo 
+FROM DETALLEPrestamo DP
+    INNER JOIN Ejemplar ej ON ej.IDEjemplarLibro = DP.IDEjemplar
+	INNER JOIN Libro l ON l.IdLibro = ej.ID_Libro
+    INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo 
+    inner join Lector lec on lec.IdLector = p.ID_Lector order by DP.IdDetallePrestamo DESC
+    
+
+select * from lector
+select * from prestamo
+
+select * from detallePrestamo

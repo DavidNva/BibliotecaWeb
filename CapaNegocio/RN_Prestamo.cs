@@ -21,6 +21,11 @@ namespace CapaNegocio
         {
             return objCapaDato.ListarPrestamos(idLector);
         }
+
+        public List<EN_Prestamo> ListarPrestamosCompleto()
+        {
+            return objCapaDato.ListarPrestamosCompleto();
+        }
         //public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         //{
         //    return objCapaDato.ListarPrestamos(idLector);

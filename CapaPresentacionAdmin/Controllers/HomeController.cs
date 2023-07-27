@@ -31,6 +31,34 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
+        [Authorize]
+        public ActionResult Prestamos()
+        {
+            return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
+        }
+        /*--------------PRESTAMOS--------------------*/
+        #region PRESTAMOS
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarPrestamosCompleto() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Prestamo> oLista = new List<EN_Prestamo>();
+            oLista = new RN_Prestamo().ListarPrestamosCompleto();/*Esta declarado en RN_Prestamos, capa negocio*/
+            
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+
+        }
+
+        [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
+        public JsonResult ListarLectorParaPrestamo() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
+        {
+            List<EN_Lector> oLista = new List<EN_Lector>();
+            oLista = new RN_Lector().ListarLectorParaPrestamo();
+            return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
+            /*El json da los datos, jala los datos de esa lista, en data*/
+        }
+        #endregion
+
         /*--------------USUARIOS---------------------*/
         #region USUARIOS
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */

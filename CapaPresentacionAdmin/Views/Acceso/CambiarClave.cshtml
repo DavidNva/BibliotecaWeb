@@ -22,7 +22,7 @@
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Cambiar Contraseña</h3></div>
                                 <div class="card-body">
                                     <form action="@Url.Action("CambiarClave","Acceso")" method="post">
-                                        <input class="form-control" type="text" value="@TempData["IdUsuario"]" name="idUsuario" /> @*pasamos el valor del id del usuario*@
+                                        <input class="form-control" type="hidden" value="@TempData["IdUsuario"]" name="idUsuario" /> @*pasamos el valor del id del usuario*@
                                         <div class="row mb-3">
                                             <div class="col-md-12">
                                                 <div class="form-floating mb-3 mb-md-0">

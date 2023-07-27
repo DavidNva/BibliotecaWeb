@@ -452,7 +452,8 @@ namespace CapaPresentacionConsulta.Controllers
             }
 
             oPrestamo.TotalLibro = (int)total;
-            oPrestamo.Id_Lector = ((EN_Lector)Session["Lector"]).IdLector;
+            oPrestamo.oId_Lector.IdLector = ((EN_Lector)Session["Lector"]).IdLector;
+            //Se coloco el oidLector
 
             TempData["Prestamo"] = oPrestamo;  //Almacena informacion que vamos a poder compartir a traves de metodos (Todo el obj de Prestamo)
             TempData["DetallePrestamo"] = detallePrestamo; //Almacena todo el dataTable

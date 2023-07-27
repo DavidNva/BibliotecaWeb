@@ -66,7 +66,7 @@ namespace CapaPresentacionAdmin.Controllers
                 TempData["IdUsuario"] = idUsuario;
                 ViewData["vclave"] = "";/*View data pemrite almacenar valores mas simples, como cadenas de texto*/
                 /*Como la clave actual no es correcta, la colocamos en vacio*/
-                ViewBag.Error = "La contraseña actual no es correcta (Verifique la clave que se le envío al correo registrado)";
+                ViewBag.Error = "La contraseña actual no es correcta (Verifique la clave que se le envió al correo registrado)";
                 return View();
             }
             else if (nuevaClave != confirmarClave)/*En el caso que si sea correcta, pero al confirmar nueva clave no coincida*/

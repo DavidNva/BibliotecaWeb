@@ -521,6 +521,7 @@
     <Content Include="Views\Acceso\CambiarClave.cshtml" />
     <Content Include="Views\Acceso\Reestablecer.cshtml" />
     <Content Include="Views\Mantenedor\CategoriaPruebaSelect.cshtml" />
+    <Content Include="Views\Home\Prestamos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

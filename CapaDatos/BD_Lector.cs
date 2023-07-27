@@ -98,6 +98,44 @@ namespace CapaDatos
 
             return lista;
         }
+
+
+        public List<EN_Lector> ListarLectorParaPrestamo()
+        {
+            List<EN_Lector> lista = new List<EN_Lector>();
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    string query = "select IDLector, CONCAT(Nombres,' ',Apellidos) [NombreLector],  Activo from Lector where Activo  = 1";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
+
+                    oConexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
+                    {
+                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
+                        {
+                            lista.Add(/*Agrega un nuevo usuario a la lista*/
+                                new EN_Lector()
+                                {
+                                    IdLector = Convert.ToInt32(dr["IdLector"]),
+                                    NombreCompletoLector = dr["NombreLector"].ToString(),
+                                    Activo = Convert.ToBoolean(dr["Activo"])
+                                }
+                                );
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lista = new List<EN_Lector>();
+            }
+
+            return lista;
+        }
+
         public bool CambiarClave(int idLector, string nuevaClave, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = false;
