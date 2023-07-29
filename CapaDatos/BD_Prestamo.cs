@@ -99,6 +99,80 @@ namespace CapaDatos
             return lista;
         }
 
+        public bool Editar(EN_Prestamo obj, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EditarPrestamo", oConexion);
+                    //cmd.Parameters.AddWithValue("IDPrestamo", obj.IdPrestamo);
+                    //cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
+                    //cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    //cmd.Parameters.AddWithValue("Ciudad", obj.Ciudad);
+                    //cmd.Parameters.AddWithValue("Calle", obj.Calle);
+                    //cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
+                    //cmd.Parameters.AddWithValue("Correo", obj.Correo);
+                    //cmd.Parameters.AddWithValue("Tipo", obj.oId_TipoPersona.IdTipoPersona);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+
+            }
+            return resultado;
+        }
+
+        public bool Eliminar(int id, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EliminarPrestamo", oConexion);
+                    cmd.Parameters.AddWithValue("IdPrestamo", id);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+
+            }
+            return resultado;
+        }
+
+
         public List<EN_Prestamo> ListarPrestamosCompleto()
         {
             List<EN_Prestamo> lista = new List<EN_Prestamo>();
@@ -111,7 +185,8 @@ namespace CapaDatos
                     sb.AppendLine("SELECT p.IdPrestamo, lec.IDLector, CONCAT(lec.Nombres,' ',lec.Apellidos) [NombreLector],");
                     sb.AppendLine("p.TotalLibro, p.FechaPrestamo, p.FechaDevolucion,");
                     sb.AppendLine("p.DiasDePrestamo, p.Observaciones, p.Activo ");
-                    //sb.AppendLine(",l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,");
+                    sb.AppendLine(",l.IdLibro,l.Titulo");
+                    //b.AppendLine(",l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,");
                     //sb.AppendLine("DP.CantidadEjemplares, DP.Total, DP.IdDetallePrestamo ");
                     sb.AppendLine("FROM DETALLEPrestamo DP");
                     sb.AppendLine("INNER JOIN Ejemplar ej ON ej.IDEjemplarLibro = DP.IDEjemplar");
@@ -143,6 +218,7 @@ namespace CapaDatos
                                     Observaciones = dr["Observaciones"].ToString(),
                                     //Tipo = Convert.ToInt32(dr["Tipo"]),   
                                     Activo = Convert.ToBoolean(dr["Activo"]),
+                                    oId_Libro = new EN_Libro() { IdLibro = Convert.ToInt32(dr["IdLibro"]), Titulo = dr["Titulo"].ToString() }
                                     //oDetallePrestamo = new EN_DetallePrestamo() { IdDetallePrestamo = Convert.ToInt32(dr["IdDetallePrestamo"]), Total = dr["NombreLector"].ToString() },
 
 

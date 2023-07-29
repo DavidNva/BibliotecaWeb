@@ -10,6 +10,7 @@ namespace CapaEntidad
     {
 		public int IdPrestamo { get; set; }
 		//public int Id_Lector { get; set; }
+        public EN_Libro oId_Libro { get; set; }
         public EN_Lector oId_Lector { get; set; }
         public int TotalLibro { get; set; }
 		//public decimal MontoTotal { get; set; }

@@ -26,6 +26,7 @@
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
+                    <th>Libro</th>
                     <th>Lector</th> @*listaremos como tipo persona o como listabamos categoria*@
                     <th>Libros Prestados</th>
                     <th>Fecha Prestamo</th>
@@ -62,46 +63,59 @@
 
                 <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
                     pero si es diferente a 0 significa que ya existe y vamos a editar*@
-                <div class="row g-2">
-                    <div class="col-sm-6">
-                        <label class="form-label">Lector</label>
-                        <select id="cmbLector" class="form-select">
-                        </select>
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="txtTotalLibros" class="form-label">Libros Prestados</label>
-                        <input type="number" class="form-control" id="txtTotalLibros" autocomplete="off">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
-                        <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="txtFechaDevolucion" class="form-label">Fecha Devolución</label>
-                        <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
-                    </div>
-                    <div class="col-sm-6">
-                        <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
-                        <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off">
-                    </div>
+            <div class="row g-2">
 
-                    @*<div class="col-sm-6">
-                            <label for="txtTipo" class="form-label">Tipo</label>
-                            <input type="text" class="form-control" id="txtTipo" autocomplete="off">
-                        </div>*@
-
-                    <div class="col-sm-6">
-                        <label for="cmbActivo" class="form-label">Activo</label>
-                        <select id="cmbActivo" class="form-select">
-                            <option value="1">Si</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-12">
-                        <label for="txtObservaciones" class="form-label">Observaciones</label>
-                        <input type="text" class="form-control" id="txtObservaciones" autocomplete="off">
-                    </div>
+                <div class="col-sm-6">
+                    <label class="form-label">Libro</label>
+                    <select id="cmbLibro" class="form-select">
+                    </select>
                 </div>
+
+                <div class="col-sm-6">
+                    <label class="form-label">Ejemplar Disponible</label>
+                    <select id="cmbEjemplar" class="form-select">
+                    </select>
+                </div>
+
+                <div class="col-sm-12">
+                    <label class="form-label">Lector</label>
+                    <select id="cmbLector" class="form-select">
+                    </select>
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtTotalLibros" class="form-label">Libros Prestados</label>
+                    <input type="number" class="form-control" id="txtTotalLibros" autocomplete="off">
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
+                    <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtFechaDevolucion" class="form-label">Fecha Devolución</label>
+                    <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
+                </div>
+                <div class="col-sm-6">
+                    <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
+                    <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off">
+                </div>
+
+                @*<div class="col-sm-6">
+            <label for="txtTipo" class="form-label">Tipo</label>
+            <input type="text" class="form-control" id="txtTipo" autocomplete="off">
+        </div>*@
+
+                <div class="col-sm-6">
+                    <label for="cmbActivo" class="form-label">Activo</label>
+                    <select id="cmbActivo" class="form-select">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div class="col-sm-12">
+                    <label for="txtObservaciones" class="form-label">Observaciones</label>
+                    <input type="text" class="form-control" id="txtObservaciones" autocomplete="off">
+                </div>
+            </div>
                 <!--mensaje de alerta-->
                 <div class="row mt-2">
                     <div class="col-12">
@@ -122,6 +136,7 @@
 @section scripts{
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        //BIEN
         var tabladata;
         var filaSeleccionada;/*Son variables globales para se usada por lo que este dentro */
 
@@ -138,6 +153,11 @@
             "columns": [/*Todas las columnas que vamos a usar*/
                 /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
                  y el seguno valor es como se llama la columna*/
+                {
+                    "data": "oId_Libro", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.Titulo
+                    }
+                },
                 {
                     "data": "oId_Lector", "render": function (data) {/*El render permite obtener el valor de la columna*/
                         return data.NombreCompletoLector
@@ -235,9 +255,35 @@
             error: function (error) {
                 console.log(error)
               }
-        });
+          });
 
 
+          jQuery.ajax({
+            url: '@Url.Action("ListarLibrosParaPrestamo", "Home")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+               //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
+                $.each(data.data, function (index, item) {
+                    //El valor de item es el declarado en EN_Lector, la capa Entidad
+                    $("<option>").attr({ "value": item.IdLibro }).text(item.Titulo).appendTo("#cmbLibro");
+                })
+                //dropdownParent: $('#FormModal')
+                $("#cmbLibro").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
+                   /* .css("z-index", "1600");*/
+
+            },
+            error: function (error) {
+                console.log(error)
+              }
+          });
+
+
+        //.attr({"type":"hidden"});
         function abrirModal(json) /*json es el data del siguiente*/ {
             $("#txtId").val(0);
             $("#txtTotalLibros").val(1);
@@ -246,7 +292,11 @@
             $("#txtDiasPrestamo").val(7);
             $("#txtObservaciones").val("");
             $("#cmbLector").append($("<option selected>").val("").text("Seleccionar"));
+            $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
             $("#cmbActivo").val(1);
+
+            $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+            //$("#txtFechaDevolucion").val("").attr({ "disabled": "disabled" });
 
 
             $("#mensajeError").hide();
@@ -257,10 +307,15 @@
                 $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
                 $("#txtFechaPrestamo").val(json.FechaPrestamo);//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
                 $("#txtFechaDevolucion").val(json.FechaDevolucion);
+
+                $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' })
+                $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' })
+
                 $("#txtDiasPrestamo").val(json.DiasDePrestamo);
                 $("#txtObservaciones").val(json.Observaciones);
                 //$("#cmbLector").val(json.oId_Lector.IdLector);
                 $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
+                $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
 

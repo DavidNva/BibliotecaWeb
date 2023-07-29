@@ -26,6 +26,16 @@ namespace CapaNegocio
         {
             return objCapaDato.ListarPrestamosCompleto();
         }
+
+        public bool Editar(EN_Prestamo obj, out string Mensaje)
+        {
+            return objCapaDato.Editar(obj, out Mensaje);
+        }
+
+        public bool Eliminar(int id, out string Mensaje)
+        {
+            return objCapaDato.Eliminar(id, out Mensaje);
+        }
         //public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         //{
         //    return objCapaDato.ListarPrestamos(idLector);
