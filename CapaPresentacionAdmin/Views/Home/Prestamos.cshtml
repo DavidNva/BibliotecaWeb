@@ -275,16 +275,41 @@
                 //dropdownParent: $('#FormModal')
                 $("#cmbLibro").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
                    /* .css("z-index", "1600");*/
-
+                ListarEjemplar();
             },
             error: function (error) {
                 console.log(error)
               }
           });
 
+          $("#cmbLibro").on("change", function () {
+            ListarEjemplar();//Cada vez que cambia lista nuevamente las Ejemplars
+        })
 
+        function ListarEjemplar() {//Ejemplar = Municipio
+            $("#cmbEjemplar").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
+            //Aqui se colocan los atributos de html y opciones de valor, text, etc
+            //$("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+
+            jQuery.ajax({
+                url: '@Url.Action("ObtenerEjemplarPorLibro", "Home")',
+                type: "POST",
+                data: JSON.stringify({ IdLibro: $("#cmbLibro option:selected").val() }),//pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.lista != null) {
+                        $.each(data.lista, function (i, item) {
+                            $("<option>").attr({"value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo("#cmbEjemplar")
+                        })
+                    }
+                }
+            })
+        }
         //.attr({"type":"hidden"});
         function abrirModal(json) /*json es el data del siguiente*/ {
+
             $("#txtId").val(0);
             $("#txtTotalLibros").val(1);
             $("#txtFechaPrestamo").val("");
@@ -293,6 +318,9 @@
             $("#txtObservaciones").val("");
             $("#cmbLector").append($("<option selected>").val("").text("Seleccionar"));
             $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
+            $("#cmbEjemplar").html("")
+            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+            $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());
             $("#cmbActivo").val(1);
 
             $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())

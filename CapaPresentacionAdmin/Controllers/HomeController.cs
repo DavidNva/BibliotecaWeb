@@ -67,7 +67,14 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { data = oLista }, JsonRequestBehavior.AllowGet);
             /*El json da los datos, jala los datos de esa lista, en data*/
         }
+        [HttpPost]
+        public JsonResult ObtenerEjemplarPorLibro(int idLibro)//Con parametros
+        {
+            List<EN_Ejemplar> oLista = new List<EN_Ejemplar>();
 
+            oLista = new RN_Ejemplar().ListarEjemplarLibro(idLibro);
+            return Json(new { lista = oLista }, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         public JsonResult GuardarPrestamo(EN_Prestamo objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/

@@ -41,6 +41,43 @@ namespace CapaDatos
             return resultado;
 
         }
+        public List<EN_Ejemplar> ObtenerEjemplar(string idLibro) //Provincia = Municipio
+        {
+            List<EN_Ejemplar> lista = new List<EN_Ejemplar>();
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    string query = "select * from Ejemplar  where IdLibro = @idLibro";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@idLibro", idLibro);
+                    cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
+
+                    oConexion.Open();
+                    using (SqlDataReader dr = cmd.ExecuteReader())/*Lee todos los resultados que aparecen en la ejecucion del select anter ior*/
+                    {
+                        while (dr.Read())/*Mientras reader esta leyendo, ira agregando a la lista dicha lectura*/
+                        {
+                            lista.Add(/*Agrega un nuevo usuario a la lista*/
+                                new EN_Ejemplar()
+                                {
+                                    IdEjemplarLibro = Convert.ToInt32( dr["IdEjemplarLibro"]),
+                                    IdLibro = Convert.ToInt32( dr["IdLibro"])
+                                });
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                lista = new List<EN_Ejemplar>();
+            }
+
+            return lista;
+        }
+
+
+
 
         public List<EN_Ejemplar> ListarEjemplarLibro(int idlibro) /*Para listar las Ejemplars a filtrar en la presentacion de tienda*/
         {
@@ -68,8 +105,8 @@ namespace CapaDatos
                                 new EN_Ejemplar()
                                 {
                                     IdEjemplarLibro = Convert.ToInt32(dr["IdEjemplarLibro"]),
-                                    IdLibro = Convert.ToInt32(dr["IdLibro"]),//Estamos usando idLibro directamente porque se hizo un inner join con libro
-                                    Activo = Convert.ToBoolean(dr["Activo"])
+                                    IdLibro = Convert.ToInt32(dr["IdLibro"])//,Estamos usando idLibro directamente porque se hizo un inner join con libro
+                                    //Activo = Convert.ToBoolean(dr["Activo"])
                                 });
                         }
                     }
