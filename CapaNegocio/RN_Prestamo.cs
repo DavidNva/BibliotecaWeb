@@ -16,6 +16,10 @@ namespace CapaNegocio
         {
             return objCapaDato.Registrar(obj, DetallePrestamo, /*EjemplarActivo, */ out Mensaje);
         }
+        public int RegistrarPrestamo2(EN_Prestamo obj, out string Mensaje)
+        {
+            return objCapaDato.RegistrarPrestamo2(obj, out Mensaje);
+        }
 
         public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         {

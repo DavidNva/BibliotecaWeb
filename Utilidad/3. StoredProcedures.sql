@@ -1754,7 +1754,54 @@ begin
     end catch 
 end
 go
+sp_RegistrarPrestamo2 20,1,7,'NINGU',1,''
+go
+select * from Prestamo
+select * from lector
+go
+create procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
+    --@IDUsuario int,---El id es Identity
+    @Id_Lector int,
+    @TotalLibro int, 
+    --@MontoTotal decimal(18,2),
+    @DiasDePrestamo int, 
+    --@Estado bit,--Es como si dijeramos activo(El 0 significa no Prestamo activo o "DEVUELTO" y
+    -- el 1 significa prestamo activo o "No devuelto")
+    @Observaciones nvarchar(500),
+    --@DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
+	--@EjemplarActivo [Ejemplar_Activo] READONLY,
+    @Resultado bit output,
+    @Mensaje varchar(500) output
+    --@ID_TipoPersona int --ESTARÁ COMO DEFAULT = 1, ES DECIR, COMO LECTOR
+    --FechaCreacion date --Esta como default DEFAULT GETDATE()
+    )
+as
+begin
+    begin try 
+        declare @idPrestamo int = 0
+        set @Resultado = 1
+        set @Mensaje = ''
+        begin transaction registro
+        insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones )
+        values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones )
 
+        set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
+
+        -- insert into DetallePrestamo(IdPrestamo, IDEjemplar, CantidadEjemplares, Total)
+        -- select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
+
+		--update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
+
+        --DELETE FROM CARRITO WHERE IdLector = @Id_Lector
+        commit transaction registro 
+    end try 
+    begin catch --en el caso de algun error, reestablece todo
+        set @Resultado = 0
+        set @Mensaje = ERROR_MESSAGE()
+        rollback transaction registro 
+    end catch 
+end 
+go 
 
 select * from fn_ListarPrestamos(1006)
 go
@@ -1851,3 +1898,29 @@ select * from libro
 select * from fn_obtenerCarritoLector(20)
 
 delete carrito where idlibro = 1
+
+
+
+
+
+  SELECT p.IdPrestamo,l.IdLibro, l.Titulo, lec.IDLector, CONCAT(lec.Nombres,' ',lec.Apellidos) [NombreLector],
+ p.TotalLibro, p.FechaPrestamo, p.FechaDevolucion,
+p.DiasDePrestamo, p.Observaciones, p.Activo
+,l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,
+DP.CantidadEjemplares, DP.Total, DP.IdDetallePrestamo
+FROM DETALLEPrestamo DP
+INNER JOIN Ejemplar ej ON ej.IDEjemplarLibro = DP.IDEjemplar
+INNER JOIN Libro l ON l.IdLibro = ej.ID_Libro
+INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo
+inner join Lector lec on lec.IdLector = p.ID_Lector order by DP.IdDetallePrestamo DESC
+
+
+
+select * from Ejemplar  where Id_Libro = 2
+
+
+
+
+select e.IDEjemplarLibro, l.IDLibro, e.Activo from Libro l
+inner join Ejemplar e on e.ID_Libro = l.IDLibro and e.Activo = 1
+where l.IdLibro = 2 

@@ -482,20 +482,27 @@
                  el signo de interrogacion es un entonces
                  leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
                  pero si es diferentes es falso*/
-                Nombres: $("#txtNombres").val(),
-
-                Apellidos: $("#txtApellidos").val(),/*El punto val sirve para obtener un valor y para establecer un valor*/
-                Ciudad: $("#txtCiudad").val(),
-                Calle: $("#txtCalle").val(),
-                Telefono: $("#txtTelefono").val(),
-                oId_TipoPersona: {
-                    IdTipoPersona: $("#cmbTipoPersona option:selected").val(),
-                    Descripcion: $("#cmbTipoPersona option:selected").text()
+                oId_Lector: {
+                    IdLector: $("#cmbLector option:selected").val(),
+                    NombreCompletoLector: $("#cmbLector option:selected").text()
                 },
-                Correo: $("#txtCorreo").val(),
+                oId_Libro: {
+                    IdLibro: $("#cmbLibro option:selected").val(),
+                    Titulo: $("#cmbLibro option:selected").text()
+                },
+                
+                TotalLibro: $("#txtTotalLibros").val(),
+
+                /*El punto val sirve para obtener un valor y para establecer un valor*/
+                FechaPrestamo: $("#txtFechaPrestamo").val(),
+                FechaDevolucion: $("#txtFechaDevolucion").val(),
+                DiasDePrestamo: $("#txtDiasPrestamo").val(),
+               
+               
+                Observaciones: $("#txtObservaciones").val(),
                 Activo: $("#cmbActivo").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
-                 * o un no (No = 0*/
-                Reestablecer: true
+                // * o un no (No = 0*/
+                
             }
             jQuery.ajax({/*Llama al metodo de guardar Prestamo, que dependiendo de la accion va a crear nuevo
              o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/

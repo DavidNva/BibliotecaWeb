@@ -49,6 +49,41 @@ namespace CapaDatos
             return respuesta;
         }
 
+        public int RegistrarPrestamo2(EN_Prestamo obj, out string Mensaje)//out indica parametro de salida
+        {
+            int IdAutogenerado = 0; /*Recibe el id autogenerado*/
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_RegistrarPrestamo2", oConexion);
+                    cmd.Parameters.AddWithValue("Id_Lector", obj.oId_Lector.IdLector);
+                    cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
+                    cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
+                    cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);
+                    
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    IdAutogenerado = Convert.ToInt32(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                IdAutogenerado = 0;
+                Mensaje = ex.Message;
+
+            }
+            return IdAutogenerado;
+
+        }
 
         public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         {
