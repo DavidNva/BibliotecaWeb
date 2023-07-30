@@ -134,9 +134,29 @@ namespace CapaDatos
             return lista;
         }
 
+        /*
+         *  // Convertir FechaPrestamo y FechaDevolucion a DateTime
+                    DateTime fechaPrestamo = DateTime.Parse(obj.FechaPrestamo, CultureInfo.InvariantCulture);
+                    DateTime fechaDevolucion = DateTime.Parse(obj.FechaDevolucion, CultureInfo.InvariantCulture);
+
+
+
+                    //cmd.Parameters.AddWithValue("FechaPrestamo", obj.FechaPrestamo);
+                    //cmd.Parameters.AddWithValue("FechaDevolucion", obj.FechaDevolucion);
+
+                    cmd.Parameters.AddWithValue("FechaPrestamo", fechaPrestamo);
+                    cmd.Parameters.AddWithValue("FechaDevolucion", fechaDevolucion);
+         */
+
+
         public bool Editar(EN_Prestamo obj, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = false;
+
+            DateTime fechaPrestamo = Convert.ToDateTime(obj.FechaPrestamo);
+            
+            DateTime fechaDevolucion = Convert.ToDateTime(obj.FechaDevolucion);
+
 
             Mensaje = string.Empty;
             try
@@ -144,15 +164,19 @@ namespace CapaDatos
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("sp_EditarPrestamo", oConexion);
-                    //cmd.Parameters.AddWithValue("IDPrestamo", obj.IdPrestamo);
-                    //cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
-                    //cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
-                    //cmd.Parameters.AddWithValue("Ciudad", obj.Ciudad);
-                    //cmd.Parameters.AddWithValue("Calle", obj.Calle);
-                    //cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
-                    //cmd.Parameters.AddWithValue("Correo", obj.Correo);
-                    //cmd.Parameters.AddWithValue("Tipo", obj.oId_TipoPersona.IdTipoPersona);
-                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    cmd.Parameters.AddWithValue("IdPrestamo", obj.IdPrestamo);
+                    cmd.Parameters.AddWithValue("Id_Lector", obj.oId_Lector.IdLector);
+                    cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo); 
+                    //cmd.Parameters.AddWithValue("FechaPrestamo", obj.FechaPrestamo);
+                    //cmd.Parameters.AddWithValue("FechaDevolucion", obj.FechaDevolucion);
+
+                    cmd.Parameters.AddWithValue("FechaPrestamo", fechaPrestamo.ToString("MM-dd-yyyy"));
+                    cmd.Parameters.AddWithValue("FechaDevolucion", fechaDevolucion.ToString("MM-dd-yyyy"));
+
+                    cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
+                    cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);
+
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -218,7 +242,9 @@ namespace CapaDatos
 
                     StringBuilder sb = new StringBuilder(); //Permite hacer saltos de linea
                     sb.AppendLine("SELECT p.IdPrestamo, lec.IDLector, CONCAT(lec.Nombres,' ',lec.Apellidos) [NombreLector],");
-                    sb.AppendLine("p.TotalLibro, p.FechaPrestamo, p.FechaDevolucion,");
+                    sb.AppendLine("p.TotalLibro, ");
+                    sb.AppendLine("CONVERT(char(10), p.FechaPrestamo,103) [FechaPrestamo],");
+                    sb.AppendLine("CONVERT(char(10), p.FechaDevolucion,103) [FechaDevolucion],");
                     sb.AppendLine("p.DiasDePrestamo, p.Observaciones, p.Activo ");
                     sb.AppendLine(",l.IdLibro,l.Titulo");
                     //b.AppendLine(",l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,");

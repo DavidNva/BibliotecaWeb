@@ -1757,6 +1757,9 @@ go
 sp_RegistrarPrestamo2 20,1,7,'NINGU',1,''
 go
 select * from Prestamo
+select * from DetallePrestamo
+insert into DetallePrestamo 
+values(1,1,3,3)
 select * from lector
 go
 create  procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
@@ -1797,16 +1800,14 @@ begin
         commit transaction registro 
     end try 
     begin catch --en el caso de algun error, reestablece todo
-        set @Resultado = 0
+        set @Resultado = 0  
         set @Mensaje = ERROR_MESSAGE()
         rollback transaction registro 
     end catch 
 end 
-go 
-select * from Prestamo
-GO
 --EDITAR PRESTAMO 2
-sp_EditarPrestamo 10, 20, 1, 1,'26/07/23','30/07/23',7,'LIBRO NO DEVUELTO','',1
+go
+exec sp_EditarPrestamo (10, 20, 1, 1,'26/07/23','30/07/23',7,'LIBRO NO DEVUELTO','',1)
 go
 create procedure sp_EditarPrestamo
 (
@@ -1814,8 +1815,8 @@ create procedure sp_EditarPrestamo
     @Id_Lector int,
     @TotalLibro int,
     @Activo bit,
-    @FechaPrestamo varchar(50),
-    @FechaDevolucion varchar(50),
+    @FechaPrestamo date,
+    @FechaDevolucion date,
     @DiasDePrestamo int,
     @Observaciones varchar(500),
     --@DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
@@ -1873,8 +1874,6 @@ end
 GO
 
 go
-
-
 
 
 
@@ -1951,7 +1950,7 @@ select * from libro
 UPDATE LIBRO SET Titulo='Billie en el Atardecer' where IDLibro = 15
 
 
-
+GO
 sp_ActualizarEjemplarActivo 1006,12,1
 
 
@@ -1975,28 +1974,3 @@ select * from fn_obtenerCarritoLector(20)
 
 delete carrito where idlibro = 1
 
-
-
-
-
-  SELECT p.IdPrestamo,l.IdLibro, l.Titulo, lec.IDLector, CONCAT(lec.Nombres,' ',lec.Apellidos) [NombreLector],
- p.TotalLibro, p.FechaPrestamo, p.FechaDevolucion,
-p.DiasDePrestamo, p.Observaciones, p.Activo
-,l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,
-DP.CantidadEjemplares, DP.Total, DP.IdDetallePrestamo
-FROM DETALLEPrestamo DP
-INNER JOIN Ejemplar ej ON ej.IDEjemplarLibro = DP.IDEjemplar
-INNER JOIN Libro l ON l.IdLibro = ej.ID_Libro
-INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo
-inner join Lector lec on lec.IdLector = p.ID_Lector order by DP.IdDetallePrestamo DESC
-
-
-
-select * from Ejemplar  where Id_Libro = 2
-
-
-
-
-select e.IDEjemplarLibro, l.IDLibro, e.Activo from Libro l
-inner join Ejemplar e on e.ID_Libro = l.IDLibro and e.Activo = 1
-where l.IdLibro = 2 

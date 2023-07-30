@@ -324,6 +324,7 @@
             $("#cmbActivo").val(1);
 
             $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+            $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
             //$("#txtFechaDevolucion").val("").attr({ "disabled": "disabled" });
 
 
@@ -332,7 +333,11 @@
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
                 $("#txtId").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
+                $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
+                $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
                 $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
+                $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                 y si no es true de el valor de 0*/
                 $("#txtFechaPrestamo").val(json.FechaPrestamo);//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
                 $("#txtFechaDevolucion").val(json.FechaDevolucion);
 
@@ -342,11 +347,7 @@
                 $("#txtDiasPrestamo").val(json.DiasDePrestamo);
                 $("#txtObservaciones").val(json.Observaciones);
                 //$("#cmbLector").val(json.oId_Lector.IdLector);
-                $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
-                $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
-                $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
-                 y si no es true de el valor de 0*/
-
+               
             }
 
             $("#FormModal").modal("show");
@@ -363,7 +364,7 @@
             //console.log(data);/*Para visualizar en consola*/
             //abrirModal(data);
             var json = $(this).data("informacion")
-            //console.log(json);
+            console.log(json);
             abrirModal(json)
 
         })
