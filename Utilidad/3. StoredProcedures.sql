@@ -1759,7 +1759,7 @@ go
 select * from Prestamo
 select * from lector
 go
-create procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
+create  procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,---El id es Identity
     @Id_Lector int,
     @TotalLibro int, 
@@ -1782,7 +1782,8 @@ begin
         set @Resultado = 1
         set @Mensaje = ''
         begin transaction registro
-        insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones )
+
+        insert into Prestamo(Id_Lector, TotalLibro ,DiasDePrestamo,Observaciones )
         values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones )
 
         set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
@@ -1802,6 +1803,81 @@ begin
     end catch 
 end 
 go 
+select * from Prestamo
+GO
+--EDITAR PRESTAMO 2
+sp_EditarPrestamo 10, 20, 1, 1,'26/07/23','30/07/23',7,'LIBRO NO DEVUELTO','',1
+go
+create procedure sp_EditarPrestamo
+(
+    @IdPrestamo int,
+    @Id_Lector int,
+    @TotalLibro int,
+    @Activo bit,
+    @FechaPrestamo varchar(50),
+    @FechaDevolucion varchar(50),
+    @DiasDePrestamo int,
+    @Observaciones varchar(500),
+    --@DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
+	--@EjemplarActivo [Ejemplar_Activo] READONLY,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin
+    SET @Resultado = 1 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    SET @Mensaje = '' -- Asignar un valor vacío a la variable @Mensaje
+
+    IF EXISTS (SELECT * FROM Prestamo WHERE IdPrestamo = @IdPrestamo)
+    begin 
+
+        -- Convert the input date string to datetime
+        DECLARE @FechaPrestamoDatetime datetime
+        SET @FechaPrestamoDatetime = CONVERT(datetime, @FechaPrestamo, 3)
+
+        DECLARE @FechaDevolucionDatetime datetime
+        SET @FechaDevolucionDatetime = CONVERT(datetime, @FechaDevolucion, 3)
+
+        update Prestamo set
+        ID_Lector = @Id_Lector,
+        TotalLibro = @TotalLibro,
+        Activo = @Activo, 
+        FechaPrestamo = @FechaPrestamoDatetime,
+        FechaDevolucion = @FechaDevolucionDatetime,
+        DiasDePrestamo = @DiasDePrestamo, 
+        Observaciones = @Observaciones
+        where IdPrestamo = @IdPrestamo
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = 1 --true
+    end 
+    else 
+        SET @Mensaje = 'El Préstamo no pudo ser realizado'
+end 
+
+go
+create proc sp_EliminarUsuario( --Trabajo como un booleano
+    @IdUsuario int,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    begin
+        delete top(1) from Usuario where IDUsuario = @IdUsuario
+        set @Resultado = 1 --true
+    end 
+    if(@Resultado != 1)
+        set @Mensaje = 'Error: No se pudo elimnar el usuario. Intentelo de nuevo'
+end
+GO
+
+go
+
+
+
+
+
 
 select * from fn_ListarPrestamos(1006)
 go
