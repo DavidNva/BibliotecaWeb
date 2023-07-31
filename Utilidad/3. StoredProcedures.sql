@@ -746,16 +746,20 @@ GO
 --Escuela de procedencia e EMAIL pueden ser NULL
 --Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key con prestamo tiene un delete en cascade)
 --PROCEDIMIENTOS PARA Lector
-sp_RegistrarLector 'Teresa','Garcia G',31,1,'ITSSNP','8vo semestre','Zacatlan','Jose clemente orozco','786584939','teresa@gmail.com','test123',1,'',''
+sp_RegistrarLector 'Teresa2','Garcia G',31,1,'ITSSNP','8vo semestre','Zacatlan','Jose clemente orozco','786584939','teresa2@gmail.com','test123','',1
 go
+exec sp_RegistrarLector 'Maria2','Magdalena',73,0,'NINGUNA','NO APLICA','BUENOS AIRES JOPALA','JOSE CLEMENTE OROZCO','9876364734','mag2@gmail.com','test123','',1
+go
+select * from lector
+go  
 create procedure sp_RegistrarLector(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,---El id es Identity
     @Nombres varchar(100),--Tiene indice compuesto con Apellidos
     @Apellidos varchar(100),--Tiene indice compuesto con Nombre
     @Edad tinyint, --Tiene un check (0 - 125)
     @Genero bit, --H = 1 o M = 0
-    @Escuela nvarchar(100),
-    @GradoGrupo nvarchar(100),
+    @Escuela nvarchar(100) null,
+    @GradoGrupo nvarchar(100) null,
     @Ciudad nvarchar(100),
     @Calle nvarchar(100),
     @Telefono varchar(20),
@@ -1869,9 +1873,7 @@ begin
     SET @Resultado = 0 --false
     begin
         delete top(1) from Prestamo where IdPrestamo = @IdPrestamo
-
         update Ejemplar set Activo = 1 where IDEjemplarLibro = @IdEjemplarLibro
-
         update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
 
         set @Resultado = 1 --true
@@ -1881,9 +1883,6 @@ begin
         set @Mensaje = 'Error: No se pudo elimnar el préstamo. Intentelo de nuevo'
 end
 go
-
-
-
 
 select * from fn_ListarPrestamos(1006)
 go

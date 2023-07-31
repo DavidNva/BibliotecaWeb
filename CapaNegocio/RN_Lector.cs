@@ -89,6 +89,10 @@ namespace CapaNegocio
 
         }
 
+        public bool Editar(EN_Lector obj, out string Mensaje)
+        {
+            return objCapaDato.Editar(obj, out Mensaje);
+        }
 
         public bool CambiarClave(int idLector, string nuevaClave, out string Mensaje)
         {

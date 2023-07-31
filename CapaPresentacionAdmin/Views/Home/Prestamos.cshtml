@@ -99,11 +99,6 @@
                     <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off">
                 </div>
 
-                @*<div class="col-sm-6">
-            <label for="txtTipo" class="form-label">Tipo</label>
-            <input type="text" class="form-control" id="txtTipo" autocomplete="off">
-        </div>*@
-
                 <div class="col-sm-6">
                     <label for="cmbActivo" class="form-label">Activo</label>
                     <select id="cmbActivo" class="form-select">
@@ -211,27 +206,6 @@
             }
 
         });
-        /* ahora el ajax paa listar las Categorias en el cmbCategoria*/
-          @*jQuery.ajax({
-            url: '@Url.Action("ListarTipoPersona", "Mantenedor")',
-            type: "GET",
-            data: null,
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-
-                $("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cmbTipoPersona");
-                $.each(data.data, function (index, item) {
-
-                    $("<option>").attr({ "value": item.IdTipoPersona }).text(item.Descripcion).appendTo("#cmbTipoPersona");
-                })
-            },
-            error: function (error) {
-                console.log(error)
-            }
-          });*@
-
-
 
           jQuery.ajax({
             url: '@Url.Action("ListarLectorParaPrestamo", "Home")',
@@ -327,7 +301,6 @@
             $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
             //$("#txtFechaDevolucion").val("").attr({ "disabled": "disabled" });
 
-
             $("#mensajeError").hide();
             /*Llamamos al form modal*/
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
@@ -368,12 +341,6 @@
             abrirModal(json)
 
         })
-        /*Tambien lo podemos hacer de esta forma*/
-        //$(document).on('click', '.btn-editar', function (event) {
-        //    var json = $(this).data("informacion")
-
-        //    abrirModal(json)
-        //});
 
         //El boton aplica 3 acciones a la base de datos
         //1. Elimina el prestamo con su id y a su vez los detallePrestamos que tenga
@@ -383,21 +350,8 @@
 
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
-            //var Prestamoseleccionado = $(this).closest("tr");
-            //console.log(Prestamoseleccionado)
-
             var json = $(this).data("informacion")
-            //console.log(json);
-            //var idPrestamo = json.IdPrestamo
-            //console.log(json.IdPrestamo);
-            //console.log(data);
-            //if (typeof json !== "undefined" && json !== null) {
-            //    // Ahora puedes acceder a las propiedades de data de forma segura
-            //    var id = json.IdPrestamo;
-            //    // resto del código aquí
-            //} else {
-            //    console.log("La variable data es undefined o null");
-            //}
+
             swal({
                 title: "¿Esta Seguro?",
                 text: "¿Desea eliminar el Prestamo?",
@@ -419,7 +373,6 @@
                     success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Prestamo
                      * hecho en homeController*/
                         //ELIMINAR Prestamo
-
                         if (data.resultado) { /*si el resultado es verdadera)*/
                             //tabladata.row(Prestamoseleccionado).remove().draw();
                             tabladata.ajax.reload();
@@ -434,56 +387,9 @@
 
                 });
             });
-
             //console.log(data);
-
-
         })
 
-        @*$("#tabla tbody").on("click", '.btn-eliminar', function () {
-
-            var Prestamoseleccionado = $(this).closest("tr");
-            var data = tabladata.row(Prestamoseleccionado).data();
-            swal({
-                title: "¿Esta Seguro?",
-                text: "¿Desea eliminar el Prestamo?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-primary",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                closeOnConfirm: true
-            },
-            function () {
-                jQuery.ajax({
-                    url: '@Url.Action("EliminarPrestamo", "Home")',
-                    type: "POST",
-                    data: JSON.stringify({ id: data.IdPrestamo }),/*Paso de valores*/
-                    /*el stringfy lo convierte a texto*/
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Prestamo
-                     * hecho en homeController*/
-                        //ELIMINAR Prestamo
-
-                        if (data.resultado) { /*si el resultado es verdadera)*/
-                            tabladata.row(Prestamoseleccionado).remove().draw();
-                        }else {
-                            swal("No se pudo eliminar", data.mensaje, "error")
-                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
-
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-
-                });
-            });
-
-            //console.log(data);
-
-
-        })*@
 
         function Guardar() {
             var Prestamo = {

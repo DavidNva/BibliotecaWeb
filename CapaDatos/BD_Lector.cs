@@ -52,6 +52,46 @@ namespace CapaDatos
             return IdAutogenerado;
 
         }
+
+        public bool Editar(EN_Lector obj, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EditarUsuario", oConexion);
+                    cmd.Parameters.AddWithValue("IDUsuario", obj.IdLector);
+                    cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
+                    cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("Ciudad", obj.Ciudad);
+                    cmd.Parameters.AddWithValue("Calle", obj.Calle);
+                    cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
+                    cmd.Parameters.AddWithValue("Correo", obj.Correo);
+                    //cmd.Parameters.AddWithValue("Tipo", obj.oId.IdTipoPersona);
+                    cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+
+            }
+            return resultado;
+        }
+
         public List<EN_Lector> Listar()
         {
             List<EN_Lector> lista = new List<EN_Lector>();
