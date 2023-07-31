@@ -1856,8 +1856,8 @@ begin
 end 
 
 go
-create proc sp_EliminarUsuario( --Trabajo como un booleano
-    @IdUsuario int,
+create proc sp_EliminarPrestamo( --Trabajo como un booleano
+    @IdPrestamo int,
     @Mensaje varchar(500) output,
     @Resultado bit output
 )
@@ -1865,14 +1865,14 @@ as
 begin 
     SET @Resultado = 0 --false
     begin
-        delete top(1) from Usuario where IDUsuario = @IdUsuario
+        delete top(1) from Prestamo where IdPrestamo = @IdPrestamo
         set @Resultado = 1 --true
     end 
     if(@Resultado != 1)
-        set @Mensaje = 'Error: No se pudo elimnar el usuario. Intentelo de nuevo'
+        set @Mensaje = 'Error: No se pudo elimnar el préstamo. Intentelo de nuevo'
 end
 GO
-
+select * from prestamo
 go
 
 
