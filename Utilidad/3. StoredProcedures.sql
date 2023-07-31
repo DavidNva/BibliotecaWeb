@@ -1856,8 +1856,11 @@ begin
 end 
 
 go
+go
 create proc sp_EliminarPrestamo( --Trabajo como un booleano
     @IdPrestamo int,
+    @IdEjemplarLibro int,
+    @IdLibro int, 
     @Mensaje varchar(500) output,
     @Resultado bit output
 )
@@ -1866,13 +1869,17 @@ begin
     SET @Resultado = 0 --false
     begin
         delete top(1) from Prestamo where IdPrestamo = @IdPrestamo
+
+        update Ejemplar set Activo = 1 where IDEjemplarLibro = @IdEjemplarLibro
+
+        update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
+
         set @Resultado = 1 --true
+        
     end 
     if(@Resultado != 1)
         set @Mensaje = 'Error: No se pudo elimnar el préstamo. Intentelo de nuevo'
 end
-GO
-select * from prestamo
 go
 
 

@@ -197,7 +197,7 @@ namespace CapaDatos
             return resultado;
         }
 
-        public bool Eliminar(int id, out string Mensaje)//out indica parametro de salida
+        public bool Eliminar(int id, int idEjemplarLibro, int idLibro, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = false;
 
@@ -208,6 +208,8 @@ namespace CapaDatos
                 {
                     SqlCommand cmd = new SqlCommand("sp_EliminarPrestamo", oConexion);
                     cmd.Parameters.AddWithValue("IdPrestamo", id);
+                    cmd.Parameters.AddWithValue("IdEjemplarLibro", idEjemplarLibro);
+                    cmd.Parameters.AddWithValue("IdLibro", idLibro);
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
@@ -245,7 +247,7 @@ namespace CapaDatos
                     sb.AppendLine("p.TotalLibro, ");
                     sb.AppendLine("CONVERT(char(10), p.FechaPrestamo,103) [FechaPrestamo],");
                     sb.AppendLine("CONVERT(char(10), p.FechaDevolucion,103) [FechaDevolucion],");
-                    sb.AppendLine("p.DiasDePrestamo, p.Observaciones, p.Activo ");
+                    sb.AppendLine("p.DiasDePrestamo, p.Observaciones, p.Activo,dp.IdEjemplar ");
                     sb.AppendLine(",l.IdLibro,l.Titulo");
                     //b.AppendLine(",l.RutaImagen, l.NombreImagen,l.Codigo,l.Titulo,");
                     //sb.AppendLine("DP.CantidadEjemplares, DP.Total, DP.IdDetallePrestamo ");
@@ -279,10 +281,9 @@ namespace CapaDatos
                                     Observaciones = dr["Observaciones"].ToString(),
                                     //Tipo = Convert.ToInt32(dr["Tipo"]),   
                                     Activo = Convert.ToBoolean(dr["Activo"]),
-                                    oId_Libro = new EN_Libro() { IdLibro = Convert.ToInt32(dr["IdLibro"]), Titulo = dr["Titulo"].ToString() }
+                                    oId_Libro = new EN_Libro() { IdLibro = Convert.ToInt32(dr["IdLibro"]), Titulo = dr["Titulo"].ToString() },
+                                    oId_Ejemplar = new EN_Ejemplar() { IdEjemplarLibro = Convert.ToInt32(dr["IdEjemplar"])}
                                     //oDetallePrestamo = new EN_DetallePrestamo() { IdDetallePrestamo = Convert.ToInt32(dr["IdDetallePrestamo"]), Total = dr["NombreLector"].ToString() },
-
-
                                 });
                         }
                     }

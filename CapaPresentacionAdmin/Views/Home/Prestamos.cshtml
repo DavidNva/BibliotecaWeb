@@ -364,7 +364,7 @@
             //console.log(data);/*Para visualizar en consola*/
             //abrirModal(data);
             var json = $(this).data("informacion")
-            console.log(json);
+            //console.log(json);
             abrirModal(json)
 
         })
@@ -374,12 +374,20 @@
 
         //    abrirModal(json)
         //});
+
+        //El boton aplica 3 acciones a la base de datos
+        //1. Elimina el prestamo con su id y a su vez los detallePrestamos que tenga
+        //2. Actualiza el ejemplar pasando a activo = 1, reactiva el ejemplar que estaba en prestamo
+        //3. Acutaliza: Aumentando 1 ejemplar a la cantidad de ejemplares en la tabla libro ya que se reactiva un 
+        //ejemplar,entonces se suma de nuevo ese ejemplar al total de stock o cantidad de ejemplares de libro
+
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
 
             //var Prestamoseleccionado = $(this).closest("tr");
             //console.log(Prestamoseleccionado)
 
             var json = $(this).data("informacion")
+            //console.log(json);
             //var idPrestamo = json.IdPrestamo
             //console.log(json.IdPrestamo);
             //console.log(data);
@@ -404,7 +412,7 @@
                 jQuery.ajax({
                     url: '@Url.Action("EliminarPrestamo", "Home")',
                     type: "POST",
-                    data: JSON.stringify({ id:json.IdPrestamo }),/*Paso de valores*/
+                    data: JSON.stringify({ id: json.IdPrestamo, idEjemplarLibro: json.oId_Ejemplar.IdEjemplarLibro, idLibro: json.oId_Libro.IdLibro }),/*Paso de valores*/
                     /*el stringfy lo convierte a texto*/
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",

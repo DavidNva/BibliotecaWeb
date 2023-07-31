@@ -36,9 +36,13 @@ namespace CapaNegocio
             return objCapaDato.Editar(obj, out Mensaje);
         }
 
-        public bool Eliminar(int id, out string Mensaje)
+        //public bool Eliminar(int id, out string Mensaje)
+        //{
+        //    return objCapaDato.Eliminar(id, out Mensaje);
+        //}
+        public bool Eliminar(int id, int idEjemplarLibro, int idLibro, out string Mensaje)
         {
-            return objCapaDato.Eliminar(id, out Mensaje);
+            return objCapaDato.Eliminar(id, idEjemplarLibro, idLibro, out Mensaje);
         }
         //public List<EN_DetallePrestamo> ListarPrestamos(int idLector)
         //{
