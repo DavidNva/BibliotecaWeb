@@ -1720,6 +1720,7 @@ CREATE TYPE [dbo].[Ejemplar_Activo] AS TABLE(
 go
 create procedure usp_RegistrarPrestamo(
     @Id_Lector int,
+    @IdLibro int,
     @TotalLibro int, 
     --@MontoTotal decimal(18,2),
     @DiasDePrestamo int, 
@@ -1747,6 +1748,8 @@ begin
         select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
 
 		--update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
+        update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @DetallePrestamo)
+        update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro 
 
         DELETE FROM CARRITO WHERE IdLector = @Id_Lector
         commit transaction registro 
