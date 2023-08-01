@@ -128,16 +128,60 @@ namespace CapaPresentacionAdmin.Controllers
 
         //}
 
+        //[HttpPost]
+        //public JsonResult GuardarPrestamo(EN_Prestamo objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        //{
+        //    object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
+        //    string mensaje = string.Empty;
+
+        //    if (objeto.IdPrestamo == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+        //     un Prestamo nuevo, por lo que se ha dado dando clic con el boton de crear*/
+        //    {
+        //        resultado = new RN_Prestamo().RegistrarPrestamo2(objeto, out mensaje);/*El metodo registrar
+        //         de tipo int, devuelve el id registrado*/
+        //    }
+        //    else
+        //    {/*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+        //         a un Prestamo, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+        //         con los alert comentados*/
+        //        resultado = new RN_Prestamo().Editar(objeto, out mensaje);
+        //    }
+        //    return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        //}
+
         [HttpPost]
-        public JsonResult GuardarPrestamo(EN_Prestamo objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
+        public JsonResult GuardarPrestamo(List<EN_Prestamo> oListaPrestamo, EN_Prestamo objeto) /*De este json se puede controlar que mas ver, igualar elementos, etc*/
         {
+            DataTable detallePrestamo = new DataTable();
+            detallePrestamo.Locale = new CultureInfo("es-MX"); //Comenzamos a crear las columnas que necesita esta table
+            detallePrestamo.Columns.Add("IdEjemplar", typeof(string));//antes era IdLibro
+            detallePrestamo.Columns.Add("CantidadEjemplares", typeof(int));
+            detallePrestamo.Columns.Add("Total", typeof(decimal));
             object resultado;/*Va a permitir almacenar cualquier tipo de resultado (en este caso int o booelan, dependiendi si es creacion o edicion)*/
             string mensaje = string.Empty;
+
+            foreach (EN_Prestamo oEjemplar in oListaPrestamo)//por cada carrito en la lista carrito
+            {
+                decimal subTotal = Convert.ToDecimal(objeto.TotalLibro) /** oCarrito.oId_Libro.Precio*/;
+                //        //Antes se multiplicaaba por el precio, ahoa simplemente pasamos la cantidad directamente
+
+                //total += subTotal;//Va aumentando el valor de total con cada iteracion
+                detallePrestamo.Rows.Add(new object[]
+                {
+                            //oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                            //oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                            //oCarrito.Cantidad,
+                            oEjemplar.oId_Libro.oId_Ejemplar.IdEjemplarLibro,
+                            oEjemplar.TotalLibro,
+                            subTotal
+                });
+            }
 
             if (objeto.IdPrestamo == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
              un Prestamo nuevo, por lo que se ha dado dando clic con el boton de crear*/
             {
-                resultado = new RN_Prestamo().RegistrarPrestamo2(objeto, out mensaje);/*El metodo registrar
+                resultado = new RN_Prestamo().Registrar(objeto, detallePrestamo, out mensaje);/*El metodo registrar
                  de tipo int, devuelve el id registrado*/
             }
             else

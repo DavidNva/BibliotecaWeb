@@ -21,7 +21,7 @@ namespace CapaDatos
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
                     SqlCommand cmd = new SqlCommand("usp_RegistrarPrestamo", oConexion);
-                    cmd.Parameters.AddWithValue("Id_Lector", obj.oId_Lector);
+                    cmd.Parameters.AddWithValue("Id_Lector", obj.oId_Lector.IdLector);
                     cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
                     cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
                     cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);

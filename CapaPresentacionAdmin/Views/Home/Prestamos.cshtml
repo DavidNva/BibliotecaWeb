@@ -405,7 +405,11 @@
                     IdLibro: $("#cmbLibro option:selected").val(),
                     Titulo: $("#cmbLibro option:selected").text()
                 },
-                
+                oId_Ejemplar: {
+                    IdEjemplarLibro: $("#cmbEjemplar option:selected").val()
+                    //Titulo: $("#cmbLibro option:selected").text()
+                },
+                //oId_Ejemplar.IdEjemplarLibro
                 TotalLibro: $("#txtTotalLibros").val(),
 
                 /*El punto val sirve para obtener un valor y para establecer un valor*/
@@ -419,11 +423,24 @@
                 // * o un no (No = 0*/
                 
             }
+            var listaCarrito = [];
+            var Libro = Prestamo;
+            var cantidad = Prestamo.TotalLibro;
+            listaCarrito.push({//para agregar elementos a esta lisra
+                oId_Libro: Libro,//Aqui tengo que darle el idEJEMPLAR
+
+                TotalLibro: cantidad
+            })
+
+            console.log(listaCarrito)
+
+
+            console.log(Prestamo)
             jQuery.ajax({/*Llama al metodo de guardar Prestamo, que dependiendo de la accion va a crear nuevo
              o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
                 url: '@Url.Action("GuardarPrestamo", "Home")',
                 type: "POST",
-                data: JSON.stringify({ objeto: Prestamo}),/*Paso de valores
+                data: JSON.stringify({ oListaPrestamo: listaCarrito ,objeto: Prestamo}),/*Paso de valores
                  el stringfy lo convierte a texto*/
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
