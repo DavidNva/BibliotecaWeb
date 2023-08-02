@@ -26,6 +26,7 @@
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
+                    <th>Estado del Préstamo</th>
                     <th>Libro</th>
                     <th>Lector</th> @*listaremos como tipo persona o como listabamos categoria*@
                     <th>Libros Prestados</th>
@@ -33,7 +34,7 @@
                     <th>Fecha Devolucion</th>
                     <th>Dias de Prestamo</th>
                     <th>Observaciones</th>
-                    <th>Activo</th>
+                    
                     <th></th>
                 </tr>
             </thead>
@@ -44,7 +45,6 @@
         </table>
 
     </div>
-
 </div>
 
 <!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
@@ -149,6 +149,16 @@
                 /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
                  y el seguno valor es como se llama la columna*/
                 {
+                    "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                        if (valor) {/*Si el valor es verdadero*/
+                            return '<span class="badge bg-danger">Pendiente</span>' //Si Significa que esta pendiente = 1 = Activo
+                        } else {
+                            return '<span class="badge bg-success">Devuelto</span>' //No, Significa que el prestamo devuelto = 0 = Inactivo
+                        }
+                    }
+
+                },
+                {
                     "data": "oId_Libro", "render": function (data) {/*El render permite obtener el valor de la columna*/
                         return data.Titulo
                     }
@@ -166,16 +176,7 @@
                /* { "data": "Tipo" },*/
                 { "data": "Observaciones" },
 
-                {
-                    "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
-                        if (valor) {/*Si el valor es verdadero*/
-                            return '<span class="badge bg-success">Si</span>'
-                        } else {
-                            return '<span class="badge bg-danger">No</span>'
-                        }
-                    }
-
-                },
+                
                 {
                     "data": "IdPrestamo", "render": function (data, type, row, meta) {
 
@@ -192,14 +193,6 @@
                     "searchable": false,
                     "width": "90px"
                 }
-                //{/*Crea una columna por defecto*/
-                //    /*El btn-promary es el diseño, el btn-sm es el mamaño*/
-                //    "defaultContent": ' <button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
-                //        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash btn-eliminar"></i></button>',
-                //    "orderable": false,/*Que no sea ordenada, porque solo contiene botones*/
-                //    "searchable": false, /*Para que no haga la busqueda por estos botones de editar y eliminar, solo de las demas columnas*/
-                //    "width": "90px"
-                //}
             ],/*Propiedad o atributos van dentro de las comillas ""*/
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
@@ -221,7 +214,6 @@
                     //El valor de item es el declarado en EN_Lector, la capa Entidad
                     $("<option>").attr({ "value": item.IdLector }).text(item.NombreCompletoLector).appendTo("#cmbLector");
                 })
-                //dropdownParent: $('#FormModal')
                 $("#cmbLector").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
                    /* .css("z-index", "1600");*/
 
@@ -241,12 +233,12 @@
             success: function (data) {
 
                //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
-                $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
+                $("#cmbLibro").append($("<option selected>").val("0").text("Seleccionar")).attr({ "disabled": "disabled" });
+                $("#cmbLibro option:first-child").attr({ "disabled": true });//Desabilita la primera opcion que se la de seleccionar
                 $.each(data.data, function (index, item) {
                     //El valor de item es el declarado en EN_Lector, la capa Entidad
                     $("<option>").attr({ "value": item.IdLibro }).text(item.Titulo).appendTo("#cmbLibro");
                 })
-                //dropdownParent: $('#FormModal')
                 $("#cmbLibro").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
                    /* .css("z-index", "1600");*/
                 ListarEjemplar();
@@ -256,11 +248,23 @@
               }
           });
 
-          $("#cmbLibro").on("change", function () {
-            ListarEjemplar();//Cada vez que cambia lista nuevamente las Ejemplars
-        })
+        $("#cmbLibro").on("change", function () {
+            if ($("#cmbLibro").val() == "0") {
+                //console.log("El value de cmbLibro es = nada");
+                $("#cmbLibro").val($("#cmbLibro option:first").val())//Selecciona el primer valor (Serie el de seleccionar)
+                $("#cmbLibro option:first-child").attr({ "disabled":true});//Desabilita la primera opcion que es seleccinoar
+                $("#cmbEjemplar").html("")//Limpia los ejemplares
+                $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+                $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());//Vuelve a colocar el seleccionar y marcar la primera opcion
+                
+            } else {
+                ListarEjemplar();//Cada vez que cambia lista nuevamente las Ejemplaras
+                //Si realmente se ha elegido un libro, entonces si lista los ejemplares, de esta forma se evita el error de referencia null
+            }
+             
+          })
 
-        function ListarEjemplar() {//Ejemplar = Municipio
+        function ListarEjemplar() {//Ejemplar 
             $("#cmbEjemplar").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
             //Aqui se colocan los atributos de html y opciones de valor, text, etc
             //$("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
@@ -268,7 +272,7 @@
             jQuery.ajax({
                 url: '@Url.Action("ObtenerEjemplarPorLibro", "Home")',
                 type: "POST",
-                data: JSON.stringify({ IdLibro: $("#cmbLibro option:selected").val() }),//pasamos los parametros que necesita este metodo
+                data: JSON.stringify({ idLibro: $("#cmbLibro option:selected").val() }),//pasamos los parametros que necesita este metodo
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
@@ -281,17 +285,20 @@
                 }
             })
         }
-        //.attr({"type":"hidden"});
-        function abrirModal(json) /*json es el data del siguiente*/ {
 
+        function abrirModal(json) /*json es el data del siguiente*/ {
             $("#txtId").val(0);
             $("#txtTotalLibros").val(1);
             $("#txtFechaPrestamo").val("");
             $("#txtFechaDevolucion").val("");
             $("#txtDiasPrestamo").val(7);
             $("#txtObservaciones").val("");
-            $("#cmbLector").append($("<option selected>").val("").text("Seleccionar"));
+            $("#cmbLibro").removeAttr("disabled");//Para poder elegir aun cuando ayamos dado clic antes en editar
             $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
+
+            $("#cmbLector").append($("<option selected>").val("").text("Seleccionar"));
+
+            $("#cmbEjemplar").removeAttr("disabled");//Para poder elegir aun cuando ayamos dado clic antes en editar
             $("#cmbEjemplar").html("")
             $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
             $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());
@@ -306,8 +313,11 @@
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
                 $("#txtId").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
-                $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
                 $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
+                $("#cmbLibro").attr({ "disabled": "disabled" });
+                $("#cmbEjemplar").attr({ "disabled": "disabled" });
+                $("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
                 $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
@@ -319,8 +329,6 @@
 
                 $("#txtDiasPrestamo").val(json.DiasDePrestamo);
                 $("#txtObservaciones").val(json.Observaciones);
-                //$("#cmbLector").val(json.oId_Lector.IdLector);
-               
             }
 
             $("#FormModal").modal("show");
@@ -341,7 +349,6 @@
             abrirModal(json)
 
         })
-
         //El boton aplica 3 acciones a la base de datos
         //1. Elimina el prestamo con su id y a su vez los detallePrestamos que tenga
         //2. Actualiza el ejemplar pasando a activo = 1, reactiva el ejemplar que estaba en prestamo
@@ -390,7 +397,6 @@
             //console.log(data);
         })
 
-
         function Guardar() {
             var Prestamo = {
                 IdPrestamo: $("#txtId").val(), /*Los dos puntos de la condicion es "si es diferente es:"
@@ -411,7 +417,6 @@
                 },
                 //oId_Ejemplar.IdEjemplarLibro
                 TotalLibro: $("#txtTotalLibros").val(),
-
                 /*El punto val sirve para obtener un valor y para establecer un valor*/
                 FechaPrestamo: $("#txtFechaPrestamo").val(),
                 FechaDevolucion: $("#txtFechaDevolucion").val(),
