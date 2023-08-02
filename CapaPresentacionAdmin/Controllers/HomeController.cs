@@ -167,15 +167,25 @@ namespace CapaPresentacionAdmin.Controllers
                 //        //Antes se multiplicaaba por el precio, ahoa simplemente pasamos la cantidad directamente
 
                 //total += subTotal;//Va aumentando el valor de total con cada iteracion
-                detallePrestamo.Rows.Add(new object[]
+                //Dar una condicionar que si el oEjemplar es diferente de null
+                if(oListaPrestamo == null || oEjemplar == null || oEjemplar.oId_Libro.oId_Ejemplar==null)
                 {
-                            //oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
-                            //oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
-                            //oCarrito.Cantidad,
-                            oEjemplar.oId_Libro.oId_Ejemplar.IdEjemplarLibro,
-                            oEjemplar.TotalLibro,
-                            subTotal
-                });
+                    mensaje = "No hay un ejemplar disponible para el libro seleccionado";
+                }
+                else
+                {
+                    detallePrestamo.Rows.Add(new object[]
+                    {
+                        //oCarrito.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                        //oCarrito.oId_Libro.oId_Ejemplar.IdEjemplarLibro,//Estamos trabajando con ejemplar, pero en este caso solo es una lista entonces no hay problema
+                        //oCarrito.Cantidad,
+                        oEjemplar.oId_Libro.oId_Ejemplar.IdEjemplarLibro,
+                        oEjemplar.TotalLibro,
+                        subTotal
+
+                    });
+                }
+                
             }
 
             if (objeto.IdPrestamo == 0)/*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es

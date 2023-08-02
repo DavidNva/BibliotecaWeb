@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
+<link href="~/Content/misestilos.css" rel="stylesheet" />
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="#">Resumen</a></li>
     <li class="breadcrumb-item active">Prestamos</li>
@@ -65,42 +65,43 @@
                     pero si es diferente a 0 significa que ya existe y vamos a editar*@
             <div class="row g-2">
 
-                <div class="col-sm-6">
+                <div class="col-sm-8">
                     <label class="form-label">Libro</label>
                     <select id="cmbLibro" class="form-select">
                     </select>
                 </div>
 
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <label class="form-label">Ejemplar Disponible</label>
-                    <select id="cmbEjemplar" class="form-select">
+                    <select id="cmbEjemplar" class="form-select form-select-sm">
                     </select>
                 </div>
 
-                <div class="col-sm-12">
+                <div class="col-sm-9">
                     <label class="form-label">Lector</label>
                     <select id="cmbLector" class="form-select">
                     </select>
                 </div>
-                <div class="col-sm-6">
-                    <label for="txtTotalLibros" class="form-label">Libros Prestados</label>
-                    <input type="number" class="form-control" id="txtTotalLibros" autocomplete="off">
+                <div class="col-sm-3">
+                    
+                    <label for="txtTotalLibros" class="form-label" id="lblTotalLibros">Cantidad</label>
+                    <input type="number" class="form-control form-control-sm" id="txtTotalLibros" autocomplete="off">
                 </div>
                 <div class="col-sm-6">
                     <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
                     <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
                 </div>
-                <div class="col-sm-6">
-                    <label for="txtFechaDevolucion" class="form-label">Fecha Devolución</label>
+                <div class="col-sm-6" id="div-fechaDevolucion">
+                    <label for="txtFechaDevolucion" class="form-label" id="lblFechaDevolucion">Fecha Devolución</label>
                     <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
                 </div>
                 <div class="col-sm-6">
                     <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
-                    <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off">
+                    <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off" placeholder="Ingresa los dias de prestamo para el libro">
                 </div>
 
                 <div class="col-sm-6">
-                    <label for="cmbActivo" class="form-label">Activo</label>
+                    <label for="cmbActivo" class="form-label" id="lblActivo">Activo</label>
                     <select id="cmbActivo" class="form-select">
                         <option value="1">Si</option>
                         <option value="0">No</option>
@@ -108,8 +109,9 @@
                 </div>
                 <div class="col-sm-12">
                     <label for="txtObservaciones" class="form-label">Observaciones</label>
-                    <input type="text" class="form-control" id="txtObservaciones" autocomplete="off">
+                    <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entrego en perfecto estado ">
                 </div>
+
             </div>
                 <!--mensaje de alerta-->
                 <div class="row mt-2">
@@ -285,14 +287,22 @@
                 }
             })
         }
-
+        $(".btn-editar").on("click", function () {
+            $("#txtDiasPrestamo, #txtObservaciones").toggle();
+        });
         function abrirModal(json) /*json es el data del siguiente*/ {
             $("#txtId").val(0);
             $("#txtTotalLibros").val(1);
-            $("#txtFechaPrestamo").val("");
-            $("#txtFechaDevolucion").val("");
+            $("#txtTotalLibros").attr({ "disabled": "disabled" });
+            $("#lblTotalLibros").css("color", "transparent");
+
+            $("#txtFechaPrestamo").val("").attr({ "disabled": "disabled" });;
+
+            $("#div-fechaDevolucion").val("").addClass("hidden-elements");
+            $("#txtFechaDevolucion").val();//Este fecha devolucion no se utiliza para registrar, sino para editar
+
             $("#txtDiasPrestamo").val(7);
-            $("#txtObservaciones").val("");
+            $("#txtObservaciones").val("NINGUNA");
             $("#cmbLibro").removeAttr("disabled");//Para poder elegir aun cuando ayamos dado clic antes en editar
             $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
 
@@ -303,9 +313,11 @@
             $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
             $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());
             $("#cmbActivo").val(1);
+            $("#cmbActivo").hide();
+            $("#lblActivo").hide();
 
             $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
-            $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+            //$("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
             //$("#txtFechaDevolucion").val("").attr({ "disabled": "disabled" });
 
             $("#mensajeError").hide();
@@ -321,9 +333,18 @@
                 $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
-                $("#txtFechaPrestamo").val(json.FechaPrestamo);//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
-                $("#txtFechaDevolucion").val(json.FechaDevolucion);
+                $("#cmbActivo").show();
+                $("#lblActivo").show();
+                $("#txtFechaPrestamo").val(json.FechaPrestamo).attr({ "disabled": "disabled" });;//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
+                $("#div-fechaDevolucion").val(json.FechaDevolucion).removeClass("hidden-elements");
 
+                if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
+                    $("#txtFechaDevolucion").val(json.FechaDevolucion);
+                } else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
+                    $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                }
+                
+                
                 $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' })
                 $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' })
 
@@ -345,7 +366,7 @@
             //console.log(data);/*Para visualizar en consola*/
             //abrirModal(data);
             var json = $(this).data("informacion")
-            //console.log(json);
+            console.log(json);
             abrirModal(json)
 
         })

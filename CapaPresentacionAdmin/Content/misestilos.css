@@ -1,0 +1,17 @@
+﻿.bg-principal-lector{
+   /* background-color: aqua;*/
+    background-image: url('../images/bg-book1.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
+.bg-login-lector {
+    /* background-color: aqua;*/
+    background-image: url('../images/bg-book.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.hidden-elements {
+    display: none;
+}
