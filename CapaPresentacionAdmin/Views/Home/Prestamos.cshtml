@@ -97,7 +97,7 @@
                 </div>
                 <div class="col-sm-6">
                     <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
-                    <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off" placeholder="Ingresa los dias de prestamo para el libro">
+                    <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off" placeholder="Ingresa los días de prestamo para el libro">
                 </div>
 
                 <div class="col-sm-6">
@@ -109,7 +109,7 @@
                 </div>
                 <div class="col-sm-12">
                     <label for="txtObservaciones" class="form-label">Observaciones</label>
-                    <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entrego en perfecto estado ">
+                    <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
                 </div>
 
             </div>
@@ -263,6 +263,12 @@
                 ListarEjemplar();//Cada vez que cambia lista nuevamente las Ejemplaras
                 //Si realmente se ha elegido un libro, entonces si lista los ejemplares, de esta forma se evita el error de referencia null
             }
+            //if ($("#cmbEjemplar").text() == "") {
+            //    $("<option>").attr({ "value": "", "disabled": "disabled", "selected": "true" }).text("Seleccionar2").appendTo("#cmbEjemplar")
+            //    $("#cmbEjemplar").val($("#cmbEjemplar option:last").val()).prop("selected", true);
+                
+            //}
+            
              
           })
 
@@ -274,7 +280,7 @@
             jQuery.ajax({
                 url: '@Url.Action("ObtenerEjemplarPorLibro", "Home")',
                 type: "POST",
-                data: JSON.stringify({ idLibro: $("#cmbLibro option:selected").val() }),//pasamos los parametros que necesita este metodo
+                data: JSON.stringify({ idLibro: $("#cmbLibro option:selected").val() }),//psasamos los parametros que necesita este metodo
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
                 success: function (data) {
@@ -283,6 +289,13 @@
                         $.each(data.lista, function (i, item) {
                             $("<option>").attr({"value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo("#cmbEjemplar")
                         })
+                    }
+
+                    var cmbEjemplar = $("#cmbEjemplar");
+                    var opcionSeleccionar = $("<option>").text("Sin ejemplares").val(0);/*.attr("disabled","disabled");*/
+
+                    if (typeof cmbEjemplar.val() === "undefined" || cmbEjemplar.val() === null || cmbEjemplar.val() === "") {
+                        cmbEjemplar.empty().append(opcionSeleccionar);
                     }
                 }
             })
@@ -310,7 +323,7 @@
 
             $("#cmbEjemplar").removeAttr("disabled");//Para poder elegir aun cuando ayamos dado clic antes en editar
             $("#cmbEjemplar").html("")
-            $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+            $("<option>").attr({ "value": "", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
             $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());
             $("#cmbActivo").val(1);
             $("#cmbActivo").hide();
@@ -458,10 +471,14 @@
                 TotalLibro: cantidad
             })
 
+
+
+
             console.log(listaCarrito)
 
 
             console.log(Prestamo)
+
             jQuery.ajax({/*Llama al metodo de guardar Prestamo, que dependiendo de la accion va a crear nuevo
              o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
                 url: '@Url.Action("GuardarPrestamo", "Home")',
