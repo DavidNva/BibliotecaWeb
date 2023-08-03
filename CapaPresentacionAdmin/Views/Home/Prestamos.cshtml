@@ -26,15 +26,16 @@
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
+                    
                     <th>Estado del Préstamo</th>
                     <th>Libro</th>
                     <th>Lector</th> @*listaremos como tipo persona o como listabamos categoria*@
-                    <th>Libros Prestados</th>
+                    @*<th>Libros Prestados</th>*@
                     <th>Fecha Prestamo</th>
                     <th>Fecha Devolucion</th>
                     <th>Dias de Prestamo</th>
                     <th>Observaciones</th>
-                    
+
                     <th></th>
                 </tr>
             </thead>
@@ -165,12 +166,14 @@
                         return data.Titulo
                     }
                 },
+                
+               
                 {
                     "data": "oId_Lector", "render": function (data) {/*El render permite obtener el valor de la columna*/
                         return data.NombreCompletoLector
                     }
                 },
-                { "data": "TotalLibro" },
+               /* { "data": "TotalLibro" },*/
                 { "data": "FechaPrestamo" },
                 { "data": "FechaDevolucion" },
                 { "data": "DiasDePrestamo" },
@@ -337,6 +340,7 @@
             /*Llamamos al form modal*/
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
+
                 $("#txtId").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
                 $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
                 $("#cmbLibro").attr({ "disabled": "disabled" });
@@ -483,7 +487,7 @@
              o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
                 url: '@Url.Action("GuardarPrestamo", "Home")',
                 type: "POST",
-                data: JSON.stringify({ oListaPrestamo: listaCarrito ,objeto: Prestamo}),/*Paso de valores
+                data: JSON.stringify({ oListaPrestamo: listaCarrito, objeto: Prestamo}),/*Paso de valores
                  el stringfy lo convierte a texto*/
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
@@ -496,8 +500,12 @@
 
                         if (data.resultado != 0) {
                             Prestamo.IdPrestamo = data.resultado;
-                            tabladata.row.add(Prestamo).draw(false);
-
+                            //tabladata.row.add(Prestamo).draw(false);
+                            //Generraba error con el id del prestamo colocando como true al registrar
+                            //si despues de registrar editabamos ese registro entonces volvia a registrar en lugar de solo editar
+                            //por lo que conviene mejor recargar la tabla con la siguiente line de codigo
+                            //para asi tener el id correspondi
+                            tabladata.ajax.reload();
                             $("#FormModal").modal("hide");
                         } else {
 
