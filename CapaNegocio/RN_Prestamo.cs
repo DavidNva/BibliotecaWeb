@@ -35,7 +35,7 @@ namespace CapaNegocio
             }
             else if (obj.oId_Ejemplar.IdEjemplarLibro == 0)/*Si no ha seleccionado ninguna marca*/
             {
-                Mensaje = "Debes seleccionar un ejemplar disponible para el libro seleccionado. Verifica que el libro cuente con al menos un ejemplare disponible";
+                Mensaje = "Debes seleccionar un ejemplar disponible para el libro seleccionado. Verifica que el libro cuente con al menos un ejemplar disponible.";
             }
             else if (obj.oId_Lector.IdLector == 0)/*Si no ha seleccionado ningun lector*/
             {
@@ -101,10 +101,10 @@ namespace CapaNegocio
             {
                 Mensaje = "Debes seleccionar un Libro";
             }
-            else if (obj.oId_Ejemplar.IdEjemplarLibro == 0)/*Si no ha seleccionado ninguna marca*/
-            {
-                Mensaje = "Debes seleccionar un ejemplar disponible paraa el libro seleccionado";
-            }
+            //else if (obj.oId_Ejemplar.IdEjemplarLibro == 0)/*Si no ha seleccionado ninguna marca*/
+            //{
+            //    Mensaje = "Debes seleccionar un ejemplar disponible para el libro seleccionado";
+            //}
             else if (obj.oId_Lector.IdLector == 0)/*Si no ha seleccionado ningun lector*/
             {
                 Mensaje = "Debes seleccionar un Lector";

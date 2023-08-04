@@ -26,7 +26,7 @@
         <table id="tabla" class="display cell-border" style="width:100%">
             <thead>
                 <tr>
-                    
+                    <th></th> @*Esta columna no será visible*@
                     <th>Estado del Préstamo</th>
                     <th>Libro</th>
                     <th>Lector</th> @*listaremos como tipo persona o como listabamos categoria*@
@@ -72,22 +72,27 @@
                     </select>
                 </div>
 
-                <div class="col-sm-4">
-                    <label class="form-label">Ejemplar Disponible</label>
+                <div class="col-sm-4" id="div-SelectEjemplarDisponible">
+                    <label class="form-label" id="lblEjemplar">Ejemplar Disponible</label>
                     <select id="cmbEjemplar" class="form-select form-select-sm">
                     </select>
                 </div>
+                <div class="col-sm-4" id="div-EjemplarPrestado">
 
+                    <label for="txtEjemplarPrestado" class="form-label" id="lblEjemplarPrestado">Ejemplar Prestado</label>
+                    <input type="number" class="form-control form-control-sm" id="txtEjemplarPrestado" disabled autocomplete="off">
+                </div>
                 <div class="col-sm-9">
                     <label class="form-label">Lector</label>
                     <select id="cmbLector" class="form-select">
                     </select>
                 </div>
                 <div class="col-sm-3">
-                    
+
                     <label for="txtTotalLibros" class="form-label" id="lblTotalLibros">Cantidad</label>
                     <input type="number" class="form-control form-control-sm" id="txtTotalLibros" autocomplete="off">
                 </div>
+
                 <div class="col-sm-6">
                     <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
                     <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
@@ -151,6 +156,11 @@
             "columns": [/*Todas las columnas que vamos a usar*/
                 /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
                  y el seguno valor es como se llama la columna*/
+                {
+                    "data": "oId_Ejemplar", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.IdEjemplarLibro
+                    }
+                },
                 {
                     "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
                         if (valor) {/*Si el valor es verdadero*/
@@ -311,9 +321,18 @@
             $("#txtTotalLibros").val(1);
             $("#txtTotalLibros").attr({ "disabled": "disabled" });
             $("#lblTotalLibros").css("color", "transparent");
+            
+            //$("#div-EjemplarPrestado").val("").addClass("hidden-elements");
+            ////$("#div-SelectEjemplarDisponible").val("").removeClass("hidden-elements");
+            //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+
+
+            
 
             $("#txtFechaPrestamo").val("").attr({ "disabled": "disabled" });;
 
+            
+            
             $("#div-fechaDevolucion").val("").addClass("hidden-elements");
             $("#txtFechaDevolucion").val();//Este fecha devolucion no se utiliza para registrar, sino para editar
 
@@ -328,6 +347,10 @@
             $("#cmbEjemplar").html("")
             $("<option>").attr({ "value": "", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
             $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());
+
+            $("#div-EjemplarPrestado").val("").addClass("hidden-elements");
+            $("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+
             $("#cmbActivo").val(1);
             $("#cmbActivo").hide();
             $("#lblActivo").hide();
@@ -345,15 +368,26 @@
                 $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
                 $("#cmbLibro").attr({ "disabled": "disabled" });
                 $("#cmbEjemplar").attr({ "disabled": "disabled" });
-                $("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+               // $("#lblEjemplar").hide();
+                //$("#cmbEjemplar").hide();
+                
+                $("#div-EjemplarPrestado").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+                $("#div-SelectEjemplarDisponible").val("").addClass("hidden-elements");
+
+
                 $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
                 $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                $("#txtEjemplarPrestado").val(json.oId_Ejemplar.IdEjemplarLibro);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
                 $("#cmbActivo").show();
                 $("#lblActivo").show();
                 $("#txtFechaPrestamo").val(json.FechaPrestamo).attr({ "disabled": "disabled" });;//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
                 $("#div-fechaDevolucion").val(json.FechaDevolucion).removeClass("hidden-elements");
+                
 
                 if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
                     $("#txtFechaDevolucion").val(json.FechaDevolucion);
@@ -367,6 +401,7 @@
 
                 $("#txtDiasPrestamo").val(json.DiasDePrestamo);
                 $("#txtObservaciones").val(json.Observaciones);
+                
             }
 
             $("#FormModal").modal("show");

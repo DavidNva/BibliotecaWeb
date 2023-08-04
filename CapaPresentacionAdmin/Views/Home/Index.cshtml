@@ -125,8 +125,8 @@
                             <th>Fecha Prestamo</th>
                             <th>Lector</th>
                             <th>Libro</th>
-                            <th>Cantidad</th>
-                            <th>Estado</th>
+                            @*<th>Cantidad</th>*@
+                            <th>Estado del Préstamo</th>
                             @*<th>Total</th>*@
                             <th>Codigo</th>
                         </tr>
@@ -211,13 +211,18 @@
                         { "data": "FechaPrestamo" },
                         { "data": "Lector" },
                         { "data": "Libro" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
-                        { "data": "CantidadEjemplares" },
+                        /*{ "data": "CantidadEjemplares" },*/
                         {
                             "data": "Estado", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                                //if (valor) {/*Si el valor es verdadero*/
+                                //    return '<span class="badge bg-success">Si</span>'
+                                //} else {
+                                //    return '<span class="badge bg-danger">No</span>'
+                                //}
                                 if (valor) {/*Si el valor es verdadero*/
-                                    return '<span class="badge bg-success">Si</span>'
+                                    return '<span class="badge bg-danger">Pendiente</span>' //Si Significa que esta pendiente = 1 = Activo
                                 } else {
-                                    return '<span class="badge bg-danger">No</span>'
+                                    return '<span class="badge bg-success">Devuelto</span>' //No, Significa que el prestamo devuelto = 0 = Inactivo
                                 }
                             }
                         },
