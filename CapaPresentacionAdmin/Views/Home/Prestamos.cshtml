@@ -27,7 +27,7 @@
             <thead>
                 <tr>
                     <th></th> @*Esta columna no será visible*@
-                    <th>Estado del Préstamo</th>
+                    <th>Préstamo</th>
                     <th>Libro</th>
                     <th>Lector</th> @*listaremos como tipo persona o como listabamos categoria*@
                     @*<th>Libros Prestados</th>*@
@@ -35,7 +35,7 @@
                     <th>Fecha Devolucion</th>
                     <th>Dias de Prestamo</th>
                     <th>Observaciones</th>
-
+                    <th></th>
                     <th></th>
                 </tr>
             </thead>
@@ -64,61 +64,61 @@
 
                 <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
                     pero si es diferente a 0 significa que ya existe y vamos a editar*@
-            <div class="row g-2">
+                <div class="row g-2">
 
-                <div class="col-sm-8">
-                    <label class="form-label">Libro</label>
-                    <select id="cmbLibro" class="form-select">
-                    </select>
-                </div>
+                    <div class="col-sm-8">
+                        <label class="form-label">Libro</label>
+                        <select id="cmbLibro" class="form-select">
+                        </select>
+                    </div>
 
-                <div class="col-sm-4" id="div-SelectEjemplarDisponible">
-                    <label class="form-label" id="lblEjemplar">Ejemplar Disponible</label>
-                    <select id="cmbEjemplar" class="form-select form-select-sm">
-                    </select>
-                </div>
-                <div class="col-sm-4" id="div-EjemplarPrestado">
+                    <div class="col-sm-4" id="div-SelectEjemplarDisponible">
+                        <label class="form-label" id="lblEjemplar">Ejemplar Disponible</label>
+                        <select id="cmbEjemplar" class="form-select form-select-sm">
+                        </select>
+                    </div>
+                    <div class="col-sm-4" id="div-EjemplarPrestado">
 
-                    <label for="txtEjemplarPrestado" class="form-label" id="lblEjemplarPrestado">Ejemplar Prestado</label>
-                    <input type="number" class="form-control form-control-sm" id="txtEjemplarPrestado" disabled autocomplete="off">
-                </div>
-                <div class="col-sm-9">
-                    <label class="form-label">Lector</label>
-                    <select id="cmbLector" class="form-select">
-                    </select>
-                </div>
-                <div class="col-sm-3">
+                        <label for="txtEjemplarPrestado" class="form-label" id="lblEjemplarPrestado">Ejemplar Prestado</label>
+                        <input type="number" class="form-control form-control-sm" id="txtEjemplarPrestado" disabled autocomplete="off">
+                    </div>
+                    <div class="col-sm-9" id="div-Lector">
+                        <label class="form-label">Lector</label>
+                        <select id="cmbLector" class="form-select">
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
 
-                    <label for="txtTotalLibros" class="form-label" id="lblTotalLibros">Cantidad</label>
-                    <input type="number" class="form-control form-control-sm" id="txtTotalLibros" autocomplete="off">
-                </div>
+                        <label for="txtTotalLibros" class="form-label" id="lblTotalLibros">Cantidad</label>
+                        <input type="number" class="form-control form-control-sm" id="txtTotalLibros" autocomplete="off">
+                    </div>
 
-                <div class="col-sm-6">
-                    <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
-                    <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
-                </div>
-                <div class="col-sm-6" id="div-fechaDevolucion">
-                    <label for="txtFechaDevolucion" class="form-label" id="lblFechaDevolucion">Fecha Devolución</label>
-                    <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
-                </div>
-                <div class="col-sm-6">
-                    <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
-                    <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off" placeholder="Ingresa los días de prestamo para el libro">
-                </div>
+                    <div class="col-sm-6">
+                        <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
+                        <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6" id="div-fechaDevolucion">
+                        <label for="txtFechaDevolucion" class="form-label" id="lblFechaDevolucion">Fecha Devolución</label>
+                        <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
+                        <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off" placeholder="Ingresa los días de prestamo para el libro">
+                    </div>
 
-                <div class="col-sm-6">
-                    <label for="cmbActivo" class="form-label" id="lblActivo">Activo</label>
-                    <select id="cmbActivo" class="form-select">
-                        <option value="1">Si</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-                <div class="col-sm-12">
-                    <label for="txtObservaciones" class="form-label">Observaciones</label>
-                    <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
-                </div>
+                    <div class="col-sm-6">
+                        <label for="cmbActivo" class="form-label" id="lblActivo">Activo</label>
+                        <select id="cmbActivo" class="form-select">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12">
+                        <label for="txtObservaciones" class="form-label">Observaciones</label>
+                        <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                    </div>
 
-            </div>
+                </div>
                 <!--mensaje de alerta-->
                 <div class="row mt-2">
                     <div class="col-12">
@@ -131,6 +131,69 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------Modal 2 ---------------------------------------------------->
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModalNew" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+    <div class="modal-dialog">
+        @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel">Finalizar Préstamo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="contenedor2">
+                @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+                <input id="txtId2" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
+                    pero si es diferente a 0 significa que ya existe y vamos a editar*@
+            <div class="row g-2">
+
+                <div class="col-sm-12">
+                    <label for="txtLibro2" class="form-label fw-bold">Libro en Préstamo</label>
+                    <input type="text" class="form-control text-success" id="txtLibro2" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                </div>
+
+                <div class="col-sm-6">
+                    <label for="txtFechaPrestamo2" class="form-label fw-bold">Fecha Prestamo</label>
+                    <input type="text" class="form-control text-success" id="txtFechaPrestamo2" autocomplete="off">
+                </div>
+                <div class="col-sm-6" id="div-fechaDevolucion2">
+                    <label for="txtFechaDevolucion2" class="form-label fw-bold" id="lblFechaDevolucion2">Fecha Devolución</label>
+                    <input type="text" class="form-control text-primary" id="txtFechaDevolucion2" autocomplete="off">
+                </div>
+
+                @*<div class="col-sm-6">
+                    <label for="cmbActivo2" class="form-label" id="lblActivo2">Activo</label>
+                    <select id="cmbActivo2" class="form-select">
+                        <option value="1">Si</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>*@
+                <div class="col-sm-12">
+                    <label for="txtObservaciones2" class="form-label fw-bold">Observaciones</label>
+                    <input type="text" class="form-control text-success" id="txtObservaciones2" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                </div>
+
+            </div>
+                <!--mensaje de alerta-->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError2" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-warning">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="Guardar()"><b>Finalizar Préstamo</b></button>
             </div>
         </div>
     </div>
@@ -159,7 +222,8 @@
                 {
                     "data": "oId_Ejemplar", "render": function (data) {/*El render permite obtener el valor de la columna*/
                         return data.IdEjemplarLibro
-                    }
+                    },
+                    "visible": false
                 },
                 {
                     "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
@@ -176,8 +240,8 @@
                         return data.Titulo
                     }
                 },
-                
-               
+
+
                 {
                     "data": "oId_Lector", "render": function (data) {/*El render permite obtener el valor de la columna*/
                         return data.NombreCompletoLector
@@ -190,8 +254,17 @@
 
                /* { "data": "Tipo" },*/
                 { "data": "Observaciones" },
+                {
+                    "data": "IdPrestamo", "render": function (data, type, row, meta) {
 
-                
+                        return $("<button>").addClass("btn btn-warning btn-finalizarPrestamo btn-sm").append(
+                            $("<i>").addClass("fas fa-book")
+                        ).attr({ "data-informacionprestamo": JSON.stringify(row) })[0].outerHTML
+                    },
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "20px"
+                },
                 {
                     "data": "IdPrestamo", "render": function (data, type, row, meta) {
 
@@ -202,6 +275,7 @@
                             $("<button>").addClass("btn btn-danger btn-eliminar btn-sm ms-2").append(
                                 $("<i>").addClass("fas fa-trash")
                             ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
 
                     },
                     "orderable": false,
@@ -271,7 +345,7 @@
                 $("#cmbEjemplar").html("")//Limpia los ejemplares
                 $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
                 $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());//Vuelve a colocar el seleccionar y marcar la primera opcion
-                
+
             } else {
                 ListarEjemplar();//Cada vez que cambia lista nuevamente las Ejemplaras
                 //Si realmente se ha elegido un libro, entonces si lista los ejemplares, de esta forma se evita el error de referencia null
@@ -279,13 +353,13 @@
             //if ($("#cmbEjemplar").text() == "") {
             //    $("<option>").attr({ "value": "", "disabled": "disabled", "selected": "true" }).text("Seleccionar2").appendTo("#cmbEjemplar")
             //    $("#cmbEjemplar").val($("#cmbEjemplar option:last").val()).prop("selected", true);
-                
+
             //}
-            
-             
+
+
           })
 
-        function ListarEjemplar() {//Ejemplar 
+        function ListarEjemplar() {//Ejemplar
             $("#cmbEjemplar").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
             //Aqui se colocan los atributos de html y opciones de valor, text, etc
             //$("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
@@ -321,18 +395,10 @@
             $("#txtTotalLibros").val(1);
             $("#txtTotalLibros").attr({ "disabled": "disabled" });
             $("#lblTotalLibros").css("color", "transparent");
-            
-            //$("#div-EjemplarPrestado").val("").addClass("hidden-elements");
-            ////$("#div-SelectEjemplarDisponible").val("").removeClass("hidden-elements");
-            //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
 
+            $("#txtFechaPrestamo").val("").attr({ "disabled": "disabled" });
 
-            
-
-            $("#txtFechaPrestamo").val("").attr({ "disabled": "disabled" });;
-
-            
-            
+            //La clase hidden-elements viene de mis estilos, estilos css creados por mi
             $("#div-fechaDevolucion").val("").addClass("hidden-elements");
             $("#txtFechaDevolucion").val();//Este fecha devolucion no se utiliza para registrar, sino para editar
 
@@ -358,12 +424,10 @@
             $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
             //$("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
             //$("#txtFechaDevolucion").val("").attr({ "disabled": "disabled" });
-
             $("#mensajeError").hide();
             /*Llamamos al form modal*/
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
              * por eso esta linea*/
-
                 $("#txtId").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
                 $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
                 $("#cmbLibro").attr({ "disabled": "disabled" });
@@ -371,12 +435,9 @@
                 //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
                // $("#lblEjemplar").hide();
                 //$("#cmbEjemplar").hide();
-                
                 $("#div-EjemplarPrestado").removeClass("hidden-elements");
                 //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
                 $("#div-SelectEjemplarDisponible").val("").addClass("hidden-elements");
-
-
                 $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
                 $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
                 //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
@@ -387,25 +448,26 @@
                 $("#lblActivo").show();
                 $("#txtFechaPrestamo").val(json.FechaPrestamo).attr({ "disabled": "disabled" });;//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
                 $("#div-fechaDevolucion").val(json.FechaDevolucion).removeClass("hidden-elements");
-                
+
 
                 if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
                     $("#txtFechaDevolucion").val(json.FechaDevolucion);
                 } else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
                     $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
                 }
-                
-                
+
+
                 $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' })
                 $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' })
 
                 $("#txtDiasPrestamo").val(json.DiasDePrestamo);
                 $("#txtObservaciones").val(json.Observaciones);
-                
+
             }
 
             $("#FormModal").modal("show");
         }
+
         /*--------------- Al dar clic en el boton de editar-------------------------------*/
 
         /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
@@ -422,10 +484,73 @@
             abrirModal(json)
 
         })
+
+        function abrirModal2(json) /*json es el data del siguiente*/ {
+
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+                $("#mensajeError2").hide();
+                $("#txtId2").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
+                $("#txtLibro2").val(json.oId_Libro.Titulo).attr({ "disabled": "disabled" });;
+                ///$("#cmbLibro2").val(json.oId_Libro.IdLibro).trigger('change');
+                //$("#cmbLibro2").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar2").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                // $("#lblEjemplar").hide();
+                //$("#cmbEjemplar").hide();
+                //$("#div-EjemplarPrestado2").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible2").val("").addClass("hidden-elements");
+
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#txtEjemplarPrestado2").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#cmbActivo2").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                // y si no es true de el valor de 0*/
+                //$("#cmbActivo2").show();
+                //$("#lblActivo2").show();
+                $("#txtFechaPrestamo2").val(json.FechaPrestamo).attr({ "disabled": "disabled" });;//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
+                $("#div-fechaDevolucion2").val(json.FechaDevolucion).removeClass("hidden-elements");
+
+
+                if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
+                    $("#txtFechaDevolucion2").val(json.FechaDevolucion);
+                } else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
+                    $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                }
+
+
+                $("#txtFechaPrestamo2").datepicker({ dateFormat: 'dd/mm/yy' })
+                $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' })
+
+                $("#txtDiasPrestamo2").val(json.DiasDePrestamo);
+                $("#txtObservaciones2").val(json.Observaciones);
+
+            }
+
+            $("#FormModalNew").modal("show");
+        }
+        /*--------------- Al dar clic en el boton de editar solo fecha prestamo y activo-------------------------------*/
+
+        /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
+        $("#tabla tbody").on("click", '.btn-finalizarPrestamo', function () {
+            /*This es la misma tabla, se llama
+             tr es el row o la fila seleccionado de la tabla */
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+            //$("#div-div-Lector").val("").addClass("hidden-elements");
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            var json = $(this).data("informacionprestamo")
+            console.log(json);
+            abrirModal2(json)
+
+        })
+
         //El boton aplica 3 acciones a la base de datos
         //1. Elimina el prestamo con su id y a su vez los detallePrestamos que tenga
         //2. Actualiza el ejemplar pasando a activo = 1, reactiva el ejemplar que estaba en prestamo
-        //3. Acutaliza: Aumentando 1 ejemplar a la cantidad de ejemplares en la tabla libro ya que se reactiva un 
+        //3. Acutaliza: Aumentando 1 ejemplar a la cantidad de ejemplares en la tabla libro ya que se reactiva un
         //ejemplar,entonces se suma de nuevo ese ejemplar al total de stock o cantidad de ejemplares de libro
 
         $("#tabla tbody").on("click", '.btn-eliminar', function () {
@@ -494,12 +619,12 @@
                 FechaPrestamo: $("#txtFechaPrestamo").val(),
                 FechaDevolucion: $("#txtFechaDevolucion").val(),
                 DiasDePrestamo: $("#txtDiasPrestamo").val(),
-                
-                
+
+
                 Observaciones: $("#txtObservaciones").val(),
                 Activo: $("#cmbActivo").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
                 // * o un no (No = 0*/
-                
+
             }
             var listaCarrito = [];
             var Libro = Prestamo;

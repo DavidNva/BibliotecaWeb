@@ -122,13 +122,13 @@
                 <table id="tabla" class="display cell-border" style="width:100%">
                     <thead>
                         <tr>
-                            <th>Fecha Prestamo</th>
+                            <th>Fecha del Préstamo</th>
                             <th>Lector</th>
                             <th>Libro</th>
                             @*<th>Cantidad</th>*@
                             <th>Estado del Préstamo</th>
                             @*<th>Total</th>*@
-                            <th>Codigo</th>
+                            <th>Código</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -208,7 +208,7 @@
                         dataType: "json"
                     },
                     "columns": [/*Todas las columnas que vamos a usar*/
-                        { "data": "FechaPrestamo" },
+                        { "data": "FechaPrestamo", "width": "90px" },
                         { "data": "Lector" },
                         { "data": "Libro" },/*El nombre del segundo identificador debe ser igual al de la tabla, la columna*/
                         /*{ "data": "CantidadEjemplares" },*/
@@ -224,7 +224,8 @@
                                 } else {
                                     return '<span class="badge bg-success">Devuelto</span>' //No, Significa que el prestamo devuelto = 0 = Inactivo
                                 }
-                            }
+                            },
+                            "width": "90px"
                         },
                         { "data": "Codigo" }
 
