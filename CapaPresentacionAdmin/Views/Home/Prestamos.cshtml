@@ -128,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="footer-modal2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
             </div>
@@ -145,7 +145,7 @@
         @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
         <div class="modal-content">
             <div class="modal-header bg-warning">
-                <h5 class="modal-title fw-bold" id="exampleModalLabel">Finalizar Préstamo</h5>
+                <h5 class="modal-title fw-bold" id="exampleModalLabel2">Finalizar Préstamo</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="contenedor2">
@@ -192,8 +192,8 @@
                 </div>
             </div>
             <div class="modal-footer bg-warning">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="Guardar()"><b>Finalizar Préstamo</b></button>
+                <button type="button" class="btn btn-danger" id="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="Guardar()" id="btnFinalizarPrestamo"><b>Finalizar Préstamo</b></button>
             </div>
         </div>
     </div>
@@ -254,16 +254,64 @@
 
                /* { "data": "Tipo" },*/
                 { "data": "Observaciones" },
+                //{
+                //    "data": "IdPrestamo", "render": function (data, type, row, meta) {
+
+                //        return $("<button>").addClass("btn btn-warning btn-finalizarPrestamo btn-sm").append(
+                //            $("<i>").addClass("fas fa-sync")
+                //        ).attr({ "data-informacionprestamo": JSON.stringify(row) })[0].outerHTML
+                //    },
+                //    "orderable": false,
+                //    "searchable": false,
+                //    "width": "20px"
+                //},
                 {
                     "data": "IdPrestamo", "render": function (data, type, row, meta) {
+                    //    var btnclass = "btn btn-warning btn-finalizarprestamo btn-sm";
+                    //    var iconclass = row.fechadevolucion ? "fas fa-eye" : "fas fa-sync";
+                    //    var btntitle = row.fechadevolucion ? "finalizar préstamo" : "ver préstamo";
+                    //    return $("<button>").addclass(btnclass).append(
+                    //        $("<i>").addclass(iconclass)
+                    //    ).attr({
+                    //        "title": btntitle,
+                    //        "data-informacionprestamo": json.stringify(row)
+                    //    })[0].outerhtml;
 
-                        return $("<button>").addClass("btn btn-warning btn-finalizarPrestamo btn-sm").append(
-                            $("<i>").addClass("fas fa-book")
-                        ).attr({ "data-informacionprestamo": JSON.stringify(row) })[0].outerHTML
-                    },
-                    "orderable": false,
-                    "searchable": false,
-                    "width": "20px"
+                        var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        var iconClass = row.FechaDevolucion ? "fas fa-eye" : "fas fa-sync";
+                        var btnTitle = row.FechaDevolucion ? "Ver préstamo" : "Finalizar préstamo";
+                        var btnBgClass = row.FechaDevolucion ? "" : "btn-primary";
+                        return $("<button>").addClass(btnClass).addClass(btnBgClass).append(
+                            $("<i>").addClass(iconClass)
+                        ).attr({
+                            "title": btnTitle,
+                            "data-informacionprestamo": JSON.stringify(row)
+                        })[0].outerHTML;
+
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        //var iconClass = row.FechaDevolucion ? "fas fa-sync" : "fas fa-eye";
+                        //var btnTitle = row.FechaDevolucion ? "Finalizar préstamo" : "Ver préstamo";
+                        //var btnBgClass = row.FechaDevolucion ? "btn btn-primary" : "btn btn-primary";
+                        //return $("<button>").addClass(btnClass).addClass(btnBgClass).append(
+                        //    $("<i>").addClass(iconClass)
+                        //).attr({
+                        //    "title": btnTitle,
+                        //    "data-informacionprestamo": JSON.stringify(row)
+                        //})[0].outerHTML;
+
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        ////var btnClass1 = row.FechaDevolucion ? "btn btn-success " : "btn btn-warning";
+                        //var iconClass = row.FechaDevolucion ? "fas fa-eye" : "fas fa-sync";
+                        //var btnTitle = row.FechaDevolucion ? "Ver préstamo" : "Finalizar préstamo";
+                        //var btnBgClass = row.FechaDevolucion ? "" : "btn-primary";
+                        //return $("<button>").addClass(btnClass).addClass(btnBgClass).append(
+                        //    $("<i>").addClass(iconClass)
+                        //).attr({
+                        //    "title": btnTitle,
+                        //    "data-informacionprestamo": JSON.stringify(row)
+                        //})[0].outerHTML;
+
+                    }
                 },
                 {
                     "data": "IdPrestamo", "render": function (data, type, row, meta) {
@@ -514,9 +562,36 @@
 
 
                 if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
+                    
+                
+                    $("#exampleModalLabel2").text("Detalles del Préstamo Finalizado");
+                    $("#txtFechaDevolucion2").val("").attr({ "disabled": "disabled" });
                     $("#txtFechaDevolucion2").val(json.FechaDevolucion);
+                    $("#btnFinalizarPrestamo").attr({ "disabled": "disabled" });
+                    $("#btnFinalizarPrestamo").addClass("hidden-elements");
+                    $("#txtObservaciones2").attr({ "disabled": "disabled" });
+
+                    //La clase hidden-elements viene de mis estilos, estilos css creados por mi
+                    //$("#div-fechaDevolucion").val("").addClass("hidden-elements");
+                    $("#footer-modal2").val("").addClass("hidden-elements");
+
+                    //$("#btn-cancelar").addClass("col-12");
+
+
+                    //$(".btn-finalizarPrestamo").removeClass("fas fa-sync");
+                    //$(".btn-finalizarPrestamo").addClass("fas fa-book");
+                    //$("#footer-modal2").val("").addClass("hidden-elements");
+
                 } else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
+                    $("#exampleModalLabel2").text("Finalizar Préstamo");
+                    //$("#btn-cancelar").removeClass("col-12");
                     $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                    $("#footer-modal2").removeClass("hidden-elements");
+                    $("#btnFinalizarPrestamo").attr({ "disabled": false });
+                    $("#btnFinalizarPrestamo").removeClass("hidden-elements");
+                    $("#txtObservaciones2").attr({ "disabled": false });
+                    $("#txtFechaDevolucion2").attr({ "disabled": false });
+
                 }
 
 
@@ -543,6 +618,9 @@
             //abrirModal(data);
             var json = $(this).data("informacionprestamo")
             console.log(json);
+
+
+
             abrirModal2(json)
 
         })
