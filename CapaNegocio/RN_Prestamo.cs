@@ -130,6 +130,34 @@ namespace CapaNegocio
            
         }
 
+        public bool FinalizarPrestamo(EN_Prestamo obj, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+            //Validaciones para que la caja de texto no este vacio o con espacios
+
+            if (string.IsNullOrEmpty(obj.FechaDevolucion) || string.IsNullOrWhiteSpace(obj.FechaDevolucion))
+            {
+                Mensaje = "La fecha de devolucion del préstamo no puede ser vacio";
+            }
+            else if (obj.oId_Libro.IdLibro == 0)/*Si no ha seleccionado ninguna marca*/
+            {
+                Mensaje = "Debes seleccionar un Libro";
+            }
+            else if (string.IsNullOrEmpty(obj.Observaciones) || string.IsNullOrWhiteSpace(obj.Observaciones))
+            {
+                Mensaje = "El campo observaciones no puede ser vacio";
+
+            }
+           
+            if (string.IsNullOrEmpty(Mensaje))
+            {/*Si no hay ningun mensaje, significa que no ha habido ningun error*/
+                return objCapaDato.FinalizarPrestamo(obj, out Mensaje);
+            }
+            else
+            {
+                return false;
+            }
+        }
         //public bool Eliminar(int id, out string Mensaje)
         //{
         //    return objCapaDato.Eliminar(id, out Mensaje);

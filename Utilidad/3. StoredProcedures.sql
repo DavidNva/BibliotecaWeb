@@ -1863,6 +1863,50 @@ begin
 end 
 
 go
+create procedure sp_FinalizarPrestamo --EditarPrestamo2
+(
+    @IdPrestamo int,
+    --@FechaPrestamo date,
+    @FechaDevolucion date,
+    @Observaciones varchar(500),
+    --@DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
+	--@EjemplarActivo [Ejemplar_Activo] READONLY,
+    @IdEjemplarLibro int,--Este y el siguiente será para actualizar a activo el jemplar y el stock sumar1 al libro correspondiente
+    @IdLibro int,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin
+    SET @Resultado = 1 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+    SET @Mensaje = '' -- Asignar un valor vacío a la variable @Mensaje
+
+    IF EXISTS (SELECT * FROM Prestamo WHERE IdPrestamo = @IdPrestamo)
+    begin 
+
+        -- Convert the input date string to datetime
+        --DECLARE @FechaPrestamoDatetime datetime
+        --SET @FechaPrestamoDatetime = CONVERT(datetime, @FechaPrestamo, 3)
+
+        DECLARE @FechaDevolucionDatetime datetime
+        SET @FechaDevolucionDatetime = CONVERT(datetime, @FechaDevolucion, 3)
+
+        update Prestamo set
+        Activo = 0,--Es decir prestamo devuelto 
+        --FechaPrestamo = @FechaPrestamoDatetime,
+        FechaDevolucion = @FechaDevolucionDatetime,
+        Observaciones = @Observaciones
+        where IdPrestamo = @IdPrestamo
+        update Ejemplar set Activo = 1 where IDEjemplarLibro = @IdEjemplarLibro
+        update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
+        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+        SET @Resultado = 1 --true
+    end 
+    else 
+        SET @Mensaje = 'Error: No se pudo finalizar el préstamo. Intentelo otra vez.'
+end 
+
+go
 go
 create proc sp_EliminarPrestamo( --Trabajo como un booleano
     @IdPrestamo int,

@@ -152,36 +152,38 @@
                 @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
 
                 <input id="txtId2" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
-                    pero si es diferente a 0 significa que ya existe y vamos a editar*@
-            <div class="row g-2">
+        pero si es diferente a 0 significa que ya existe y vamos a editar*@
+                <input type="hidden" class="form-control text-success" id="txtLibroId"  >
+                <input type="hidden" class="form-control text-success" id="txtEjemplarId"  >
+                <div class="row g-2">
 
-                <div class="col-sm-12">
-                    <label for="txtLibro2" class="form-label fw-bold">Libro en Préstamo</label>
-                    <input type="text" class="form-control text-success" id="txtLibro2" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
-                </div>
+                    <div class="col-sm-12">
+                        <label for="txtLibroTitulo" class="form-label fw-bold">Libro en Préstamo</label>
+                        <input type="text" class="form-control text-success" id="txtLibroTitulo" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                    </div>
 
-                <div class="col-sm-6">
-                    <label for="txtFechaPrestamo2" class="form-label fw-bold">Fecha Prestamo</label>
-                    <input type="text" class="form-control text-success" id="txtFechaPrestamo2" autocomplete="off">
-                </div>
-                <div class="col-sm-6" id="div-fechaDevolucion2">
-                    <label for="txtFechaDevolucion2" class="form-label fw-bold" id="lblFechaDevolucion2">Fecha Devolución</label>
-                    <input type="text" class="form-control text-primary" id="txtFechaDevolucion2" autocomplete="off">
-                </div>
+                    <div class="col-sm-6">
+                        <label for="txtFechaPrestamo2" class="form-label fw-bold">Fecha Prestamo</label>
+                        <input type="text" class="form-control text-success" id="txtFechaPrestamo2" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6" id="div-fechaDevolucion2">
+                        <label for="txtFechaDevolucion2" class="form-label fw-bold" id="lblFechaDevolucion2">Fecha Devolución</label>
+                        <input type="text" class="form-control text-primary" id="txtFechaDevolucion2" autocomplete="off">
+                    </div>
 
-                @*<div class="col-sm-6">
-                    <label for="cmbActivo2" class="form-label" id="lblActivo2">Activo</label>
-                    <select id="cmbActivo2" class="form-select">
-                        <option value="1">Si</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>*@
-                <div class="col-sm-12">
-                    <label for="txtObservaciones2" class="form-label fw-bold">Observaciones</label>
-                    <input type="text" class="form-control text-success" id="txtObservaciones2" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
-                </div>
+                    @*<div class="col-sm-6">
+                <label for="cmbActivo2" class="form-label" id="lblActivo2">Activo</label>
+                <select id="cmbActivo2" class="form-select">
+                    <option value="1">Si</option>
+                    <option value="0">No</option>
+                </select>
+            </div>*@
+                    <div class="col-sm-12">
+                        <label for="txtObservaciones2" class="form-label fw-bold">Observaciones</label>
+                        <input type="text" class="form-control text-success" id="txtObservaciones2" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                    </div>
 
-            </div>
+                </div>
                 <!--mensaje de alerta-->
                 <div class="row mt-2">
                     <div class="col-12">
@@ -193,7 +195,7 @@
             </div>
             <div class="modal-footer bg-white" id="footer-modal2">
                 <button type="button" class="btn btn-danger" id="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-success" onclick="Guardar()" id="btnFinalizarPrestamo"><b>Finalizar Préstamo</b></button>
+                <button type="button" class="btn btn-success" onclick="GuardarFinalizarPrestamo()" id="btnFinalizarPrestamo"><b>Finalizar Préstamo</b></button>
             </div>
         </div>
     </div>
@@ -542,7 +544,10 @@
              * por eso esta linea*/
                 $("#mensajeError2").hide();
                 $("#txtId2").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
-                $("#txtLibro2").val(json.oId_Libro.Titulo).attr({ "disabled": "disabled" });;
+                $("#txtLibroId").val(json.oId_Libro.IdLibro).attr({ "disabled": "disabled" });
+                $("#txtLibroTitulo").val(json.oId_Libro.Titulo).attr({ "disabled": "disabled" });
+
+                $("#txtEjemplarId").val(json.oId_Ejemplar.IdEjemplarLibro).attr({ "disabled": "disabled" });
                 ///$("#cmbLibro2").val(json.oId_Libro.IdLibro).trigger('change');
                 //$("#cmbLibro2").attr({ "disabled": "disabled" });
                 //$("#cmbEjemplar2").attr({ "disabled": "disabled" });
@@ -564,8 +569,8 @@
 
 
                 if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
-                    
-                
+
+
                     $("#exampleModalLabel2").text("Detalles del Préstamo Finalizado");
                     $("#txtFechaDevolucion2").val("").attr({ "disabled": "disabled" });
                     $("#txtFechaDevolucion2").val(json.FechaDevolucion);
@@ -790,6 +795,74 @@
                         size: 14
                     });
                 }
+            });
+
+        }
+        //-----------------------Guardar finalizar PRESTAMO ---------------------------------------
+        function GuardarFinalizarPrestamo() {
+            var Prestamoconcluido = {
+                IdPrestamo: $("#txtId2").val(), /*Los dos puntos de la condicion es "si es diferente es:"
+                 el signo de interrogacion es un entonces
+                 leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
+                 pero si es diferentes es falso*/
+                oId_Lector: {
+                    IdLector: $("#cmbLector2 option:selected").val(),
+                    NombreCompletoLector: $("#cmbLector option:selected").text()
+                },
+                oId_Libro: {
+                    IdLibro: $("#txtLibroId").val(),
+                    Titulo: $("#txtLibroTitulo").val()//Se hicieron dos, el id es hidden para no tener problemas
+                },
+                oId_Ejemplar: {
+                    IdEjemplarLibro: $("#txtEjemplarId").val()
+                    //Titulo: $("#cmbLibro option:selected").text()
+                },
+                //oId_Ejemplar.IdEjemplarLibro
+                TotalLibro: $("#txtTotalLibros2").val(),
+                /*El punto val sirve para obtener un valor y para establecer un valor*/
+                FechaPrestamo: $("#txtFechaPrestamo2").val(),
+                FechaDevolucion: $("#txtFechaDevolucion2").val(),
+                DiasDePrestamo: $("#txtDiasPrestamo2").val(),
+
+
+                Observaciones: $("#txtObservaciones2").val(),
+                Activo: $("#cmbActivo2").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
+                // * o un no (No = 0*/
+
+            }
+            console.log(Prestamoconcluido)
+            jQuery.ajax({
+                    url: '@Url.Action("FinalizarPrestamo", "Home")',
+                    type: "POST",
+                data: JSON.stringify({ objeto: Prestamoconcluido }),/*Paso de valores*/
+                    /*el stringfy lo convierte a texto*/
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Prestamo
+                     * hecho en homeController*/
+                        //ELIMINAR Prestamo
+                        if (data.resultado) { /*si el resultado es verdadera)*/
+                            //tabladata.row(Prestamoseleccionado).remove().draw();
+                            tabladata.ajax.reload();
+                            $("#FormModalNew").modal("hide");
+                        }else {
+                            swal("No se pudo finalizar el préstamo", data.mensaje, "error")
+                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
+
+                    },
+                error: function (error) {
+                   // $("#contenedor2").LoadingOverlay("hide");
+                    $("#mensajeError2").text("Error Ajax");
+                    $("#mensajeError2").show();
+                },
+                beforeSend: function () {
+                    //$("#contenedor2").LoadingOverlay("show", {
+                    //    imageResizeFactor: 2,
+                    //    text: "Cargando...",
+                    //    size: 14
+                    //});
+                }
+                
             });
 
         }

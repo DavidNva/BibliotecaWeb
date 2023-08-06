@@ -215,12 +215,23 @@ namespace CapaPresentacionAdmin.Controllers
 
         //}
         [HttpPost]
+        public JsonResult FinalizarPrestamo(/*int id, int idEjemplarLibro, int idLibro */EN_Prestamo objeto)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new RN_Prestamo().FinalizarPrestamo(objeto, out mensaje);
+
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        }
+        [HttpPost]
         public JsonResult EliminarPrestamo(int id, int idEjemplarLibro, int idLibro)
         {
             bool respuesta = false;
             string mensaje = string.Empty;
 
-            respuesta = new RN_Prestamo().Eliminar(id,idEjemplarLibro, idLibro, out mensaje);
+            respuesta = new RN_Prestamo().Eliminar(id, idEjemplarLibro, idLibro, out mensaje);
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 

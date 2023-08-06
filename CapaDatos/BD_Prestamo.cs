@@ -198,6 +198,57 @@ namespace CapaDatos
             return resultado;
         }
 
+        //sp_FinalizarPrestamo
+        public bool FinalizarPrestamo(EN_Prestamo obj, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
+
+            DateTime fechaPrestamo = Convert.ToDateTime(obj.FechaPrestamo);
+
+            DateTime fechaDevolucion = Convert.ToDateTime(obj.FechaDevolucion);
+
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_FinalizarPrestamo", oConexion);
+                    cmd.Parameters.AddWithValue("IdPrestamo", obj.IdPrestamo);
+                    //cmd.Parameters.AddWithValue("Id_Lector", obj.oId_Lector.IdLector);
+                    //cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
+                    //cmd.Parameters.AddWithValue("Activo", obj.Activo);
+                    //cmd.Parameters.AddWithValue("FechaPrestamo", obj.FechaPrestamo);
+                    //cmd.Parameters.AddWithValue("FechaDevolucion", obj.FechaDevolucion);
+
+                    //cmd.Parameters.AddWithValue("FechaPrestamo", fechaPrestamo.ToString("MM-dd-yyyy"));
+                    cmd.Parameters.AddWithValue("FechaDevolucion", fechaDevolucion.ToString("MM-dd-yyyy"));
+
+                    //cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
+                    cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);
+                    cmd.Parameters.AddWithValue("IdEjemplarLibro", obj.oId_Ejemplar.IdEjemplarLibro);
+                    cmd.Parameters.AddWithValue("IdLibro", obj.oId_Libro.IdLibro);
+
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+
+            }
+            return resultado;
+        }
+
         public bool Eliminar(int id, int idEjemplarLibro, int idLibro, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = false;
