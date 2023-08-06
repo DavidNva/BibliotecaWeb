@@ -128,7 +128,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer" id="footer-modal2">
+            <div class="modal-footer" id="footer-modal">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
             </div>
@@ -191,7 +191,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer bg-warning">
+            <div class="modal-footer bg-white" id="footer-modal2">
                 <button type="button" class="btn btn-danger" id="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-success" onclick="Guardar()" id="btnFinalizarPrestamo"><b>Finalizar Préstamo</b></button>
             </div>
@@ -277,7 +277,9 @@
                     //        "data-informacionprestamo": json.stringify(row)
                     //    })[0].outerhtml;
 
-                        var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        var btnClass = row.FechaDevolucion ? "btn btn-success btn-finalizarPrestamo btn-sm" : "btn btn-danger btn-finalizarPrestamo btn-sm";
                         var iconClass = row.FechaDevolucion ? "fas fa-eye" : "fas fa-sync";
                         var btnTitle = row.FechaDevolucion ? "Ver préstamo" : "Finalizar préstamo";
                         var btnBgClass = row.FechaDevolucion ? "" : "btn-primary";
@@ -573,7 +575,11 @@
 
                     //La clase hidden-elements viene de mis estilos, estilos css creados por mi
                     //$("#div-fechaDevolucion").val("").addClass("hidden-elements");
-                    $("#footer-modal2").val("").addClass("hidden-elements");
+
+                    //$("#footer-modal2").val("").addClass("hidden-elements");**
+
+                    //$("#footer-modal2").removeClass("bg-warning");
+                    //$("#footer-modal2").val("").addClass("bg-white");
 
                     //$("#btn-cancelar").addClass("col-12");
 
@@ -586,7 +592,9 @@
                     $("#exampleModalLabel2").text("Finalizar Préstamo");
                     //$("#btn-cancelar").removeClass("col-12");
                     $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
-                    $("#footer-modal2").removeClass("hidden-elements");
+                    //$("#footer-modal2").removeClass("hidden-elements");**
+                    //$("#footer-modal2").removeClass("bg-warning");
+                    //$("#footer-modal2").val("").addClass("bg-white");
                     $("#btnFinalizarPrestamo").attr({ "disabled": false });
                     $("#btnFinalizarPrestamo").removeClass("hidden-elements");
                     $("#txtObservaciones2").attr({ "disabled": false });
