@@ -139,6 +139,10 @@ namespace CapaNegocio
             {
                 Mensaje = "La fecha de devolucion del préstamo no puede ser vacio";
             }
+            else if (Convert.ToDateTime(obj.FechaDevolucion) < Convert.ToDateTime(obj.FechaPrestamo))
+            {
+                Mensaje = "La fecha de devolución no puede ser menor que la fecha de préstamo";
+            }
             else if (obj.oId_Libro.IdLibro == 0)/*Si no ha seleccionado ninguna marca*/
             {
                 Mensaje = "Debes seleccionar un Libro";

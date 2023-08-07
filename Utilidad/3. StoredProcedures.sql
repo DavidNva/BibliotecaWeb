@@ -2026,3 +2026,7 @@ select * from fn_obtenerCarritoLector(20)
 
 delete carrito where idlibro = 1
 
+
+select * from prestamo
+select * from DetallePrestamo
+select * from libro

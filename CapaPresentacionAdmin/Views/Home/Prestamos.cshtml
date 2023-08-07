@@ -863,7 +863,9 @@
                             tabladata.ajax.reload();
                             $("#FormModalNew").modal("hide");
                         }else {
-                            swal("No se pudo finalizar el préstamo", data.mensaje, "error")
+                            $("#mensajeError2").text(data.mensaje);
+                            $("#mensajeError2").show();
+                            //swal("No se pudo finalizar el préstamo", data.mensaje, "error")
                         }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
 
                     },
