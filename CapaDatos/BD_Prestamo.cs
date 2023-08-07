@@ -168,12 +168,12 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("IdPrestamo", obj.IdPrestamo);
                     cmd.Parameters.AddWithValue("Id_Lector", obj.oId_Lector.IdLector);
                     cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
-                    cmd.Parameters.AddWithValue("Activo", obj.Activo); 
+                    //cmd.Parameters.AddWithValue("Activo", obj.Activo); 
                     //cmd.Parameters.AddWithValue("FechaPrestamo", obj.FechaPrestamo);
                     //cmd.Parameters.AddWithValue("FechaDevolucion", obj.FechaDevolucion);
 
                     cmd.Parameters.AddWithValue("FechaPrestamo", fechaPrestamo.ToString("MM-dd-yyyy"));
-                    cmd.Parameters.AddWithValue("FechaDevolucion", fechaDevolucion.ToString("MM-dd-yyyy"));
+                    //cmd.Parameters.AddWithValue("FechaDevolucion", fechaDevolucion.ToString("MM-dd-yyyy"));
 
                     cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
                     cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);

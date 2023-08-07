@@ -90,29 +90,29 @@
                     <div class="col-sm-3">
 
                         <label for="txtTotalLibros" class="form-label" id="lblTotalLibros">Cantidad</label>
-                        <input type="number" class="form-control form-control-sm" id="txtTotalLibros" autocomplete="off">
+                        <input type="number" class="form-control form-control-sm" id="txtTotalLibros" maxlength="1" autocomplete="off">
                     </div>
 
                     <div class="col-sm-6">
                         <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
                         <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
                     </div>
-                    <div class="col-sm-6" id="div-fechaDevolucion">
+                    @*<div class="col-sm-6" id="div-fechaDevolucion">
                         <label for="txtFechaDevolucion" class="form-label" id="lblFechaDevolucion">Fecha Devolución</label>
                         <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
-                    </div>
+                    </div>*@
                     <div class="col-sm-6">
                         <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
-                        <input type="number" class="form-control" id="txtDiasPrestamo" autocomplete="off" placeholder="Ingresa los días de prestamo para el libro">
+                        <input type="number" class="form-control" id="txtDiasPrestamo" maxlength="2" autocomplete="off" placeholder="Ingresa los días de prestamo para el libro">
                     </div>
 
-                    <div class="col-sm-6">
+                    @*<div class="col-sm-6">
                         <label for="cmbActivo" class="form-label" id="lblActivo">Activo</label>
                         <select id="cmbActivo" class="form-select">
                             <option value="1">Si</option>
                             <option value="0">No</option>
                         </select>
-                    </div>
+                    </div>*@
                     <div class="col-sm-12">
                         <label for="txtObservaciones" class="form-label">Observaciones</label>
                         <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
@@ -252,7 +252,7 @@
                /* { "data": "TotalLibro" },*/
                 { "data": "FechaPrestamo" },
                 { "data": "FechaDevolucion" },
-                { "data": "DiasDePrestamo" },
+                { "data": "DiasDePrestamo", "visible": false  },
 
                /* { "data": "Tipo" },*/
                 { "data": "Observaciones" },
@@ -635,7 +635,22 @@
 
 
             abrirModal2(json)
+            $("#txtFechaPrestamo2, #txtFechaDevolucion2").change(function () {
+                var fechaPrestamo = Date.parse($("#txtFechaPrestamo2").val());
+                var fechaDevolucion = Date.parse($("#txtFechaDevolucion2").val());
 
+                if (fechaDevolucion < fechaPrestamo) {
+                    //alert("");
+                    //swal("Error", "La fecha de devolución no puede ser menor que la fecha de préstamo", "error")
+
+                    //$("#txtFechaDevolucion2").val('');
+                    $("#mensajeError2").text("La fecha de devolución no puede ser menor que la fecha de préstamo");
+                    $("#mensajeError2").show();
+                    //$("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                } else {
+                    $("#mensajeError2").hide();
+                }
+            });
         })
 
         //El boton aplica 3 acciones a la base de datos
@@ -800,6 +815,8 @@
         }
         //-----------------------Guardar finalizar PRESTAMO ---------------------------------------
         function GuardarFinalizarPrestamo() {
+
+
             var Prestamoconcluido = {
                 IdPrestamo: $("#txtId2").val(), /*Los dos puntos de la condicion es "si es diferente es:"
                  el signo de interrogacion es un entonces

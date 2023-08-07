@@ -88,10 +88,10 @@ namespace CapaNegocio
             {
                 Mensaje = "La fecha del préstamo no puede ser vacio";
             }
-            else if (string.IsNullOrEmpty(obj.FechaDevolucion) || string.IsNullOrWhiteSpace(obj.FechaDevolucion))
-            {
-                Mensaje = "La fecha de devolucion del préstamo no puede ser vacio";
-            }
+            //else if (string.IsNullOrEmpty(obj.FechaDevolucion) || string.IsNullOrWhiteSpace(obj.FechaDevolucion))
+            //{
+            //    Mensaje = "La fecha de devolucion del préstamo no puede ser vacio";
+            //}
             else if (obj.DiasDePrestamo == 0)
             {
                 Mensaje = "Debe ingresar los dias de préstamo del libro -> El valor debe ser mayor a 0";

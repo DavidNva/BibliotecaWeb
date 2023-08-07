@@ -1821,9 +1821,9 @@ create procedure sp_EditarPrestamo
     @IdPrestamo int,
     @Id_Lector int,
     @TotalLibro int,
-    @Activo bit,
+    --@Activo bit,
     @FechaPrestamo date,
-    @FechaDevolucion date,
+    --@FechaDevolucion date,
     @DiasDePrestamo int,
     @Observaciones varchar(500),
     --@DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
@@ -1843,15 +1843,15 @@ begin
         DECLARE @FechaPrestamoDatetime datetime
         SET @FechaPrestamoDatetime = CONVERT(datetime, @FechaPrestamo, 3)
 
-        DECLARE @FechaDevolucionDatetime datetime
-        SET @FechaDevolucionDatetime = CONVERT(datetime, @FechaDevolucion, 3)
+        -- DECLARE @FechaDevolucionDatetime datetime
+        -- SET @FechaDevolucionDatetime = CONVERT(datetime, @FechaDevolucion, 3)
 
         update Prestamo set
         ID_Lector = @Id_Lector,
         TotalLibro = @TotalLibro,
-        Activo = @Activo, 
+        --Activo = @Activo, 
         FechaPrestamo = @FechaPrestamoDatetime,
-        FechaDevolucion = @FechaDevolucionDatetime,
+        --FechaDevolucion = @FechaDevolucionDatetime,
         DiasDePrestamo = @DiasDePrestamo, 
         Observaciones = @Observaciones
         where IdPrestamo = @IdPrestamo
@@ -1859,9 +1859,8 @@ begin
         SET @Resultado = 1 --true
     end 
     else 
-        SET @Mensaje = 'El Préstamo no pudo ser realizado'
+        SET @Mensaje = 'El préstamo no pudo ser actualizado'
 end 
-
 go
 create procedure sp_FinalizarPrestamo --EditarPrestamo2
 (
