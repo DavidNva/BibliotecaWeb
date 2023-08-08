@@ -566,8 +566,6 @@ begin
     else 
         set @Mensaje = 'El correo del usuario ya existe'
 end
-GO
-select * from usuario
 go
 create proc sp_EliminarUsuario( --Trabajo como un booleano
     @IdUsuario int,
@@ -1065,11 +1063,23 @@ begin
     else 
         set @Mensaje = 'El correo del lector ya existe'
 end
+go
+create proc sp_EliminarLector( --Trabajo como un booleano
+    @IdLector int,
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin 
+    SET @Resultado = 0 --false
+    begin
+        delete top(1) from Lector where IDLector = @IdLector
+        set @Resultado = 1 --true
+    end 
+    if(@Resultado != 1)
+        set @Mensaje = 'Error: No se pudo elimnar el lector. Intentelo de nuevo'
+end
 GO
-
-SELECT * from  Libro
-
-delete from libro where idLibro = 19
 go
 --PROCEDIMIENTOS PARA LIBRO
 create procedure sp_RegistrarLibro(

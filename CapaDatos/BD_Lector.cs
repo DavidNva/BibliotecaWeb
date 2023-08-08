@@ -96,6 +96,40 @@ namespace CapaDatos
             return resultado;
         }
 
+        public bool Eliminar(int id, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = false;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_EliminarLector", oConexion);
+                    cmd.Parameters.AddWithValue("IdLector", id);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+
+                    cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+
+            }
+            return resultado;
+        }
+
         public List<EN_Lector> Listar()
         {
             List<EN_Lector> lista = new List<EN_Lector>();

@@ -407,6 +407,16 @@ namespace CapaPresentacionAdmin.Controllers
         //        return View();
         //    }
         //}
+        [HttpPost]
+        public JsonResult EliminarLector(int id)
+        {
+            bool respuesta = false;
+            string mensaje = string.Empty;
+
+            respuesta = new RN_Lector().Eliminar(id, out mensaje);
+            return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+
+        }
         #endregion
     }
 }

@@ -3,6 +3,9 @@
     ViewBag.Title = "Lectores";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<link href="~/Content/misestilos.css" rel="stylesheet" />
+
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="#">Resumen</a></li>
     <li class="breadcrumb-item active">Lectores</li>
@@ -55,7 +58,7 @@
     al momento de precionar el boton nuevo-->
 <div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     @*Esto ultimo de data-bs-backdrop es para*@
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
@@ -69,49 +72,49 @@
                     pero si es diferente a 0 significa que ya existe y vamos a editar*@
             <div class="row g-2">
 
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <label for="txtNombres" class="form-label">Nombres</label>
-                    <input type="text" class="form-control" id="txtNombres" autocomplete="off">
+                    <input type="text" class="form-control" id="txtNombres" autocomplete="off" placeholder="Ejemplo: Luis">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <label for="txtApellidos" class="form-label">Apellidos</label>
-                    <input type="text" class="form-control" id="txtApellidos" autocomplete="off">
+                    <input type="text" class="form-control" id="txtApellidos" autocomplete="off" placeholder="Ejemplo: Cabrera Lobato">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-2">
                     <label for="txtEdad" class="form-label">Edad</label>
-                    <input type="number" class="form-control" id="txtEdad" autocomplete="off">
+                    <input type="number" class="form-control" id="txtEdad" autocomplete="off" placeholder="#Edad">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <label for="txtEscuela" class="form-label">Escuela</label>
-                    <input type="text" class="form-control" id="txtEscuela" autocomplete="off">
+                    <input type="text" class="form-control" id="txtEscuela" autocomplete="off" placeholder="Nombre de la Escuela">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <label for="txtGradoGrupo" class="form-label">Grado/Grupo</label>
-                    <input type="text" class="form-control" id="txtGradoGrupo" autocomplete="off">
+                    <input type="text" class="form-control" id="txtGradoGrupo" autocomplete="off" placeholder="Ejemplo: Sexto A">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <label for="txtCiudad" class="form-label">Ciudad</label>
-                    <input type="text" class="form-control" id="txtCiudad" autocomplete="off">
+                    <input type="text" class="form-control" id="txtCiudad" autocomplete="off" placeholder="Ejemplo: Zacatlán">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <label for="txtCalle" class="form-label">Calle</label>
-                    <input type="text" class="form-control" id="txtCalle" autocomplete="off">
+                    <input type="text" class="form-control" id="txtCalle" autocomplete="off" placeholder="Ej: Juan Nepomuceno Mendez">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-3">
                     <label for="txtTelefono" class="form-label">Teléfono</label>
-                    <input type="tel" class="form-control" id="txtTelefono" autocomplete="off">
+                    <input type="tel" class="form-control" id="txtTelefono" autocomplete="off" placeholder="Ej: 7647382728">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <label for="txtCorreo" class="form-label">Correo</label>
-                    <input type="email" class="form-control" id="txtCorreo" autocomplete="off">
+                    <input type="email" class="form-control" id="txtCorreo" autocomplete="off" placeholder="example@gmail.com">
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6" id="div-clave">
                     <label for="txtClave" class="form-label">Contraseña</label>
-                    <input type="password" class="form-control" id="txtClave" autocomplete="off">
+                    <input type="password" class="form-control" id="txtClave" autocomplete="off" placeholder="Ingresa una contraseña">
                 </div>
-                <div class="col-sm-12">
+                <div class="col-sm-6" id="div-confirmarClave">
                     <label for="txtConfirmarClave" class="form-label">Confirmar Contraseña</label>
-                    <input type="password" class="form-control" id="txtConfirmarClave" autocomplete="off">
+                    <input type="password" class="form-control" id="txtConfirmarClave" autocomplete="off" placeholder="Confirma tu contraseña">
                 </div>
                 <div class="col-sm-6">
                     <label for="cmbGenero" class="form-label">Género</label>
@@ -234,6 +237,10 @@
             $("#cmbActivo").val(1);
 
 
+            $("#div-clave").removeClass("hidden-elements");
+            
+            $("#div-confirmarClave").removeClass("hidden-elements");
+
             $("#mensajeError").hide();
             /*Llamamos al form modal*/
             if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
@@ -251,6 +258,8 @@
                 $("#cmbGenero").val(json.Genero == true ? 1 : 0);
                 $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
                  y si no es true de el valor de 0*/
+                $("#div-clave").addClass("hidden-elements");
+                $("#div-confirmarClave").addClass("hidden-elements");
 
             }
 
