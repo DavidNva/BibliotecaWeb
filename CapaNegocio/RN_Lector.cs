@@ -25,7 +25,6 @@ namespace CapaNegocio
         public int Registrar(EN_Lector obj, out string Mensaje)
         {
             Mensaje = string.Empty;
-          
             
             //Validaciones para que la caja de texto no este vacio o con espacios
             if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres))
@@ -91,7 +90,60 @@ namespace CapaNegocio
 
         public bool Editar(EN_Lector obj, out string Mensaje)
         {
-            return objCapaDato.Editar(obj, out Mensaje);
+            Mensaje = string.Empty;
+
+            //Validaciones para que la caja de texto no este vacio o con espacios
+            if (string.IsNullOrEmpty(obj.Nombres) || string.IsNullOrWhiteSpace(obj.Nombres))
+            {
+                Mensaje = "El nombre del lector no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Apellidos) || string.IsNullOrWhiteSpace(obj.Apellidos))
+            {
+                Mensaje = "Los apellidos del lector no puede ser vacio";
+            }
+            else if (obj.Edad == 0)
+            {
+                Mensaje = "Debe ingresar una edad válida";
+            }
+            else if (obj.Edad > 125)
+            {
+                Mensaje = "El rango de edad válido es entre 1 - 125";
+            }
+            else if (string.IsNullOrEmpty(obj.Escuela) || string.IsNullOrWhiteSpace(obj.Escuela))
+            {
+                Mensaje = "La escuela del lector no puede ser vacio";//Por default tendra NINGUNA por si el lector no asiste a alguna escuela
+            }
+            else if (string.IsNullOrEmpty(obj.GradoGrupo) || string.IsNullOrWhiteSpace(obj.GradoGrupo))
+            {
+                Mensaje = "El grado y el grupo del lector no puede ser vacio";
+            }
+            else if (string.IsNullOrEmpty(obj.Ciudad) || string.IsNullOrWhiteSpace(obj.Ciudad))
+            {
+                Mensaje = "La ciudad del lector no puede ser vacio";//Por default tendra NINGUNA por si el lector no asiste a alguna escuela
+            }
+            else if (string.IsNullOrEmpty(obj.Calle) || string.IsNullOrWhiteSpace(obj.Calle))
+            {
+                Mensaje = "La calle del lector no puede ser vacio";//Por default tendra NINGUNA por si el lector no asiste a alguna escuela
+            }
+            else if (string.IsNullOrEmpty(obj.Telefono) || string.IsNullOrWhiteSpace(obj.Telefono))
+            {
+                Mensaje = "El teléfono del lector no puede ser vacio";//Por default tendra NINGUNA por si el lector no asiste a alguna escuela
+            }
+            else if (string.IsNullOrEmpty(obj.Correo) || string.IsNullOrWhiteSpace(obj.Correo))
+            {
+                Mensaje = "El correo del lector no puede ser vacio";
+            }
+           
+            if (string.IsNullOrEmpty(Mensaje))
+            {/*Si no hay ningun mensaje, significa que no ha habido ningun error*/
+
+                return objCapaDato.Editar(obj, out Mensaje);
+            }
+            else
+            {
+                return false;/*No se ha creado un usuario*/
+            }
+            
         }
 
         public bool CambiarClave(int idLector, string nuevaClave, out string Mensaje)

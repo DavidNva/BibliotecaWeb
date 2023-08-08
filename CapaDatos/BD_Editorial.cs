@@ -17,7 +17,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "SELECT IdEditorial, Descripcion, Activo FROM Editorial";
+                    string query = "SELECT IdEditorial, Descripcion, Activo FROM Editorial order by IdEditorial desc";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
 

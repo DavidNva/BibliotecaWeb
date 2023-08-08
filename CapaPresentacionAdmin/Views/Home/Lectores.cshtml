@@ -423,7 +423,8 @@
 
                         if (data.resultado != 0) {
                             Lector.IdLector = data.resultado;
-                            tabladata.row.add(Lector).draw(false);
+                            tabladata.ajax.reload();
+                            //tabladata.row.add(Lector).draw(false);
 
                             $("#FormModal").modal("hide");
                         } else {

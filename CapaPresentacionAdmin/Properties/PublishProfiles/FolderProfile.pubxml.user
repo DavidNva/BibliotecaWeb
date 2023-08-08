@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Biblioteca</_PublishTargetUrl>
-    <History>True|2023-07-26T17:58:42.2699754Z;</History>
+    <_PublishTargetUrl>C:\Users\David Nava\Documents\BibliotecaD</_PublishTargetUrl>
+    <History>True|2023-08-08T15:54:47.2084535Z;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -16,28 +16,28 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/10/2013 17:29:20</publishTime>
     </File>
     <File Include="bin/CapaDatos.dll">
-      <publishTime>07/26/2023 11:56:16</publishTime>
+      <publishTime>08/08/2023 09:54:28</publishTime>
     </File>
     <File Include="bin/CapaDatos.pdb">
-      <publishTime>07/26/2023 11:56:16</publishTime>
+      <publishTime>08/08/2023 09:54:28</publishTime>
     </File>
     <File Include="bin/CapaEntidad.dll">
-      <publishTime>07/24/2023 14:04:18</publishTime>
+      <publishTime>08/08/2023 09:54:24</publishTime>
     </File>
     <File Include="bin/CapaEntidad.pdb">
-      <publishTime>07/24/2023 14:04:18</publishTime>
+      <publishTime>08/08/2023 09:54:24</publishTime>
     </File>
     <File Include="bin/CapaNegocio.dll">
-      <publishTime>07/26/2023 11:56:20</publishTime>
+      <publishTime>08/08/2023 09:54:30</publishTime>
     </File>
     <File Include="bin/CapaNegocio.pdb">
-      <publishTime>07/26/2023 11:56:20</publishTime>
+      <publishTime>08/08/2023 09:54:30</publishTime>
     </File>
     <File Include="bin/CapaPresentacionAdmin.dll">
-      <publishTime>07/26/2023 11:58:28</publishTime>
+      <publishTime>08/08/2023 09:54:34</publishTime>
     </File>
     <File Include="bin/CapaPresentacionAdmin.pdb">
-      <publishTime>07/26/2023 11:58:28</publishTime>
+      <publishTime>08/08/2023 09:54:34</publishTime>
     </File>
     <File Include="bin/ClosedXML.dll">
       <publishTime>12/16/2020 03:59:08</publishTime>
@@ -855,6 +855,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Content/jquery-ui.theme.css">
       <publishTime>06/27/2023 11:46:12</publishTime>
     </File>
+    <File Include="Content/misestilos.css">
+      <publishTime>08/02/2023 14:02:02</publishTime>
+    </File>
     <File Include="Content/regular.css">
       <publishTime>06/19/2023 17:32:46</publishTime>
     </File>
@@ -1243,7 +1246,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>06/20/2023 16:55:36</publishTime>
     </File>
     <File Include="Views/Acceso/CambiarClave.cshtml">
-      <publishTime>06/29/2023 11:29:32</publishTime>
+      <publishTime>07/27/2023 09:58:40</publishTime>
     </File>
     <File Include="Views/Acceso/Index.cshtml">
       <publishTime>06/29/2023 11:59:30</publishTime>
@@ -1252,13 +1255,16 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>06/30/2023 11:32:26</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>07/26/2023 11:50:00</publishTime>
+      <publishTime>08/05/2023 08:10:00</publishTime>
     </File>
     <File Include="Views/Home/Lectores.cshtml">
-      <publishTime>07/02/2023 16:36:26</publishTime>
+      <publishTime>08/04/2023 11:16:16</publishTime>
+    </File>
+    <File Include="Views/Home/Prestamos.cshtml">
+      <publishTime>08/08/2023 09:52:52</publishTime>
     </File>
     <File Include="Views/Home/Usuarios.cshtml">
-      <publishTime>06/28/2023 12:12:02</publishTime>
+      <publishTime>08/03/2023 16:34:36</publishTime>
     </File>
     <File Include="Views/Mantenedor/Autor.cshtml">
       <publishTime>06/24/2023 14:24:26</publishTime>
@@ -1282,7 +1288,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>06/19/2023 16:51:10</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>07/26/2023 10:47:04</publishTime>
+      <publishTime>07/27/2023 10:00:04</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>06/19/2023 16:51:10</publishTime>

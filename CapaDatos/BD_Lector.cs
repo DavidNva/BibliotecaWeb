@@ -62,10 +62,14 @@ namespace CapaDatos
             {
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
-                    SqlCommand cmd = new SqlCommand("sp_EditarUsuario", oConexion);
-                    cmd.Parameters.AddWithValue("IDUsuario", obj.IdLector);
+                    SqlCommand cmd = new SqlCommand("sp_EditarLector", oConexion);
+                    cmd.Parameters.AddWithValue("IdLector", obj.IdLector);
                     cmd.Parameters.AddWithValue("Nombres", obj.Nombres);
                     cmd.Parameters.AddWithValue("Apellidos", obj.Apellidos);
+                    cmd.Parameters.AddWithValue("Edad", obj.Edad);
+                    cmd.Parameters.AddWithValue("Genero", obj.Genero);
+                    cmd.Parameters.AddWithValue("Escuela", obj.Escuela);
+                    cmd.Parameters.AddWithValue("GradoGrupo", obj.GradoGrupo);
                     cmd.Parameters.AddWithValue("Ciudad", obj.Ciudad);
                     cmd.Parameters.AddWithValue("Calle", obj.Calle);
                     cmd.Parameters.AddWithValue("Telefono", obj.Telefono);
@@ -99,7 +103,7 @@ namespace CapaDatos
             {
                 using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
                 {
-                    string query = "select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer, Activo from Lector";
+                    string query = "select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer, Activo from Lector order by IdLector desc";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.CommandType = CommandType.Text;/*En este caso es de tipo Text (no usamos para este ejemplo, procedimientos almacenados*/
 

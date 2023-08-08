@@ -432,13 +432,6 @@ begin
 end
 go
 
-
-
-
-
-
-
-
 -- CREATE PROCEDURE sp_RegistrarAutor ( @NombreAutor varchar(40), @ApellidosAutor varchar(40)) --Hay un indice unico para el nombre completo de autor
 -- AS
 -- BEGIN
@@ -1029,7 +1022,50 @@ go
 --               Libro esta referenciado a ejemplar, y ejemplar esta referenciado a prestamo
 --               Por eso para poder eliminar libro, las foreign key de estos debe ser cascade
 -- */
+GO
+create proc sp_EditarLector(
+    @IdLector int,
+    @Nombres varchar(100),--Tiene indice compuesto con Apellidos
+    @Apellidos varchar(100),--Tiene indice compuesto con Nombre
+    @Edad tinyint, --Tiene un check (0 - 125)
+    @Genero bit, --H = 1 o M = 0
+    @Escuela nvarchar(100) null,
+    @GradoGrupo nvarchar(100) null,
+    @Ciudad nvarchar(100),
+    @Calle nvarchar(100),
+    @Telefono varchar(20),
+    @Correo nvarchar(100),--Puede ser null
+    --@Clave nvarchar(150),
+    @Activo bit,
+    @Mensaje varchar(500) output,
+    @Resultado int output
 
+)
+as
+begin 
+    SET @Resultado = 0
+    IF NOT EXISTS (SELECT * FROM Lector WHERE Correo = @Correo and IdLector != @IdLector)
+    begin 
+        update top(1) Lector set 
+        Nombres = @Nombres,
+        Apellidos  = @Apellidos,
+        Edad  = @Edad,
+        Genero  = @Genero,
+        Escuela  = @Escuela,
+        GradoGrupo  = @GradoGrupo,
+        Ciudad = @Ciudad,
+        Calle = @Calle,
+        Telefono = @Telefono,
+        Correo = @Correo,
+      
+        Activo = @Activo
+        where IdLector = @IdLector
+        set @Resultado = 1
+    end 
+    else 
+        set @Mensaje = 'El correo del lector ya existe'
+end
+GO
 
 SELECT * from  Libro
 

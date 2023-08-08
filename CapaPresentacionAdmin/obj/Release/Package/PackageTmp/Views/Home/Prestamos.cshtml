@@ -1,0 +1,889 @@
+﻿
+@{
+    ViewBag.Title = "Prestamos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="~/Content/misestilos.css" rel="stylesheet" />
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="#">Resumen</a></li>
+    <li class="breadcrumb-item active">Prestamos</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+
+        <i class="fas fa-landmark me-1"></i>Lista de Prestamos
+    </div>
+    <div class="card-body">
+        @*boostrap es como manejar una hoja en excel*@
+        <div class="row">
+            <div class="col-12">
+                @*numero de filas*@
+                <button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+            </div>
+        </div>
+        <hr /> @*el id es para identificar la tabla*@
+        <table id="tabla" class="display cell-border" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th> @*Esta columna no será visible*@
+                    <th>Préstamo</th>
+                    <th>Libro</th>
+                    <th>Lector</th> @*listaremos como tipo persona o como listabamos categoria*@
+                    @*<th>Libros Prestados</th>*@
+                    <th>Fecha Prestamo</th>
+                    <th>Fecha Devolucion</th>
+                    <th>Dias de Prestamo</th>
+                    <th>Observaciones</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @*ajax va permitir por ejemplo, hacer la ejecuciion del metodo listarPrestamo llamada en el HomeControler*@
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+    <div class="modal-dialog">
+        @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Prestamo</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="contenedor">
+                @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+                <input id="txtId" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
+                    pero si es diferente a 0 significa que ya existe y vamos a editar*@
+                <div class="row g-2">
+
+                    <div class="col-sm-8">
+                        <label class="form-label">Libro</label>
+                        <select id="cmbLibro" class="form-select">
+                        </select>
+                    </div>
+
+                    <div class="col-sm-4" id="div-SelectEjemplarDisponible">
+                        <label class="form-label" id="lblEjemplar">Ejemplar Disponible</label>
+                        <select id="cmbEjemplar" class="form-select form-select-sm">
+                        </select>
+                    </div>
+                    <div class="col-sm-4" id="div-EjemplarPrestado">
+
+                        <label for="txtEjemplarPrestado" class="form-label" id="lblEjemplarPrestado">Ejemplar Prestado</label>
+                        <input type="number" class="form-control form-control-sm" id="txtEjemplarPrestado" disabled autocomplete="off">
+                    </div>
+                    <div class="col-sm-9" id="div-Lector">
+                        <label class="form-label">Lector</label>
+                        <select id="cmbLector" class="form-select">
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+
+                        <label for="txtTotalLibros" class="form-label" id="lblTotalLibros">Cantidad</label>
+                        <input type="number" class="form-control form-control-sm" id="txtTotalLibros" maxlength="1" autocomplete="off">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtFechaPrestamo" class="form-label">Fecha Prestamo</label>
+                        <input type="text" class="form-control" id="txtFechaPrestamo" autocomplete="off">
+                    </div>
+                    @*<div class="col-sm-6" id="div-fechaDevolucion">
+                        <label for="txtFechaDevolucion" class="form-label" id="lblFechaDevolucion">Fecha Devolución</label>
+                        <input type="text" class="form-control" id="txtFechaDevolucion" autocomplete="off">
+                    </div>*@
+                    <div class="col-sm-6">
+                        <label for="txtDiasPrestamo" class="form-label">Dias de Prestamo</label>
+                        <input type="number" class="form-control" id="txtDiasPrestamo" maxlength="2" autocomplete="off" placeholder="Ingresa los días de prestamo para el libro">
+                    </div>
+
+                    @*<div class="col-sm-6">
+                        <label for="cmbActivo" class="form-label" id="lblActivo">Activo</label>
+                        <select id="cmbActivo" class="form-select">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>*@
+                    <div class="col-sm-12">
+                        <label for="txtObservaciones" class="form-label">Observaciones</label>
+                        <input type="text" class="form-control" id="txtObservaciones" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                    </div>
+
+                </div>
+                <!--mensaje de alerta-->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="footer-modal">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!------------------------------------------------Modal 2 ---------------------------------------------------->
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModalNew" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+    <div class="modal-dialog">
+        @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title fw-bold" id="exampleModalLabel2">Finalizar Préstamo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="contenedor2">
+                @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+                <input id="txtId2" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
+        pero si es diferente a 0 significa que ya existe y vamos a editar*@
+                <input type="hidden" class="form-control text-success" id="txtLibroId"  >
+                <input type="hidden" class="form-control text-success" id="txtEjemplarId"  >
+                <div class="row g-2">
+
+                    <div class="col-sm-12">
+                        <label for="txtLibroTitulo" class="form-label fw-bold">Libro en Préstamo</label>
+                        <input type="text" class="form-control text-success" id="txtLibroTitulo" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="txtFechaPrestamo2" class="form-label fw-bold">Fecha Prestamo</label>
+                        <input type="text" class="form-control text-success" id="txtFechaPrestamo2" autocomplete="off">
+                    </div>
+                    <div class="col-sm-6" id="div-fechaDevolucion2">
+                        <label for="txtFechaDevolucion2" class="form-label fw-bold" id="lblFechaDevolucion2">Fecha Devolución</label>
+                        <input type="text" class="form-control text-primary" id="txtFechaDevolucion2" autocomplete="off">
+                    </div>
+
+                    @*<div class="col-sm-6">
+                <label for="cmbActivo2" class="form-label" id="lblActivo2">Activo</label>
+                <select id="cmbActivo2" class="form-select">
+                    <option value="1">Si</option>
+                    <option value="0">No</option>
+                </select>
+            </div>*@
+                    <div class="col-sm-12">
+                        <label for="txtObservaciones2" class="form-label fw-bold">Observaciones</label>
+                        <input type="text" class="form-control text-success" id="txtObservaciones2" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                    </div>
+
+                </div>
+                <!--mensaje de alerta-->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError2" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-white" id="footer-modal2">
+                <button type="button" class="btn btn-danger" id="btn-cancelar" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="GuardarFinalizarPrestamo()" id="btnFinalizarPrestamo"><b>Finalizar Préstamo</b></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        //BIEN
+        var tabladata;
+        var filaSeleccionada;/*Son variables globales para se usada por lo que este dentro */
+
+        //el hastash significa que se refiere a un id, entonces llama o igual la variable a una tabla declarada
+        //anteriormente en el html de arriba con id que se llama tabla
+        tabladata = $("#tabla").DataTable({
+            responsive: true,/*Para que sea resposiva*/
+            ordering: false,
+            "ajax": {/*Como pinta la tabla, ajax solo trae todos los valores*/
+                url: '@Url.Action("ListarPrestamosCompleto", "Home")',
+                type: "GET",
+                dataType: "json"
+            },
+            "columns": [/*Todas las columnas que vamos a usar*/
+                /*El data s el origen que se esta llamando en su controlar Home cuando igualamos en el jsnundata
+                 y el seguno valor es como se llama la columna*/
+                {
+                    "data": "oId_Ejemplar", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.IdEjemplarLibro
+                    },
+                    "visible": false
+                },
+                {
+                    "data": "Activo", "render": function (valor) {/*El render permite obtener el valor de la columna activo*/
+                        if (valor) {/*Si el valor es verdadero*/
+                            return '<span class="badge bg-danger">Pendiente</span>' //Si Significa que esta pendiente = 1 = Activo
+                        } else {
+                            return '<span class="badge bg-success">Devuelto</span>' //No, Significa que el prestamo devuelto = 0 = Inactivo
+                        }
+                    }
+
+                },
+                {
+                    "data": "oId_Libro", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.Titulo
+                    }
+                },
+
+
+                {
+                    "data": "oId_Lector", "render": function (data) {/*El render permite obtener el valor de la columna*/
+                        return data.NombreCompletoLector
+                    }
+                },
+               /* { "data": "TotalLibro" },*/
+                { "data": "FechaPrestamo" },
+                { "data": "FechaDevolucion" },
+                { "data": "DiasDePrestamo", "visible": false  },
+
+               /* { "data": "Tipo" },*/
+                { "data": "Observaciones" },
+                //{
+                //    "data": "IdPrestamo", "render": function (data, type, row, meta) {
+
+                //        return $("<button>").addClass("btn btn-warning btn-finalizarPrestamo btn-sm").append(
+                //            $("<i>").addClass("fas fa-sync")
+                //        ).attr({ "data-informacionprestamo": JSON.stringify(row) })[0].outerHTML
+                //    },
+                //    "orderable": false,
+                //    "searchable": false,
+                //    "width": "20px"
+                //},
+                {
+                    "data": "IdPrestamo", "render": function (data, type, row, meta) {
+                    //    var btnclass = "btn btn-warning btn-finalizarprestamo btn-sm";
+                    //    var iconclass = row.fechadevolucion ? "fas fa-eye" : "fas fa-sync";
+                    //    var btntitle = row.fechadevolucion ? "finalizar préstamo" : "ver préstamo";
+                    //    return $("<button>").addclass(btnclass).append(
+                    //        $("<i>").addclass(iconclass)
+                    //    ).attr({
+                    //        "title": btntitle,
+                    //        "data-informacionprestamo": json.stringify(row)
+                    //    })[0].outerhtml;
+
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        var btnClass = row.FechaDevolucion ? "btn btn-success btn-finalizarPrestamo btn-sm" : "btn btn-danger btn-finalizarPrestamo btn-sm";
+                        var iconClass = row.FechaDevolucion ? "fas fa-eye" : "fas fa-sync";
+                        var btnTitle = row.FechaDevolucion ? "Ver préstamo" : "Finalizar préstamo";
+                        var btnBgClass = row.FechaDevolucion ? "" : "btn-primary";
+                        return $("<button>").addClass(btnClass).addClass(btnBgClass).append(
+                            $("<i>").addClass(iconClass)
+                        ).attr({
+                            "title": btnTitle,
+                            "data-informacionprestamo": JSON.stringify(row)
+                        })[0].outerHTML;
+
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        //var iconClass = row.FechaDevolucion ? "fas fa-sync" : "fas fa-eye";
+                        //var btnTitle = row.FechaDevolucion ? "Finalizar préstamo" : "Ver préstamo";
+                        //var btnBgClass = row.FechaDevolucion ? "btn btn-primary" : "btn btn-primary";
+                        //return $("<button>").addClass(btnClass).addClass(btnBgClass).append(
+                        //    $("<i>").addClass(iconClass)
+                        //).attr({
+                        //    "title": btnTitle,
+                        //    "data-informacionprestamo": JSON.stringify(row)
+                        //})[0].outerHTML;
+
+                        //var btnClass = "btn btn-warning btn-finalizarPrestamo btn-sm";
+                        ////var btnClass1 = row.FechaDevolucion ? "btn btn-success " : "btn btn-warning";
+                        //var iconClass = row.FechaDevolucion ? "fas fa-eye" : "fas fa-sync";
+                        //var btnTitle = row.FechaDevolucion ? "Ver préstamo" : "Finalizar préstamo";
+                        //var btnBgClass = row.FechaDevolucion ? "" : "btn-primary";
+                        //return $("<button>").addClass(btnClass).addClass(btnBgClass).append(
+                        //    $("<i>").addClass(iconClass)
+                        //).attr({
+                        //    "title": btnTitle,
+                        //    "data-informacionprestamo": JSON.stringify(row)
+                        //})[0].outerHTML;
+
+                    }
+                },
+                {
+                    "data": "IdPrestamo", "render": function (data, type, row, meta) {
+
+                        return $("<button>").addClass("btn btn-primary btn-editar btn-sm").append(
+                            $("<i>").addClass("fas fa-pen")
+                        ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML
+                            +
+                            $("<button>").addClass("btn btn-danger btn-eliminar btn-sm ms-2").append(
+                                $("<i>").addClass("fas fa-trash")
+                            ).attr({ "data-informacion": JSON.stringify(row) })[0].outerHTML;
+
+
+                    },
+                    "orderable": false,
+                    "searchable": false,
+                    "width": "90px"
+                }
+            ],/*Propiedad o atributos van dentro de las comillas ""*/
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+
+        });
+
+          jQuery.ajax({
+            url: '@Url.Action("ListarLectorParaPrestamo", "Home")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+               //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $("#cmbLector").append($("<option selected>").val("").text("Seleccionar"));
+                $.each(data.data, function (index, item) {
+                    //El valor de item es el declarado en EN_Lector, la capa Entidad
+                    $("<option>").attr({ "value": item.IdLector }).text(item.NombreCompletoLector).appendTo("#cmbLector");
+                })
+                $("#cmbLector").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
+                   /* .css("z-index", "1600");*/
+
+            },
+            error: function (error) {
+                console.log(error)
+              }
+          });
+
+
+          jQuery.ajax({
+            url: '@Url.Action("ListarLibrosParaPrestamo", "Home")',
+            type: "GET",
+            data: null,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+
+               //$("<option>").attr({ "value": "0", "disabled": "true" }).text("Seleccionar").appendTo("#cbocategoria");
+                $("#cmbLibro").append($("<option selected>").val("0").text("Seleccionar")).attr({ "disabled": "disabled" });
+                $("#cmbLibro option:first-child").attr({ "disabled": true });//Desabilita la primera opcion que se la de seleccionar
+                $.each(data.data, function (index, item) {
+                    //El valor de item es el declarado en EN_Lector, la capa Entidad
+                    $("<option>").attr({ "value": item.IdLibro }).text(item.Titulo).appendTo("#cmbLibro");
+                })
+                $("#cmbLibro").select2({ placeholder: "Seleccionar", width: "100%", dropdownParent: $('#contenedor') });
+                   /* .css("z-index", "1600");*/
+                ListarEjemplar();
+            },
+            error: function (error) {
+                console.log(error)
+              }
+          });
+
+        $("#cmbLibro").on("change", function () {
+            if ($("#cmbLibro").val() == "0") {
+                //console.log("El value de cmbLibro es = nada");
+                $("#cmbLibro").val($("#cmbLibro option:first").val())//Selecciona el primer valor (Serie el de seleccionar)
+                $("#cmbLibro option:first-child").attr({ "disabled":true});//Desabilita la primera opcion que es seleccinoar
+                $("#cmbEjemplar").html("")//Limpia los ejemplares
+                $("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+                $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());//Vuelve a colocar el seleccionar y marcar la primera opcion
+
+            } else {
+                ListarEjemplar();//Cada vez que cambia lista nuevamente las Ejemplaras
+                //Si realmente se ha elegido un libro, entonces si lista los ejemplares, de esta forma se evita el error de referencia null
+            }
+            //if ($("#cmbEjemplar").text() == "") {
+            //    $("<option>").attr({ "value": "", "disabled": "disabled", "selected": "true" }).text("Seleccionar2").appendTo("#cmbEjemplar")
+            //    $("#cmbEjemplar").val($("#cmbEjemplar option:last").val()).prop("selected", true);
+
+            //}
+
+
+          })
+
+        function ListarEjemplar() {//Ejemplar
+            $("#cmbEjemplar").html("")//Para poder iniciar desde 0 lo limpiamos de esta forma
+            //Aqui se colocan los atributos de html y opciones de valor, text, etc
+            //$("<option>").attr({ "value": "00", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+
+            jQuery.ajax({
+                url: '@Url.Action("ObtenerEjemplarPorLibro", "Home")',
+                type: "POST",
+                data: JSON.stringify({ idLibro: $("#cmbLibro option:selected").val() }),//psasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+
+                    if (data.lista != null) {
+                        $.each(data.lista, function (i, item) {
+                            $("<option>").attr({"value": item.IdEjemplarLibro }).text("Ejemplar: " + item.IdEjemplarLibro).appendTo("#cmbEjemplar")
+                        })
+                    }
+
+                    var cmbEjemplar = $("#cmbEjemplar");
+                    var opcionSeleccionar = $("<option>").text("Sin ejemplares").val(0);/*.attr("disabled","disabled");*/
+
+                    if (typeof cmbEjemplar.val() === "undefined" || cmbEjemplar.val() === null || cmbEjemplar.val() === "") {
+                        cmbEjemplar.empty().append(opcionSeleccionar);
+                    }
+                }
+            })
+        }
+        $(".btn-editar").on("click", function () {
+            $("#txtDiasPrestamo, #txtObservaciones").toggle();
+        });
+        function abrirModal(json) /*json es el data del siguiente*/ {
+            $("#txtId").val(0);
+            $("#txtTotalLibros").val(1);
+            $("#txtTotalLibros").attr({ "disabled": "disabled" });
+            $("#lblTotalLibros").css("color", "transparent");
+
+            $("#txtFechaPrestamo").val("").attr({ "disabled": "disabled" });
+
+            //La clase hidden-elements viene de mis estilos, estilos css creados por mi
+            $("#div-fechaDevolucion").val("").addClass("hidden-elements");
+            $("#txtFechaDevolucion").val();//Este fecha devolucion no se utiliza para registrar, sino para editar
+
+            $("#txtDiasPrestamo").val(7);
+            $("#txtObservaciones").val("NINGUNA");
+            $("#cmbLibro").removeAttr("disabled");//Para poder elegir aun cuando ayamos dado clic antes en editar
+            $("#cmbLibro").append($("<option selected>").val("").text("Seleccionar"));
+
+            $("#cmbLector").append($("<option selected>").val("").text("Seleccionar"));
+
+            $("#cmbEjemplar").removeAttr("disabled");//Para poder elegir aun cuando ayamos dado clic antes en editar
+            $("#cmbEjemplar").html("")
+            $("<option>").attr({ "value": "", "disabled": "disabled", "selected": "true" }).text("Seleccionar").appendTo("#cmbEjemplar")
+            $("#cmbEjemplar").val($("#cmbEjemplar option:first").val());
+
+            $("#div-EjemplarPrestado").val("").addClass("hidden-elements");
+            $("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+
+            $("#cmbActivo").val(1);
+            $("#cmbActivo").hide();
+            $("#lblActivo").hide();
+
+            $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+            //$("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+            //$("#txtFechaDevolucion").val("").attr({ "disabled": "disabled" });
+            $("#mensajeError").hide();
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+                $("#txtId").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
+                $("#cmbLibro").val(json.oId_Libro.IdLibro).trigger('change');
+                $("#cmbLibro").attr({ "disabled": "disabled" });
+                $("#cmbEjemplar").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+               // $("#lblEjemplar").hide();
+                //$("#cmbEjemplar").hide();
+                $("#div-EjemplarPrestado").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+                $("#div-SelectEjemplarDisponible").val("").addClass("hidden-elements");
+                $("#cmbLector").val(json.oId_Lector.IdLector).trigger('change');
+                $("#txtTotalLibros").val(json.TotalLibro); /*El json o data, trae una propieadad llamada nombres*/
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                $("#txtEjemplarPrestado").val(json.oId_Ejemplar.IdEjemplarLibro);
+                $("#cmbActivo").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                 y si no es true de el valor de 0*/
+                $("#cmbActivo").show();
+                $("#lblActivo").show();
+                $("#txtFechaPrestamo").val(json.FechaPrestamo).attr({ "disabled": "disabled" });;//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
+                $("#div-fechaDevolucion").val(json.FechaDevolucion).removeClass("hidden-elements");
+
+
+                if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
+                    $("#txtFechaDevolucion").val(json.FechaDevolucion);
+                } else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
+                    $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                }
+
+
+                $("#txtFechaPrestamo").datepicker({ dateFormat: 'dd/mm/yy' })
+                $("#txtFechaDevolucion").datepicker({ dateFormat: 'dd/mm/yy' })
+
+                $("#txtDiasPrestamo").val(json.DiasDePrestamo);
+                $("#txtObservaciones").val(json.Observaciones);
+
+            }
+
+            $("#FormModal").modal("show");
+        }
+
+        /*--------------- Al dar clic en el boton de editar-------------------------------*/
+
+        /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+            /*This es la misma tabla, se llama
+             tr es el row o la fila seleccionado de la tabla */
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            var json = $(this).data("informacion")
+            console.log(json);
+            abrirModal(json)
+
+        })
+
+        function abrirModal2(json) /*json es el data del siguiente*/ {
+
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+                $("#mensajeError2").hide();
+                $("#txtId2").val(json.IdPrestamo);/*Traerá el codigo pero no lo mostrará al Prestamo*/
+                $("#txtLibroId").val(json.oId_Libro.IdLibro).attr({ "disabled": "disabled" });
+                $("#txtLibroTitulo").val(json.oId_Libro.Titulo).attr({ "disabled": "disabled" });
+
+                $("#txtEjemplarId").val(json.oId_Ejemplar.IdEjemplarLibro).attr({ "disabled": "disabled" });
+                ///$("#cmbLibro2").val(json.oId_Libro.IdLibro).trigger('change');
+                //$("#cmbLibro2").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar2").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                // $("#lblEjemplar").hide();
+                //$("#cmbEjemplar").hide();
+                //$("#div-EjemplarPrestado2").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible2").val("").addClass("hidden-elements");
+
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#txtEjemplarPrestado2").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#cmbActivo2").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                // y si no es true de el valor de 0*/
+                //$("#cmbActivo2").show();
+                //$("#lblActivo2").show();
+                $("#txtFechaPrestamo2").val(json.FechaPrestamo).attr({ "disabled": "disabled" });;//El dato despues de json. se refiere al identificador dado en Capa Entidad EN_Prestamo, tal cual se deben de escribirs
+                $("#div-fechaDevolucion2").val(json.FechaDevolucion).removeClass("hidden-elements");
+
+
+                if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
+
+
+                    $("#exampleModalLabel2").text("Detalles del Préstamo Finalizado");
+                    $("#txtFechaDevolucion2").val("").attr({ "disabled": "disabled" });
+                    $("#txtFechaDevolucion2").val(json.FechaDevolucion);
+                    $("#btnFinalizarPrestamo").attr({ "disabled": "disabled" });
+                    $("#btnFinalizarPrestamo").addClass("hidden-elements");
+                    $("#txtObservaciones2").attr({ "disabled": "disabled" });
+
+                    //La clase hidden-elements viene de mis estilos, estilos css creados por mi
+                    //$("#div-fechaDevolucion").val("").addClass("hidden-elements");
+
+                    //$("#footer-modal2").val("").addClass("hidden-elements");**
+
+                    //$("#footer-modal2").removeClass("bg-warning");
+                    //$("#footer-modal2").val("").addClass("bg-white");
+
+                    //$("#btn-cancelar").addClass("col-12");
+
+
+                    //$(".btn-finalizarPrestamo").removeClass("fas fa-sync");
+                    //$(".btn-finalizarPrestamo").addClass("fas fa-book");
+                    //$("#footer-modal2").val("").addClass("hidden-elements");
+
+                } else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
+                    $("#exampleModalLabel2").text("Finalizar Préstamo");
+                    //$("#btn-cancelar").removeClass("col-12");
+                    $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                    //$("#footer-modal2").removeClass("hidden-elements");**
+                    //$("#footer-modal2").removeClass("bg-warning");
+                    //$("#footer-modal2").val("").addClass("bg-white");
+                    $("#btnFinalizarPrestamo").attr({ "disabled": false });
+                    $("#btnFinalizarPrestamo").removeClass("hidden-elements");
+                    $("#txtObservaciones2").attr({ "disabled": false });
+                    $("#txtFechaDevolucion2").attr({ "disabled": false });
+
+                }
+
+
+                $("#txtFechaPrestamo2").datepicker({ dateFormat: 'dd/mm/yy' })
+                $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' })
+
+                $("#txtDiasPrestamo2").val(json.DiasDePrestamo);
+                $("#txtObservaciones2").val(json.Observaciones);
+
+            }
+
+            $("#FormModalNew").modal("show");
+        }
+        /*--------------- Al dar clic en el boton de editar solo fecha prestamo y activo-------------------------------*/
+
+        /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
+        $("#tabla tbody").on("click", '.btn-finalizarPrestamo', function () {
+            /*This es la misma tabla, se llama
+             tr es el row o la fila seleccionado de la tabla */
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+            //$("#div-div-Lector").val("").addClass("hidden-elements");
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            var json = $(this).data("informacionprestamo")
+            console.log(json);
+
+
+
+            abrirModal2(json)
+            $("#txtFechaPrestamo2, #txtFechaDevolucion2").change(function () {
+                var fechaPrestamo = Date.parse($("#txtFechaPrestamo2").val());
+                var fechaDevolucion = Date.parse($("#txtFechaDevolucion2").val());
+
+                if (fechaDevolucion < fechaPrestamo) {
+                    //alert("");
+                    //swal("Error", "La fecha de devolución no puede ser menor que la fecha de préstamo", "error")
+
+                    //$("#txtFechaDevolucion2").val('');
+                    $("#mensajeError2").text("La fecha de devolución no puede ser menor que la fecha de préstamo");
+                    $("#mensajeError2").show();
+                    //$("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                } else {
+                    $("#mensajeError2").hide();
+                }
+            });
+        })
+
+        //El boton aplica 3 acciones a la base de datos
+        //1. Elimina el prestamo con su id y a su vez los detallePrestamos que tenga
+        //2. Actualiza el ejemplar pasando a activo = 1, reactiva el ejemplar que estaba en prestamo
+        //3. Acutaliza: Aumentando 1 ejemplar a la cantidad de ejemplares en la tabla libro ya que se reactiva un
+        //ejemplar,entonces se suma de nuevo ese ejemplar al total de stock o cantidad de ejemplares de libro
+
+        $("#tabla tbody").on("click", '.btn-eliminar', function () {
+
+            var json = $(this).data("informacion")
+
+            swal({
+                title: "¿Esta Seguro?",
+                text: "¿Desea eliminar el Prestamo?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-primary",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true
+            },
+            function () {
+                jQuery.ajax({
+                    url: '@Url.Action("EliminarPrestamo", "Home")',
+                    type: "POST",
+                    data: JSON.stringify({ id: json.IdPrestamo, idEjemplarLibro: json.oId_Ejemplar.IdEjemplarLibro, idLibro: json.oId_Libro.IdLibro }),/*Paso de valores*/
+                    /*el stringfy lo convierte a texto*/
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Prestamo
+                     * hecho en homeController*/
+                        //ELIMINAR Prestamo
+                        if (data.resultado) { /*si el resultado es verdadera)*/
+                            //tabladata.row(Prestamoseleccionado).remove().draw();
+                            tabladata.ajax.reload();
+                        }else {
+                            swal("No se pudo eliminar", data.mensaje, "error")
+                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
+
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+
+                });
+            });
+            //console.log(data);
+        })
+
+        function Guardar() {
+            var Prestamo = {
+                IdPrestamo: $("#txtId").val(), /*Los dos puntos de la condicion es "si es diferente es:"
+                 el signo de interrogacion es un entonces
+                 leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
+                 pero si es diferentes es falso*/
+                oId_Lector: {
+                    IdLector: $("#cmbLector option:selected").val(),
+                    NombreCompletoLector: $("#cmbLector option:selected").text()
+                },
+                oId_Libro: {
+                    IdLibro: $("#cmbLibro option:selected").val(),
+                    Titulo: $("#cmbLibro option:selected").text()
+                },
+                oId_Ejemplar: {
+                    IdEjemplarLibro: $("#cmbEjemplar option:selected").val()
+                    //Titulo: $("#cmbLibro option:selected").text()
+                },
+                //oId_Ejemplar.IdEjemplarLibro
+                TotalLibro: $("#txtTotalLibros").val(),
+                /*El punto val sirve para obtener un valor y para establecer un valor*/
+                FechaPrestamo: $("#txtFechaPrestamo").val(),
+                FechaDevolucion: $("#txtFechaDevolucion").val(),
+                DiasDePrestamo: $("#txtDiasPrestamo").val(),
+
+
+                Observaciones: $("#txtObservaciones").val(),
+                Activo: $("#cmbActivo").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
+                // * o un no (No = 0*/
+
+            }
+            var listaCarrito = [];
+            var Libro = Prestamo;
+            var cantidad = Prestamo.TotalLibro;
+            listaCarrito.push({//para agregar elementos a esta lisra
+                oId_Libro: Libro,//Aqui tengo que darle el idEJEMPLAR
+
+                TotalLibro: cantidad
+            })
+
+
+
+
+            console.log(listaCarrito)
+
+
+            console.log(Prestamo)
+
+            jQuery.ajax({/*Llama al metodo de guardar Prestamo, que dependiendo de la accion va a crear nuevo
+             o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
+                url: '@Url.Action("GuardarPrestamo", "Home")',
+                type: "POST",
+                data: JSON.stringify({ oListaPrestamo: listaCarrito, objeto: Prestamo}),/*Paso de valores
+                 el stringfy lo convierte a texto*/
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    //Prestamo NUEVO
+                    if (Prestamo.IdPrestamo == 0) { /*Es decir, si el id es 0 en inicio (el valor es 0 inicialmente) significa que es
+                        un Prestamo nuevo, por lo que se ha dado dando clic con el boton de crear*/
+                        /*alert("Crear Prestamo")*/
+
+                        if (data.resultado != 0) {
+                            Prestamo.IdPrestamo = data.resultado;
+                            //tabladata.row.add(Prestamo).draw(false);
+                            //Generraba error con el id del prestamo colocando como true al registrar
+                            //si despues de registrar editabamos ese registro entonces volvia a registrar en lugar de solo editar
+                            //por lo que conviene mejor recargar la tabla con la siguiente line de codigo
+                            //para asi tener el id correspondi
+                            tabladata.ajax.reload();
+                            $("#FormModal").modal("hide");
+                        } else {
+
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+                    }
+                    //Prestamo Editar
+                    else {
+                        /* alert("Editar Prestamo")*/
+                        /*Pero si el id es diferente de 0, es decir ya existe, entonces se esta editando
+                         a un Prestamo, por lo que indica que se ha dado clic en el boton de editar, eso lo comprobamos
+                         con los alert comentados*/
+
+                        if (data.resultado) {
+                            tabladata.ajax.reload();
+                            /*tabladata.row(filaSeleccionada).data(Prestamo).draw(false);*/
+                            filaSeleccionada = null;
+                            $("#FormModal").modal("hide");
+
+                        } else {
+                            $("#mensajeError").text(data.mensaje);
+                            $("#mensajeError").show();
+                        }
+                    }
+                },
+                error: function (error) {
+                    $(".modal-body").LoadingOverlay("hide");
+                    $("#mensajeError").text("Error Ajax");
+                    $("#mensajeError").show();
+                },
+                beforeSend: function () {
+                    $(".modal-body").LoadingOverlay("show", {
+                        imageResizeFactor: 2,
+                        text: "Cargando...",
+                        size: 14
+                    });
+                }
+            });
+
+        }
+        //-----------------------Guardar finalizar PRESTAMO ---------------------------------------
+        function GuardarFinalizarPrestamo() {
+
+
+            var Prestamoconcluido = {
+                IdPrestamo: $("#txtId2").val(), /*Los dos puntos de la condicion es "si es diferente es:"
+                 el signo de interrogacion es un entonces
+                 leyendo la sentencia de abajo seria, si el valor es igual a 1, entonces es true (verdadero)
+                 pero si es diferentes es falso*/
+                oId_Lector: {
+                    IdLector: $("#cmbLector2 option:selected").val(),
+                    NombreCompletoLector: $("#cmbLector option:selected").text()
+                },
+                oId_Libro: {
+                    IdLibro: $("#txtLibroId").val(),
+                    Titulo: $("#txtLibroTitulo").val()//Se hicieron dos, el id es hidden para no tener problemas
+                },
+                oId_Ejemplar: {
+                    IdEjemplarLibro: $("#txtEjemplarId").val()
+                    //Titulo: $("#cmbLibro option:selected").text()
+                },
+                //oId_Ejemplar.IdEjemplarLibro
+                TotalLibro: $("#txtTotalLibros2").val(),
+                /*El punto val sirve para obtener un valor y para establecer un valor*/
+                FechaPrestamo: $("#txtFechaPrestamo2").val(),
+                FechaDevolucion: $("#txtFechaDevolucion2").val(),
+                DiasDePrestamo: $("#txtDiasPrestamo2").val(),
+
+
+                Observaciones: $("#txtObservaciones2").val(),
+                Activo: $("#cmbActivo2").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
+                // * o un no (No = 0*/
+
+            }
+            console.log(Prestamoconcluido)
+            jQuery.ajax({
+                    url: '@Url.Action("FinalizarPrestamo", "Home")',
+                    type: "POST",
+                data: JSON.stringify({ objeto: Prestamoconcluido }),/*Paso de valores*/
+                    /*el stringfy lo convierte a texto*/
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {/*Ese data esta almacenando la respuesta del metodo eliminar Prestamo
+                     * hecho en homeController*/
+                        //ELIMINAR Prestamo
+                        if (data.resultado) { /*si el resultado es verdadera)*/
+                            //tabladata.row(Prestamoseleccionado).remove().draw();
+                            tabladata.ajax.reload();
+                            $("#FormModalNew").modal("hide");
+                        }else {
+                            $("#mensajeError2").text(data.mensaje);
+                            $("#mensajeError2").show();
+                            //swal("No se pudo finalizar el préstamo", data.mensaje, "error")
+                        }/*Primer parametro mensaje, luego el mensaje del data, y el tercero indica que es de tipo error*/
+
+                    },
+                error: function (error) {
+                   // $("#contenedor2").LoadingOverlay("hide");
+                    $("#mensajeError2").text("Error Ajax");
+                    $("#mensajeError2").show();
+                },
+                beforeSend: function () {
+                    //$("#contenedor2").LoadingOverlay("show", {
+                    //    imageResizeFactor: 2,
+                    //    text: "Cargando...",
+                    //    size: 14
+                    //});
+                }
+                
+            });
+
+        }
+    </script>
+}

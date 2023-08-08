@@ -106,6 +106,14 @@
                     <input type="email" class="form-control" id="txtCorreo" autocomplete="off">
                 </div>
                 <div class="col-sm-6">
+                    <label for="txtClave" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="txtClave" autocomplete="off">
+                </div>
+                <div class="col-sm-12">
+                    <label for="txtConfirmarClave" class="form-label">Confirmar Contraseña</label>
+                    <input type="password" class="form-control" id="txtConfirmarClave" autocomplete="off">
+                </div>
+                <div class="col-sm-6">
                     <label for="cmbGenero" class="form-label">Género</label>
                     <select id="cmbGenero" class="form-select">
                         <option value="1">Hombre</option>
@@ -220,6 +228,8 @@
             $("#txtCalle").val("");
             $("#txtTelefono").val("");
             $("#txtCorreo").val("");
+            $("#txtClave").val("");
+            $("#txtConfirmarClave").val("");
             $("#cmbGenero").val(1);
             $("#cmbActivo").val(1);
 
@@ -388,11 +398,14 @@
                 Calle: $("#txtCalle").val(),
                 Telefono: $("#txtTelefono").val(),
                 Correo: $("#txtCorreo").val(),
+                Clave: $("#txtClave").val(),
+                ConfirmarClave: $("#txtConfirmarClave").val(),
                 Genero: $("#cmbGenero").val() == 1 ? true : false,
                 Activo: $("#cmbActivo").val() == 1 ? true : false, /*Para saber si se esta seleccionado un Si (Si = 0)
                  * o un no (No = 0*/
                 Reestablecer: true
             }
+            console.log(Lector)
             jQuery.ajax({/*Llama al metodo de guardar Lector, que dependiendo de la accion va a crear nuevo
              o a editar, tomando en cuenta que se basa en que si el id = 0 o no*/
                 url: '@Url.Action("GuardarLector", "Home")',
