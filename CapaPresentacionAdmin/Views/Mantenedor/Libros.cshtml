@@ -84,7 +84,7 @@
                     <div class="col-sm-3">
                         <div class="mb-3">
                             <label for="txtCodigo" class="form-label">Código</label>
-                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off" />
+                            <input type="text" class="form-control" id="txtCodigo" name="codigo" autocomplete="off" placeholder="Ejemplo: C002FJR.2I93"/>
                             @*<input id="txtid" class="form-control" type="text" value="0" />*@
                         </div>
 
@@ -94,7 +94,7 @@
                             </div>*@
                         <div class="mb-3">
                             <label for="txtTitulo" class="form-label">Título</label>
-                            <textarea type="text" class="form-control" id="txtTitulo" name="titulo" style="height:125px;resize:none"></textarea>
+                            <textarea type="text" class="form-control" id="txtTitulo" name="titulo" style="height:125px;resize:none" placeholder="Ejemplo: El Principito"></textarea>
                         </div>
                         @*<div class="mb-3">
                                 <label for="txtUbicacion" class="form-label">Ubicación</label>
@@ -102,13 +102,13 @@
                             </div>*@
                         <div class="mb-3">
                             <label for="txtPaginas" class="form-label">Páginas</label>
-                            <input type="number" class="form-control" id="txtPaginas" name="paginas" autocomplete="off" />
+                            <input type="number" class="form-control" id="txtPaginas" name="paginas" maxlength="5" autocomplete="off" placeholder="Ejemplo: 534" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/>
                         </div>
                     </div>
 
                     <div class="col-sm-3">
 
-                        <div class="mb-3">
+                        <div class="mb-4">
                             @*<label for="cbocategoria" class="form-label">Categoria</label>
                                 <select id="cbocategoria" class="form-select" name="categoria">
                                 </select>*@
@@ -116,35 +116,35 @@
                             <select id="cbocategoria" class="form-select" name="categoria">
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-4 mt-1">
                             <label for="cboeditorial" class="form-label">Editorial</label>
                             <select id="cboeditorial" class="form-select" name="editorial">
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 mt-1">
                             <label for="cbosala" class="form-label">Sala</label>
                             <select id="cbosala" class="form-select" name="sala">
                             </select>
                         </div>
                         <div class="mb-3">
                             <label for="txtEjemplares" class="form-label">Ejemplares</label>
-                            <input type="number" class="form-control" id="txtEjemplares" name="ejemplares" autocomplete="off" />
+                            <input type="number" class="form-control" id="txtEjemplares" name="ejemplares"  maxlength="3" autocomplete="off" placeholder="Ejemplo: 3" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"/>
                         </div>
                     </div>
 
                     <div class="col-sm-3">
                         <div class="mb-3">
                             <label for="txtAñoEdicion" class="form-label">Año de Edición</label>
-                            <input type="text" class="form-control" id="txtAñoEdicion" name="añoedicion" autocomplete="off" />
+                            <input type="text" class="form-control" id="txtAñoEdicion" name="añoedicion" maxlength="4" autocomplete="off" placeholder="Ej: 2005"/>
                         </div>
 
                         <div class="mb-3">
                             <label for="txtVolumen" class="form-label">Volumen</label>
-                            <input type="number" class="form-control" id="txtVolumen" name="volumen" autocomplete="off">
+                            <input type="number" class="form-control" id="txtVolumen" name="volumen" maxlength="2" autocomplete="off" placeholder="Ejemplo: 2" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                         </div>
                         <div class="mb-3">
                             <label for="txtObservaciones" class="form-label">Observaciones</label>
-                            <input type="text" class="form-control" id="txtObservaciones" name="observaciones" autocomplete="off" />
+                            <input type="text" class="form-control" id="txtObservaciones" name="observaciones" autocomplete="off" placeholder="Ejemplo: El libro es nuevo" />
                         </div>
                         <div class="mb-3">
                             <label for="cboactivo" class="form-label">Activo</label>
@@ -367,13 +367,13 @@
         /*El metodo se llama precioDecimal*/
 
         jQuery.validator.addMethod("preciodecimal", function (value, element) {
-            return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
+            return this.optional(element) || /^\d{0,5}(\.\d{0,2})?$/i.test(value);
         }, "El formato correcto es solo números");
 
 
         $("#contenedor").validate({
             rules: {
-                codigo: {/*Indica que el campo nombre es requerido*/
+                codigo: {/*Indica que los campos son requeridos*/
                     required: true
                 },
                 titulo: {
@@ -648,10 +648,11 @@
                             Libro.IdLibro = data.idGenerado;
                             tabladata.ajax.reload();
                             //tabladata.row.add(Libro).draw(false);
-
+                            $("#mensajeError").text("");
                             $("#FormModal").modal("hide");
                         } else {
 
+                            $("#mensajeError").text("");
                             $("#mensajeError").text(data.mensaje);
                             $("#mensajeError").show();
                         }

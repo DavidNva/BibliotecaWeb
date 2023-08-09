@@ -1082,7 +1082,37 @@ end
 
 go
 --PROCEDIMIENTOS PARA LIBRO
-create procedure sp_RegistrarLibro(
+-- create ALTER procedure sp_RegistrarLibro(
+--     @Codigo varchar(25),--Es asignado por administrador al insertar
+--     @Titulo nvarchar(130),
+--     @Paginas int,
+--     --Llaves foraneas
+--     @IDCategoria nvarchar(10),
+--     @IDEditorial nvarchar(10),
+--     @IDSala nvarchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)
+--     @Ejemplares int,
+--     @AñoEdicion varchar(5),
+--     @Volumen int,
+--     @Observaciones varchar(500), --Definido como default: EN BUEN ESTADO
+--     @Activo bit,
+--     @Mensaje varchar(500) output,
+--     @Resultado int output
+--     )
+-- as
+-- begin
+--     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+--     IF NOT EXISTS (SELECT * FROM Libro WHERE Codigo = @Codigo)
+--     begin 
+--         insert into Libro(Codigo,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
+--         (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
+--         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+--         SET @Resultado = scope_identity() 
+--     end 
+--     else 
+--      SET @Mensaje = 'El codigo del libro ya existe'
+-- end 
+-- go
+create procedure sp_RegistrarLibro(--Nuevo sp que registra igual el libro con su ejemplar  la vez
     @Codigo varchar(25),--Es asignado por administrador al insertar
     @Titulo nvarchar(130),
     @Paginas int,
@@ -1100,16 +1130,31 @@ create procedure sp_RegistrarLibro(
     )
 as
 begin
-    SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
-    IF NOT EXISTS (SELECT * FROM Libro WHERE Codigo = @Codigo)
-    begin 
-        insert into Libro(Codigo,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
-        (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
-        --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
-        SET @Resultado = scope_identity() 
-    end 
-    else 
-     SET @Mensaje = 'El codigo del libro ya existe'
+    begin try 
+        declare @idLibro int = 0
+        SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
+        IF NOT EXISTS (SELECT * FROM Libro WHERE Codigo = @Codigo)
+        begin
+            begin transaction registrolibro
+            insert into Libro(Codigo,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
+            (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
+            --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
+            SET @Resultado = scope_identity() 
+            set @idLibro = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
+            
+            insert into Ejemplar(ID_Libro, Activo)
+            values(@idLibro,@Activo)
+            commit transaction registrolibro
+        end
+        else 
+        SET @Mensaje = 'El código del libro ya existe*'
+    end try
+    begin catch
+        set @Resultado = 0
+        set @Mensaje = ERROR_MESSAGE()
+        rollback transaction registrolibro 
+    end catch
+    
 end 
 go
 
