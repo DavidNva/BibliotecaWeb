@@ -381,32 +381,7 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = resultado, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
 
         }
-        //[HttpPost]
-        //public ActionResult Registrar(EN_Lector objeto) //Para mostrar vista de login
-        //{
-        //    int resultado;
-        //    string mensaje = string.Empty;
-        //    ViewData["Nombres"] = string.IsNullOrEmpty(objeto.Nombres) ? "" : objeto.Nombres;
-        //    ViewData["Apellidos"] = string.IsNullOrEmpty(objeto.Apellidos) ? "" : objeto.Apellidos;
-        //    ViewData["Correo"] = string.IsNullOrEmpty(objeto.Correo) ? "" : objeto.Correo;
 
-        //    if (objeto.Clave != objeto.ConfirmarClave)
-        //    {
-        //        ViewBag.Error = "Las contraseñas no coinciden";
-        //        return View();
-        //    }
-        //    resultado = new RN_Lector().Registrar(objeto, out mensaje);
-        //    if (resultado > 0)
-        //    {
-        //        ViewBag.Error = null;/*No hay error*/
-        //        return RedirectToAction("Index", "Acceso");
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Error = mensaje;
-        //        return View();
-        //    }
-        //}
         [HttpPost]
         public JsonResult EliminarLector(int id)
         {

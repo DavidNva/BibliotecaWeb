@@ -1079,7 +1079,7 @@ begin
     if(@Resultado != 1)
         set @Mensaje = 'Error: No se pudo elimnar el lector. Intentelo de nuevo'
 end
-GO
+
 go
 --PROCEDIMIENTOS PARA LIBRO
 create procedure sp_RegistrarLibro(
