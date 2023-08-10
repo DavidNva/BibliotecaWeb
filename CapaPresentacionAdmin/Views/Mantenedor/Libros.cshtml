@@ -173,6 +173,85 @@
     </div>
 </div>
 
+
+<!------------------------------------------------Modal 2 ---------------------------------------------------->
+<!-- Modal, con el id FormModal vamos a llamarlo cuando deseamos que aparezca y cuando no
+    al momento de precionar el boton nuevo-->
+<div class="modal fade" id="FormModalNew" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    @*Esto ultimo de data-bs-backdrop es para*@
+    <div class="modal-dialog">
+        @*no poder quitar es modal a menos que demos clic en cerrar o en la x, si hacemos clic en otro lado no se puede quitar*@
+        <div class="modal-content">
+            <div class="modal-header bg-success text-center">
+                <h5 class="modal-title fw-bold  text-white" id="exampleModalLabel2">¿Desea agregar más ejemplares?</h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="contenedor2">
+                @*El g-2 significa que va a agrupar las columnas de 2 en 2*@
+
+                <input id="txtId2" type="hidden" value="0" />@*Con el valor 0 se identifica si es un Prestamo nuevo a ingresar o es valor ya existe
+        pero si es diferente a 0 significa que ya existe y vamos a editar*@
+                @*<input type="text" class="form-control text-success" id="txtLibroId"  >*@
+            <div class="row g-2">
+                <!--<div class="col-sm-2 align-self-center">--> @*para aumentar la cantidad del Libro*@
+                <!--<div class="d-flex">
+    <button class="btn btn-outline-secondary btn-restar rounded-0">
+        <i class="fas fa-minus"></i>
+    </button>-->
+                @*boton de restar*@
+                <!--<input class="form-control input-cantidad p-1 text-center rounded-0" id="txtCantidadEjemplares" disabled style="width:40px" />-->@*para visualizar la cantidad de Libros*@
+                <!--<button class="btn btn-outline-secondary btn-sumar rounded-0">
+        <i class="fas fa-plus"></i>
+    </button>-->
+                @*boton de sumar*@
+                <!--</div>
+    </div>-->
+                <div class="col-sm-12 align-self-center">
+                    <div class="d-flex justify-content-center">
+                        <!-- Added justify-content-center class -->
+                        <button class="btn btn-outline-secondary btn-restar rounded-0">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input class="form-control input-cantidad p-1 text-center rounded-0" id="txtCantidadEjemplares" disabled style="width:40px" />
+                        <button class="btn btn-outline-secondary btn-sumar rounded-0">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+
+                <!--<div class="col-sm-12">
+        <label for="txtLibroTitulo" class="form-label fw-bold">Libro Registrado</label>-->
+                @*<label for="txtLibroTitulo" class="form-label fw-bold text-center" id="txtLibroTitulo">Prueba</label>*@
+
+                <!--<input type="text" class="form-control text-success" id="txtLibroTitulo" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+
+    </div>-->
+                <div class="col-sm-12 text-center">
+                    <label for="txtLibroTitulo" class="form-label fw-bold text-center">Libro Registrado</label>
+                    <input type="text" class="form-control text-success text-center" id="txtLibroTitulo" autocomplete="off" placeholder="Ejemplo: El libro se entregó en perfecto estado ">
+                </div>
+
+            </div>
+                <!--mensaje de alerta-->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <div id="mensajeError2" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-white" id="footer-modal2">
+                <button type="button" class="btn btn-danger" id="btn-cancelar" data-bs-dismiss="modal">Cerrar</button>
+
+                @*<button type="button" class="btn btn-success" onclick="GuardarFinalizarPrestamo()" id="btnFinalizarPrestamo"><b>Finalizar Préstamo</b></button>*@
+            
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts{
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
@@ -584,7 +663,124 @@
 
 
         })
+        //-----------------------------------Codigo para segundo modal de agregar mas ejemplares
 
+        function abrirModal2(json) /*json es el data del siguiente*/ {
+
+            /*Llamamos al form modal*/
+            if (json != null) {/*Porque el metodo abrir modal puede abrirse con crear nuevo o con editar,
+             * por eso esta linea*/
+                $("#mensajeError2").hide();
+                $("#txtId2").val(json.IdLibro);/*Traerá el codigo pero no lo mostrará al Prestamo*/
+                $("#txtCantidadEjemplares").val(json.Ejemplares);/*Traerá el codigo pero no lo mostrará al Prestamo*/
+                $("#txtLibroId").val(json.IdLibro).attr({ "disabled": "disabled" });
+                $("#txtLibroTitulo").val(json.Titulo).attr({ "disabled": "disabled" });
+
+                //$("#txtEjemplarId").val(json.oId_Ejemplar.IdEjemplarLibro).attr({ "disabled": "disabled" });
+                ///$("#cmbLibro2").val(json.oId_Libro.IdLibro).trigger('change');
+                //$("#cmbLibro2").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar2").attr({ "disabled": "disabled" });
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                // $("#lblEjemplar").hide();
+                //$("#cmbEjemplar").hide();
+                //$("#div-EjemplarPrestado2").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible").removeClass("hidden-elements");
+                //$("#div-SelectEjemplarDisponible2").val("").addClass("hidden-elements");
+
+                //$("#cmbEjemplar").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#txtEjemplarPrestado2").val(json.oId_Ejemplar.IdEjemplarLibro);
+                //$("#cmbActivo2").val(json.Activo == true ? 1 : 0);/*Si es igual a true de el valor de uno
+                // y si no es true de el valor de 0*/
+                //$("#cmbActivo2").show();
+                //$("#lblActivo2").show();
+      
+
+                //if (json.FechaDevolucion != "") {/*Si ya hay un valor agregado para fecha devolucion en la tabla */
+
+
+                //    $("#exampleModalLabel2").text("Detalles del Préstamo Finalizado");
+                //    $("#txtFechaDevolucion2").val("").attr({ "disabled": "disabled" });
+                //    $("#txtFechaDevolucion2").val(json.FechaDevolucion);
+                //    $("#btnFinalizarPrestamo").attr({ "disabled": "disabled" });
+                //    $("#btnFinalizarPrestamo").addClass("hidden-elements");
+                //    $("#txtObservaciones2").attr({ "disabled": "disabled" });
+
+                //    //La clase hidden-elements viene de mis estilos, estilos css creados por mi
+                //    //$("#div-fechaDevolucion").val("").addClass("hidden-elements");
+
+                //    //$("#footer-modal2").val("").addClass("hidden-elements");**
+
+                //    //$("#footer-modal2").removeClass("bg-warning");
+                //    //$("#footer-modal2").val("").addClass("bg-white");
+
+                //    //$("#btn-cancelar").addClass("col-12");
+
+
+                //    //$(".btn-finalizarPrestamo").removeClass("fas fa-sync");
+                //    //$(".btn-finalizarPrestamo").addClass("fas fa-book");
+                //    //$("#footer-modal2").val("").addClass("hidden-elements");
+
+                //} else {//Si es = "", no han agregado nada para fecha devolucion, entonces:
+                //    $("#exampleModalLabel2").text("Finalizar Préstamo");
+                //    //$("#btn-cancelar").removeClass("col-12");
+                //    $("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                //    //$("#footer-modal2").removeClass("hidden-elements");**
+                //    //$("#footer-modal2").removeClass("bg-warning");
+                //    //$("#footer-modal2").val("").addClass("bg-white");
+                //    $("#btnFinalizarPrestamo").attr({ "disabled": false });
+                //    $("#btnFinalizarPrestamo").removeClass("hidden-elements");
+                //    $("#txtObservaciones2").attr({ "disabled": false });
+                //    $("#txtFechaDevolucion2").attr({ "disabled": false });
+
+                //}
+
+
+                //$("#txtFechaPrestamo2").datepicker({ dateFormat: 'dd/mm/yy' })
+                //$("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' })
+
+                //$("#txtDiasPrestamo2").val(json.DiasDePrestamo);
+                //$("#txtObservaciones2").val(json.Observaciones);
+
+            }
+
+            $("#FormModalNew").modal("show");
+        }
+        /*--------------- Al dar clic en el boton de editar solo fecha prestamo y activo-------------------------------*/
+
+        /*Estamos llamando a la tabla especificamente al tbody, todo ira en relacion a esa tabla*/
+        $("#tabla tbody").on("click", '.btn-finalizarPrestamo', function () {
+            /*This es la misma tabla, se llama
+             tr es el row o la fila seleccionado de la tabla */
+            filaSeleccionada = $(this).closest("tr");
+            var data = tabladata.row(filaSeleccionada).data();
+            //$("#div-div-Lector").val("").addClass("hidden-elements");
+            //console.log(data);/*Para visualizar en consola*/
+            //abrirModal(data);
+            var json = $(this).data("informacionprestamo")
+            console.log(json);
+
+
+
+            abrirModal2(json)
+            $("#txtFechaPrestamo2, #txtFechaDevolucion2").change(function () {
+                var fechaPrestamo = Date.parse($("#txtFechaPrestamo2").val());
+                var fechaDevolucion = Date.parse($("#txtFechaDevolucion2").val());
+
+                if (fechaDevolucion < fechaPrestamo) {
+                    //alert("");
+                    //swal("Error", "La fecha de devolución no puede ser menor que la fecha de préstamo", "error")
+
+                    //$("#txtFechaDevolucion2").val('');
+                    $("#mensajeError2").text("La fecha de devolución no puede ser menor que la fecha de préstamo");
+                    $("#mensajeError2").show();
+                    //$("#txtFechaDevolucion2").datepicker({ dateFormat: 'dd/mm/yy' }).datepicker('setDate', new Date())
+                } else {
+                    $("#mensajeError2").hide();
+                }
+            });
+        })
+
+        //-------------------------------------------End - Code para mas ejemplares --------------------------------------------
 
         function Guardar() {
             /* Si no se han completado los campos */
@@ -650,6 +846,7 @@
                             //tabladata.row.add(Libro).draw(false);
                             $("#mensajeError").text("");
                             $("#FormModal").modal("hide");
+                            abrirModal2(Libro)
                         } else {
 
                             $("#mensajeError").text("");
