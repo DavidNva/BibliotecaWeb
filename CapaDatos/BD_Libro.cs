@@ -226,6 +226,40 @@ namespace CapaDatos
             }
             return resultado;
         }
+
+        public bool OperacionEjemplarLibro(int idLibro, bool sumar, out string Mensaje)//out indica parametro de salida
+        {
+            bool resultado = true;
+
+            Mensaje = string.Empty;
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("sp_OperacionEjemplarLibro", oConexion);
+                    //cmd.Parameters.AddWithValue("IdLector", idLector);
+                    cmd.Parameters.AddWithValue("IdLibro", idLibro);//ya tiene el id del libro, que ya estuve relacionado con el idejemplarlibro
+                    cmd.Parameters.AddWithValue("Sumar", sumar);
+                    //Dos parametros de salida, un entero de resultaado y un string de mensaje
+                    cmd.Parameters.Add("Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                    resultado = Convert.ToBoolean(cmd.Parameters["Resultado"].Value);
+                    Mensaje = cmd.Parameters["Mensaje"].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+                Mensaje = ex.Message;
+
+            }
+            return resultado;
+
+        }
         //    List<EN_Libro> lista = new List<EN_Libro>();
         //    try
         //    {

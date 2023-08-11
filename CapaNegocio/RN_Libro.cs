@@ -16,6 +16,11 @@ namespace CapaNegocio
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
 
+        public bool OperacionEjemplarLibro(int idLibro, bool sumar, out string Mensaje)
+        {
+            return objCapaDato.OperacionEjemplarLibro(idLibro, sumar, out Mensaje);
+        }
+
         public int Registrar(EN_Libro obj, out string Mensaje)
         {
             Mensaje = string.Empty;

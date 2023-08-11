@@ -888,5 +888,91 @@
             });
 
         }
+
+        //Esto es para aumentar el total de Libros y actualizar la suma total de los precios de esos Libros actuales en el carrito
+         $(document).on("click", ".btn-sumar", function () {//btn-sumar viene de la clase del diseño script de arriba
+
+            var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
+
+            var inputCantidad = $(divContenedor).find("input.input-cantidad");//encuentra un input con esa clase, obtiene el input cantidad
+
+             var btn = $(this);
+
+             var Libro = { IdLibro: $("#txtId2").val() }//Ahora tomamos el id del nuevo modal
+             console.log(Libro)
+            //var idLibro = $(inputCantidad).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
+
+            jQuery.ajax({
+                url: '@Url.Action("OperacionEjemplarLibro", "Mantenedor")',
+                type: "POST",
+                //como se va a sumar colocamos true, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                data: JSON.stringify({ idLibro: Libro.IdLibro, sumar: true }),//pasamos los parametros que necesita este metodo
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    $(btn).LoadingOverlay("hide")
+                    if (data.respuesta) {//si la respuesta es true
+                        var cantidad = parseInt($(inputCantidad).val()) + 1;//retorna el valor de inputCantidad en entero
+                        $(inputCantidad).val(cantidad)//Ahora la caja de texto tendrá un nuevo valor y sera la cantidad ya sumada 1+1 o 2+1, etc.
+                       // sumarTotal();//vuelve a sumar total de los valores, actualiza el precio final
+                        tabladata.ajax.reload();
+                    } else {
+                        swal("", data.mensaje, "warning")
+                    }
+                },
+                beforeSend: function () {
+                    $(btn).LoadingOverlay("show")
+                },
+                error: function (error) {
+                    $(btn).LoadingOverlay("hide")
+                }
+            })
+
+        }) 
+
+        //Esto es para restar el total de Libros y actualizar la resta total de los precios de esos Libros actuales en el carrito
+        $(document).on("click", ".btn-restar", function () {//btn-sumar viene de la clase del diseño script de arriba
+
+            var divContenedor = $(this).parent("div.d-flex");//encuentra un control superior a este que es un div con la clase d-flex
+
+            var inputCantidad = $(divContenedor).find("input.input-cantidad");//encuentra un input con esa clase, obtiene el input cantidad
+
+            var btn = $(this);
+            var Libro = { IdLibro: $("#txtId2").val() }//Ahora tomamos el id del nuevo modal
+            console.log(Libro)
+            //var idLibro = $(inputCantidad).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
+
+            //var idLibro = $(inputCantidad).data("oId_Libro").IdLibro;//recordemos que el inputCantidad tiene data donde esta el idLibro
+            var cantidad = parseInt($(inputCantidad).val()) - 1;//retorna el valor de inputCantidad en entero
+
+            if (cantidad >= 1) {//No debe ser 0 la cantidad en carrito o no tendria sentido
+                jQuery.ajax({
+                    url: '@Url.Action("OperacionEjemplarLibro", "Mantenedor")',
+                    type: "POST",
+                    //como se va a restar colocamos false, el idLibro es el parametro declarado (tal cual) en el metodo OperacionCarrito
+                    data: JSON.stringify({ idLibro: Libro.IdLibro, sumar: false }),//pasamos los parametros que necesita este metodo
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+
+                        $(btn).LoadingOverlay("hide")
+                        if (data.respuesta) {//si la respuesta es true
+
+                            $(inputCantidad).val(cantidad)//Ahora la caja de texto tendrá un nuevo valor y sera la cantidad ya sumada 1+1 o 2+1, etc.
+                           // sumarTotal();//vuelve a sumar total de los valores, actualiza el precio final
+                            tabladata.ajax.reload();
+                        } else {
+                            swal("", data.mensaje, "warning")
+                        }
+                    },
+                    beforeSend: function () {
+                        $(btn).LoadingOverlay("show")
+                    },
+                    error: function (error) {
+                        $(btn).LoadingOverlay("hide")
+                    }
+                })
+            }
+        }) 
     </script>
 }

@@ -1124,7 +1124,7 @@ create procedure sp_RegistrarLibro(--Nuevo sp que registra igual el libro con su
     @AñoEdicion varchar(5),
     @Volumen int,
     @Observaciones varchar(500), --Definido como default: EN BUEN ESTADO
-    @Activo bit,
+    @Activo bit,--Mejor al registrarlo darlo por default como 1, no tiene sentido regitrar y darlo como inactivo
     @Mensaje varchar(500) output,
     @Resultado int output
     )
@@ -1137,13 +1137,13 @@ begin
         begin
             begin transaction registrolibro
             insert into Libro(Codigo,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
-            (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
+            (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, 1)
             --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
             SET @Resultado = scope_identity() 
             set @idLibro = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
             
             insert into Ejemplar(ID_Libro, Activo)
-            values(@idLibro,@Activo)
+            values(@idLibro,1)
             commit transaction registrolibro
         end
         else 

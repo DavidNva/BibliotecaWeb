@@ -399,6 +399,20 @@ namespace CapaPresentacionAdmin.Controllers
 
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
+
+        
+        [HttpPost]
+        public JsonResult OperacionEjemplarLibro(int idLibro, bool sumar)//Va a permitir operar las cantidades del producto dentro del carrito
+        {
+           // int idLector = ((EN_Lector)Session["Lector"]).IdLector;//Obtenemos el idLector de acuerdo a la sesion iniciada donde estan los datos
+            //de dicho clinte, convertimos la ssion a tipo Lector y traemos su id
+
+            bool respuesta = false;
+            string mensaje = string.Empty;
+            respuesta = new RN_Libro().OperacionEjemplarLibro(idLibro, sumar, out mensaje);//true es igual sumar = 1 = true, restar = 0 = false 
+
+            return Json(new { respuesta = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
+        }
         #endregion
     }
 }
