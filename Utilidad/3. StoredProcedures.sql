@@ -1234,7 +1234,65 @@ begin
      SET @Mensaje = 'El libro se encuentra relacionado a un ejemplar en préstamo'
 end 
 go
+create  proc sp_OperacionEjemplarLibro( --servirá para validar que vamos a agregar un ejemplar mas a un Libro registrado
+    --@IdLector int,
+    @IdLibro int, 
+	--@IdEjemplar int,
+    @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
+    @Mensaje varchar(500) output,
+    @Resultado bit output
+)
+as
+begin
+    set @Resultado = 1
+    set @Mensaje = '' 
+    --si en verdad existe una relacion con id Lector y idLibro en la tabla carrito
+   
+    --declare @existeCarrito bit =  iif(exists(select * from carrito where IdLector = @IdLector and IdLibro = @IdLibro),1,0)
+    declare @EjemplaresLibro int = (select Ejemplares from Libro where IdLibro =  @IdLibro)--obtener el Ejemplares actual  del Libro de acuerdo al que estamos solicitando
 
+    BEGIN TRY --capturador de errores
+        BEGIN TRANSACTION OPERACION 
+        if(@Sumar = 1)
+        begin 
+            update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
+            insert into Ejemplar(ID_Libro, Activo)
+            values(@IdLibro,1)
+            -- if(@EjemplaresLibro > 0)--validamos que el Ejemplares del Libro sea mayor a 0 (que si haya Libros disponibles)
+            -- begin 
+            --     --if(@existeCarrito = 1) --verificamos entonces que si ya existe en el carrito
+            --     --en el caso de que ya existe, actualiza la cantidad con un mas 1
+            --    --     update Carrito set Cantidad = Cantidad + 1 where IdLector = @IdLector and IdLibro = @IdLibro
+            --    -- else --y si todavia no exista en el carrito, insertamos un nuevo valor a carrito
+            --      --   insert into Carrito(IdLector, IdLibro, Cantidad) values (@IdLector, @IdLibro, 1)
+            --    
+			-- 	--	update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --si lo anterior fue bien, resta 1 a Ejemplares de la tabla Libro
+			-- 		--update Ejemplar set Activo = 0 where IDEjemplarLibro = @IdEjemplar --actualiza el activo a 0
+            -- end 
+            -- else --en el caso de que el Ejemplares del Libro no se mayor a 0
+            -- begin --envia el siguiente error
+            --     update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
+            --     set @Resultado = 0
+            --     set @Mensaje = 'El libro no cuenta con otro ejemplar disponible'
+            -- end 
+        end 
+        else --si la suma no es igual a 1, entonces se va a restar
+        --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este Libro
+        begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idLibro 
+            --update Carrito set Cantidad =  Cantidad - 1 where IdLector = @IdLector  and IdLibro = @IdLibro
+            update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --y actualiza el Ejemplares con un + 1 
+        end 
+        --todo lo anterior lo ejecuta temporalmente, pero cuando llega a esta linea lo qu hace es guardar los cambios ya definitivos
+        COMMIT TRANSACTION OPERACION --indica que toda operacion que se haya realizado se va a guardar los cambios
+    END TRY 
+    BEGIN CATCH --en el casi de que exista un error en el proceso
+        set @Resultado = 0 --manda un result de 0, envia el mensaje
+        set @Mensaje = ERROR_MESSAGE()
+        ROLLBACK TRANSACTION OPERCION -- entonces regresa a como estaba antes, como si no hubieramos hecho nada
+    END CATCH
+
+end 
+go
 select * from carrito
 -- CREATE PROCEDURE sp_RegistrarLibro (
 --     @IDLibro varchar(25),--Es asignado por administrador al insertar
