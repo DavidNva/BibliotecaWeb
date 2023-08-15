@@ -37,6 +37,11 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
+        [Authorize]
+        public ActionResult InfoBiblioteca()
+        {
+            return View();/*Retorna la vista con el nombre de Index (Dentro de la carpeta vista, hay un Index*/
+        }
         /*--------------PRESTAMOS--------------------*/
         #region PRESTAMOS
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */

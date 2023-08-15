@@ -326,6 +326,12 @@
     <Content Include="Content\DataTables\swf\flashExport.swf" />
     <Content Include="Content\fontawesome.css" />
     <Content Include="Content\fontawesome.min.css" />
+    <Content Include="Content\images\bg-callout.jpg" />
+    <Content Include="Content\images\bg-masthead.jpg" />
+    <Content Include="Content\images\portfolio-1.jpg" />
+    <Content Include="Content\images\portfolio-2.jpg" />
+    <Content Include="Content\images\portfolio-3.jpg" />
+    <Content Include="Content\images\portfolio-4.jpg" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />
     <Content Include="Content\images\ui-icons_555555_256x240.png" />
     <Content Include="Content\images\ui-icons_777620_256x240.png" />
@@ -340,6 +346,7 @@
     <Content Include="Content\regular.min.css" />
     <Content Include="Content\solid.css" />
     <Content Include="Content\solid.min.css" />
+    <Content Include="Content\styles.css" />
     <Content Include="Content\svg-with-js.css" />
     <Content Include="Content\svg-with-js.min.css" />
     <Content Include="Content\sweetalert.css" />
@@ -483,6 +490,7 @@
     <Content Include="Scripts\loadingoverlay\loadingoverlay.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\scripts.js" />
+    <Content Include="Scripts\scriptsinfo.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -523,6 +531,7 @@
     <Content Include="Views\Acceso\Reestablecer.cshtml" />
     <Content Include="Views\Mantenedor\CategoriaPruebaSelect.cshtml" />
     <Content Include="Views\Home\Prestamos.cshtml" />
+    <Content Include="Views\Home\InfoBiblioteca.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1259,9 +1259,12 @@ begin
         else --si la suma no es igual a 1, entonces se va a restar
         --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este Libro
         begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idLibro 
-            --update Carrito set Cantidad =  Cantidad - 1 where IdLector = @IdLector  and IdLibro = @IdLibro
+       
             update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --y actualiza el Ejemplares con un - 1 
             --Elimina el primer ejemplar de la siguiente consulta siempre y cuando el ejemplar este activo, es decir no este en prestamo
+
+            --antes de eliminar y restar a ejemplares, quizas primero debemos comprobar que exista registro a eliminar, es decir, 
+            -- comprobar la siguiente consulta  y ya comprobada de que si hay registro, entonces pasar a eliminar
             DELETE top(1) ej FROM Ejemplar ej
             INNER JOIN Libro l ON ej.ID_Libro = l.IDLibro AND ej.Activo = 1
             WHERE l.IDLibro = @IdLibro
@@ -1277,7 +1280,63 @@ begin
 
 end 
 go
-select * from carrito
+
+-- create  proc sp_OperacionEjemplarLibro( --servirá para validar que vamos a agregar un ejemplar mas a un Libro registrado
+--     --@IdLector int,
+--     @IdLibro int, 
+-- 	--@IdEjemplar int,
+--     @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
+--     @Mensaje varchar(500) output,
+--     @Resultado bit output
+-- )
+-- as
+-- begin
+--     set @Resultado = 1
+--     set @Mensaje = '' 
+--     --obtener el Ejemplares actual  del Libro de acuerdo al que estamos solicitando
+--     declare @EjemplaresLibro int = (select Ejemplares from Libro where IdLibro =  @IdLibro)
+--     BEGIN TRY --capturador de errores
+--         BEGIN TRANSACTION OPERACION 
+--         if(@Sumar = 1)
+--         begin 
+--             update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
+--             insert into Ejemplar(ID_Libro, Activo)
+--             values(@IdLibro,1)
+--         end 
+--         else --si la suma no es igual a 1, entonces se va a restar
+--         --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este Libro
+--         begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idLibro 
+--             IF NOT EXISTS (select * FROM Ejemplar ej 
+--             INNER JOIN Libro l ON l.IDLibro = ej.ID_Libro AND ej.Activo = 1
+--             WHERE l.IDLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
+--             begin 
+--                 SET @Mensaje = 'No se pudo eliminar: Los ejemplares del libro están en préstamo'
+--             end
+--             else 
+--             BEGIN
+--             update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --y actualiza el Ejemplares con un - 1 
+--             --Elimina el primer ejemplar de la siguiente consulta siempre y cuando el ejemplar este activo, es decir no este en prestamo
+
+--             --antes de eliminar y restar a ejemplares, quizas primero debemos comprobar que exista registro a eliminar, es decir, 
+--             -- comprobar la siguiente consulta  y ya comprobada de que si hay registro, entonces pasar a eliminar
+--                 DELETE top(1) ej FROM Ejemplar ej
+--                 INNER JOIN Libro l ON ej.ID_Libro = l.IDLibro AND ej.Activo = 1
+--                 WHERE l.IDLibro = @IdLibro
+--             END
+            
+--         end 
+--         --todo lo anterior lo ejecuta temporalmente, pero cuando llega a esta linea lo qu hace es guardar los cambios ya definitivos
+--         COMMIT TRANSACTION OPERACION --indica que toda operacion que se haya realizado se va a guardar los cambios
+--     END TRY 
+--     BEGIN CATCH --en el casi de que exista un error en el proceso
+--         set @Resultado = 0 --manda un result de 0, envia el mensaje
+--         set @Mensaje = ERROR_MESSAGE()
+--         ROLLBACK TRANSACTION OPERCION -- entonces regresa a como estaba antes, como si no hubieramos hecho nada
+--     END CATCH
+
+-- end 
+
+go
 -- CREATE PROCEDURE sp_RegistrarLibro (
 --     @IDLibro varchar(25),--Es asignado por administrador al insertar
 --     @Titulo nvarchar(130),
