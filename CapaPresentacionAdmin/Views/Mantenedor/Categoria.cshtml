@@ -18,6 +18,12 @@
             <div class="col-12">
                 @*numero de filas*@
                 <button type="button" class="btn btn-success" onclick="abrirModal()">Crear Nuevo</button>
+
+                
+
+                <form action="@Url.Action("DescargarPdf","Mantenedor")" class="mt-3">
+                    <button class="btn btn-danger" type="submit">Descargar PDF</button>
+                </form>
             </div>
         </div>
         <hr /> @*el id es para identificar la tabla*@
