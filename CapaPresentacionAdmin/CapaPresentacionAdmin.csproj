@@ -353,6 +353,7 @@
     <Content Include="Content\fontawesome.min.css" />
     <Content Include="Content\images\bg-callout.jpg" />
     <Content Include="Content\images\bg-masthead.jpg" />
+    <Content Include="Content\images\cuborubiklarge.png" />
     <Content Include="Content\images\portfolio-1.jpg" />
     <Content Include="Content\images\portfolio-2.jpg" />
     <Content Include="Content\images\portfolio-3.jpg" />
