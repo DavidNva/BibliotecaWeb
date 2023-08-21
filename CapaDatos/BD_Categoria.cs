@@ -184,9 +184,7 @@ namespace CapaDatos
             return resultado;
         }
 
-        //public ActionResult DescargarPdf()
-        public byte[] DescargarPdf()
-        //public ActionResult DescargarPdfCategoria<T>(List<T> oLista)
+        public byte[] GenerarPDF() //public ActionResult DescargarPdfCategoria<T>(List<T> oLista)
         {
             List<EN_Categoria> oLista = new List<EN_Categoria>();
 

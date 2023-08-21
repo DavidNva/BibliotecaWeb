@@ -54,6 +54,11 @@ namespace CapaPresentacionAdmin.Controllers
             /*El json da los datos, jala los datos de esa lista, en data*/
         }
 
+
+
+        /*--------------CATEGORIA---------------------*/
+        #region CATEGORIA
+
         ///*--------------Generar PDF--------------------*/ 
 
         //public ActionResult DescargarPdf()
@@ -403,20 +408,14 @@ namespace CapaPresentacionAdmin.Controllers
         //    //return View();
         //}
 
-        public ActionResult DescargarPDF()
+        public ActionResult DescargarPDF_Categoria()
         {
-            // Llamar al método de la capa de datos para obtener los datos
-            //DataTable datos = capaDatos.ObtenerDatos();
-
-            // Llamar al método de la capa de negocios para generar el PDF
+            // Llama al método de la capa de negocios para generar el PDF
             byte[] pdf = new RN_Categoria().GenerarPDF();
-
             // Devolver el PDF como una descarga al usuario
-            return File(pdf, "application/pdf", "reporte.pdf");
+            return File(pdf, "application/pdf", "DatosCategorias_"+ DateTime.Now.ToString() + ".pdf");
         }
 
-        /*--------------CATEGORIA---------------------*/
-        #region CATEGORIA
         [HttpGet] /*Una URL que devuelve datos, un httpost se le pasan los valores y despues devuelve los datos  */
         public JsonResult ListarCategoria() /*D este json se puede controlar que mas ver, igualar elementos, etc*/
         {
