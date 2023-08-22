@@ -15,6 +15,7 @@ namespace CapaNegocio
         {
             return objCapaDato.Listar();/*Retorna el metodo listar de la instancia de la capa Datos*/
         }
+
         public List<EN_Editorial> ListarEditorialEnLibro()
         {
             return objCapaDato.ListarEditorialEnLibro();
@@ -40,7 +41,6 @@ namespace CapaNegocio
             }
 
         }
-
 
         public bool Editar(EN_Editorial obj, out string Mensaje)
         {
@@ -68,6 +68,11 @@ namespace CapaNegocio
         public List<EN_Editorial> ListarEditorialPorCategoria(string idCategoria) /*Para listar las Editorials a filtrar en la presentacion de tienda*/
         {
             return objCapaDato.ListarEditorialPorCategoria(idCategoria);
+        }
+
+        public byte[] GenerarPDF()
+        {
+            return objCapaDato.GenerarPDF();
         }
     }
 }
