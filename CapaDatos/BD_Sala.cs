@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using CapaEntidad;
 using System.Data.SqlClient;
 using System.Data; /*Acceso a sql conections*/
+using QuestPDF.Fluent;//Para exportar a pdf
+using QuestPDF.Helpers;
+using System.IO;
 
 namespace CapaDatos
 {
@@ -79,6 +82,7 @@ namespace CapaDatos
             return IdAutogenerado; /*Si cambia a un nuevo valor al agregar un nuevo id*/
 
         }
+
         public bool Editar(EN_Sala obj, out string Mensaje)//out indica parametro de salida
         {
             bool resultado = false;
@@ -144,5 +148,146 @@ namespace CapaDatos
             }
             return resultado;
         }
+
+        public byte[] GenerarPDF() //public ActionResult DescargarPdfSala<T>(List<T> oLista)
+        {
+            List<EN_Sala> oLista = new List<EN_Sala>();
+
+            //oLista = new RN_Sala().Listar();
+            oLista = new BD_Sala().Listar();
+
+            var data = Document.Create(document =>
+            {
+                document.Page(page =>
+                {
+                    // page content
+                    page.Margin(30);
+                    // page.Header().Height(100).Background(Colors.Blue.Medium);
+                    page.Header().ShowOnce().Row(row =>
+                    {//el ShowOnce sirve para que el header solo aparezca en la primera hoja
+                     //D:\ConsolePdf\ExportarPdf_Web\Content\images\cuborubikcode.png
+                        var rutaImagen = Path.Combine("D:\\ConsolePdf\\ExportarPdf_Web\\Content\\images\\cuborubikcode.png");
+
+                        byte[] imageData = System.IO.File.ReadAllBytes(rutaImagen);
+
+                        row.ConstantItem(150).Image(imageData);
+
+                        //row.ConstantItem(140).Height(60).Placeholder();//Elegimos el ancho del item
+
+                        row.RelativeItem().Column(col =>//El ancho se coloca relativamente automatica
+                        {
+                            col.Item().AlignCenter().Text("Biblioteca: Luis Cabrera Lobato").Bold().FontSize(14);
+                            col.Item().AlignCenter().Text("Puebla, Puebla").Bold().FontSize(9);
+                            col.Item().AlignCenter().Text("123 456 7890").Bold().FontSize(9);
+                            col.Item().AlignCenter().Text("example@gmail.com").Bold().FontSize(9);
+                            //col.Item().Background(Colors.Orange.Medium).Height(10);
+                            //col.Item().Background(Colors.Green.Medium).Height(10);
+                        });
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Border(1).BorderColor("#257272").
+                            AlignCenter().Text("Biblioteca");
+
+                            col.Item().Background("#257272").Border(1)
+                            .BorderColor("#257272").AlignCenter()
+                            .Text("Salas").FontColor("#fff");
+
+                            col.Item().Border(1).BorderColor("#257272").
+                            AlignCenter().Text(DateTime.Now.ToString("dd-MM-yyyy"));
+
+                        });
+
+                    });
+
+                    // page.Content().Background(Colors.Yellow.Medium);
+                    page.Content().PaddingVertical(10).Column(col1 =>
+                    {
+                        int totalSalas = 0;
+                        col1.Item().LineHorizontal(0.5f);
+                        col1.Item().Table(tabla =>
+                        {//Seccion de la tabla
+                            tabla.ColumnsDefinition(columns =>
+                            {
+                                //columns.RelativeColumn(3);
+                                columns.ConstantColumn(100);
+                                //columns.RelativeColumn();
+                                columns.RelativeColumn();
+                                //columns.RelativeColumn();
+                                columns.ConstantColumn(100);
+                            });
+
+                            tabla.Header(header =>
+                            {
+                                header.Cell().Background("#257272")
+                                 .Padding(2).Text("Código").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Descripción").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Activo").FontColor("#fff");
+                            });
+                            
+                            foreach (EN_Sala sala in oLista)
+                            //foreach (var item in Enumerable.Range(1, 45))
+                            {
+                                
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text(sala.IdSala.ToString()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text(sala.Descripcion).FontSize(10);
+
+                                if (sala.Activo)
+                                {
+                                    tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                    .Padding(2).Text("Sí").FontSize(10);
+                                }
+                                else
+                                {
+                                    tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                    .Padding(2).Text("No").FontSize(10);
+                                }
+                                totalSalas++;
+                            }
+
+
+                        });
+
+                        col1.Item().AlignRight().Text($"Total de salas: {totalSalas}").FontSize(12);
+
+
+                        //col1.Item().Background(Colors.Grey.Lighten3).Padding(10)//Seccion de comentarios
+                        //.Column(column =>
+                        //{
+                        //    column.Item().Text("Comentarios").FontSize(14);
+                        //    column.Item().Text(Placeholders.LoremIpsum());
+                        //    column.Spacing(5);
+                        //});
+
+                        col1.Spacing(10);
+                    });
+
+                    page.Footer()
+                    .AlignRight()
+                    .Text(txt =>
+                    {
+                        txt.Span("Pagina ").FontSize(10);
+                        txt.CurrentPageNumber().FontSize(10);
+
+                        txt.Span(" de ").FontSize(10);
+                        txt.TotalPages().FontSize(10);
+                    });
+                    //page.Footer().Height(50).Background(Colors.Red.Medium);
+                });
+            }).GeneratePdf();
+
+            MemoryStream stream = new MemoryStream(data);
+            //return stream.
+            return stream.ToArray();
+            //return File(stream, "applicacion/pdf", "detallePrestamo.pdf");
+            //return View();
+        }
+
     }
 }

@@ -253,7 +253,7 @@ namespace CapaDatos
 
                         row.RelativeItem().Column(col =>//El ancho se coloca relativamente automatica
                         {
-                            col.Item().AlignCenter().Text("Biblioteca: Luis Cabrera").Bold().FontSize(14);
+                            col.Item().AlignCenter().Text("Biblioteca: Luis Cabrera Lobato").Bold().FontSize(14);
                             col.Item().AlignCenter().Text("Puebla, Puebla").Bold().FontSize(9);
                             col.Item().AlignCenter().Text("123 456 7890").Bold().FontSize(9);
                             col.Item().AlignCenter().Text("example@gmail.com").Bold().FontSize(9);
@@ -263,14 +263,14 @@ namespace CapaDatos
                         row.RelativeItem().Column(col =>
                         {
                             col.Item().Border(1).BorderColor("#257272").
-                            AlignCenter().Text("RUC 1234567890");
-
+                            AlignCenter().Text("Biblioteca");
+                            
                             col.Item().Background("#257272").Border(1)
                             .BorderColor("#257272").AlignCenter()
-                            .Text("Boleto de Venta").FontColor("#fff");
+                            .Text("Editoriales").FontColor("#fff");
 
                             col.Item().Border(1).BorderColor("#257272").
-                            AlignCenter().Text("B0001 - 234");
+                            AlignCenter().Text(DateTime.Now.ToString("dd-MM-yyyy"));
 
                         });
 
@@ -279,6 +279,7 @@ namespace CapaDatos
                     // page.Content().Background(Colors.Yellow.Medium);
                     page.Content().PaddingVertical(10).Column(col1 =>
                     {
+                        int totalEditoriales = 0;
                         col1.Item().LineHorizontal(0.5f);
                         col1.Item().Table(tabla =>
                         {//Seccion de la tabla
@@ -324,21 +325,23 @@ namespace CapaDatos
                                     tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
                                     .Padding(2).Text("No").FontSize(10);
                                 }
+                                totalEditoriales++;
                             }
 
 
                         });
 
-                        col1.Item().AlignRight().Text("Total: 1500").FontSize(12);
+                        //col1.Item().AlignRight().Text("Total: 1500").FontSize(12);
+                        col1.Item().AlignRight().Text($"Total de editoriales: {totalEditoriales}").FontSize(12);
 
 
-                        col1.Item().Background(Colors.Grey.Lighten3).Padding(10)//Seccion de comentarios
-                        .Column(column =>
-                        {
-                            column.Item().Text("Comentarios").FontSize(14);
-                            column.Item().Text(Placeholders.LoremIpsum());
-                            column.Spacing(5);
-                        });
+                        //col1.Item().Background(Colors.Grey.Lighten3).Padding(10)//Seccion de comentarios
+                        //.Column(column =>
+                        //{
+                        //    column.Item().Text("Comentarios").FontSize(14);
+                        //    column.Item().Text(Placeholders.LoremIpsum());
+                        //    column.Spacing(5);
+                        //});
 
                         col1.Spacing(10);
                     });
