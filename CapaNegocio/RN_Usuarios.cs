@@ -75,6 +75,7 @@ namespace CapaNegocio
             }
 
         }
+
         public bool Editar(EN_Usuario obj, out string Mensaje)
         {
             Mensaje = string.Empty;
@@ -112,6 +113,7 @@ namespace CapaNegocio
                 return false;
             }
         }
+
         public bool Eliminar(int id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
@@ -151,6 +153,11 @@ namespace CapaNegocio
                 Mensaje = "No se pudo reestablecer la contraseña";
                 return false;
             }
+        }
+
+        public byte[] GenerarPDF()
+        {
+            return objCapaDato.GenerarPDF();
         }
     }
 }

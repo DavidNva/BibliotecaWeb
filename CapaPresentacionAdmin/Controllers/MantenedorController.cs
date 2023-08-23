@@ -408,7 +408,7 @@ namespace CapaPresentacionAdmin.Controllers
             // Llama al método de la capa de negocios para generar el PDF
             byte[] pdf = new RN_Categoria().GenerarPDF();
             // Devolver el PDF como una descarga al usuario
-            return File(pdf, "application/pdf", "DatosCategorias_" + DateTime.Now.ToString() + ".pdf");
+            return File(pdf, "application/pdf", "Categorias_" + DateTime.Now.ToString() + ".pdf");
         }
 
         public ActionResult DescargarPDF_Editorial()
@@ -416,7 +416,7 @@ namespace CapaPresentacionAdmin.Controllers
             // Llama al método de la capa de negocios para generar el PDF
             byte[] pdf = new RN_Editorial().GenerarPDF();
             // Devolver el PDF como una descarga al usuario
-            return File(pdf, "application/pdf", "DatosEditoriales_" + DateTime.Now.ToString() + ".pdf");
+            return File(pdf, "application/pdf", "Editoriales_" + DateTime.Now.ToString() + ".pdf");
         }
 
         public ActionResult DescargarPDF_Sala()
