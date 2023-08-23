@@ -41,7 +41,6 @@ namespace CapaNegocio
 
         }
 
-
         public bool Editar(EN_Autor obj, out string Mensaje)
         {
             Mensaje = string.Empty;
@@ -68,6 +67,11 @@ namespace CapaNegocio
         public bool Eliminar(string id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
+        }
+
+        public byte[] GenerarPDF()
+        {
+            return objCapaDato.GenerarPDF();
         }
     }
 }
