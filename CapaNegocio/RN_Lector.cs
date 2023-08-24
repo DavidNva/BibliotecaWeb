@@ -21,7 +21,6 @@ namespace CapaNegocio
             return objCapaDato.ListarLectorParaPrestamo();
         }
 
-
         public int Registrar(EN_Lector obj, out string Mensaje)
         {
             Mensaje = string.Empty;
@@ -145,10 +144,12 @@ namespace CapaNegocio
             }
             
         }
+
         public bool Eliminar(int id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
         }
+
         public bool CambiarClave(int idLector, string nuevaClave, out string Mensaje)
         {
             return objCapaDato.CambiarClave(idLector, nuevaClave, out Mensaje);
@@ -184,6 +185,11 @@ namespace CapaNegocio
             }
 
 
+        }
+
+        public byte[] GenerarPDF()
+        {
+            return objCapaDato.GenerarPDF();
         }
     }
 }

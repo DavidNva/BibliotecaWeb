@@ -16,31 +16,31 @@ using ClosedXML.Excel;
 
 namespace CapaPresentacionAdmin.Controllers
 {
-    [Authorize] //No va a poder ingresar a ninguna de estas vistas si no se encuentra autorizado
+    //[Authorize] //No va a poder ingresar a ninguna de estas vistas si no se encuentra autorizado
 
     public class HomeController : Controller
     {
-        [Authorize]
+        //[Authorize]
         public ActionResult Index()
         {
             return View();/*Retorna la vista con el nombre de Index (Dentro de la carpeta vista, hay un Index*/
         }
-        [Authorize]
+        //[Authorize]
         public ActionResult Usuarios()
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
-        [Authorize]
+        //[Authorize]
         public ActionResult Lectores()
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
-        [Authorize]
+        //[Authorize]
         public ActionResult Prestamos()
         {
             return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
         }
-        [Authorize]
+        //[Authorize]
         public ActionResult InfoBiblioteca()
         {
             return View();/*Retorna la vista con el nombre de Index (Dentro de la carpeta vista, hay un Index*/
@@ -57,7 +57,13 @@ namespace CapaPresentacionAdmin.Controllers
             return File(pdf, "application/pdf", "Usuarios_" + DateTime.Now.ToString() + ".pdf");
         }
 
-    
+        public ActionResult DescargarPDF_Lectores()
+        {
+            // Llama al método de la capa de negocios para generar el PDF
+            byte[] pdf = new RN_Lector().GenerarPDF();
+            // Devolver el PDF como una descarga al usuario
+            return File(pdf, "application/pdf", "Lectores_" + DateTime.Now.ToString() + ".pdf");
+        }
 
         #endregion
 
