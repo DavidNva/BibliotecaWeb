@@ -174,5 +174,9 @@ namespace CapaNegocio
         //{
         //    return objCapaDato.ListarPrestamos(idLector);
         //}
+        public byte[] GenerarPDF()
+        {
+            return objCapaDato.GenerarPDF();
+        }
     }
 }

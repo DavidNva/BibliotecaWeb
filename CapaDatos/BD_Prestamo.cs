@@ -7,6 +7,10 @@ using CapaEntidad;
 using System.Data.SqlClient;
 using System.Data; /*Acceso a sql conections*/
 using System.Globalization;
+using QuestPDF.Fluent;//Para exportar a pdf
+using QuestPDF.Helpers;
+using System.IO;
+
 namespace CapaDatos
 {
     public class BD_Prestamo
@@ -285,7 +289,6 @@ namespace CapaDatos
             return resultado;
         }
 
-
         public List<EN_Prestamo> ListarPrestamosCompleto()
         {
             List<EN_Prestamo> lista = new List<EN_Prestamo>();
@@ -347,6 +350,189 @@ namespace CapaDatos
             }
 
             return lista;
+        }
+
+        public byte[] GenerarPDF() //public ActionResult DescargarPdfPrestamo<T>(List<T> oLista)
+        {
+            List<EN_Prestamo> oLista = new List<EN_Prestamo>();
+
+            //oLista = new RN_Prestamo().Listar();
+            oLista = new BD_Prestamo().ListarPrestamosCompleto();
+
+            var data = Document.Create(document =>
+            {
+                document.Page(page =>
+                {
+                    // page content
+                    page.Margin(30);
+                    // page.Header().Height(100).Background(Colors.Blue.Medium);
+                    page.Header().ShowOnce().Row(row =>
+                    {//el ShowOnce sirve para que el header solo aparezca en la primera hoja
+                     //D:\ConsolePdf\ExportarPdf_Web\Content\images\cuborubikcode.png
+                        var rutaImagen = Path.Combine("D:\\ConsolePdf\\ExportarPdf_Web\\Content\\images\\cuborubikcode.png");
+
+                        byte[] imageData = System.IO.File.ReadAllBytes(rutaImagen);
+
+                        row.ConstantItem(150).Image(imageData);
+
+                        //row.ConstantItem(140).Height(60).Placeholder();//Elegimos el ancho del item
+
+                        row.RelativeItem().Column(col =>//El ancho se coloca relativamente automatica
+                        {
+                            col.Item().AlignCenter().Text("Biblioteca: Luis Cabrera Lobato").Bold().FontSize(14);
+                            col.Item().AlignCenter().Text("Puebla, Puebla").Bold().FontSize(9);
+                            col.Item().AlignCenter().Text("123 456 7890").Bold().FontSize(9);
+                            col.Item().AlignCenter().Text("example@gmail.com").Bold().FontSize(9);
+                            //col.Item().Background(Colors.Orange.Medium).Height(10);
+                            //col.Item().Background(Colors.Green.Medium).Height(10);
+                        });
+                        row.RelativeItem().Column(col =>
+                        {
+                            col.Item().Border(1).BorderColor("#257272").
+                            AlignCenter().Text("Biblioteca");
+
+                            col.Item().Background("#257272").Border(1)
+                            .BorderColor("#257272").AlignCenter()
+                            .Text("Préstamos").FontColor("#fff");
+
+                            col.Item().Border(1).BorderColor("#257272").
+                            AlignCenter().Text(DateTime.Now.ToString("dd-MM-yyyy"));
+
+                        });
+
+                    });
+
+                    // page.Content().Background(Colors.Yellow.Medium);
+                    page.Content().PaddingVertical(10).Column(col1 =>
+                    {
+                        int totalPrestamo = 0;
+                        col1.Item().LineHorizontal(0.5f);
+                        col1.Item().Table(tabla =>
+                        {//Seccion de la tabla
+                            tabla.ColumnsDefinition(columns =>
+                            {
+                                //columns.RelativeColumn(3);
+
+                                //columns.ConstantColumn(100);
+                                //columns.RelativeColumn();
+                                columns.ConstantColumn(55);//Activo
+
+                                columns.RelativeColumn();//Libro en prestamo
+                                columns.RelativeColumn();//Lector
+                                columns.ConstantColumn(60);//Fecha Prestamo
+
+                                columns.ConstantColumn(65);//Fecha Devolución
+                               
+                                
+                                columns.ConstantColumn(35);//Dias
+                                columns.RelativeColumn();//Observaciones
+
+                                
+                            });
+
+                            tabla.Header(header =>
+                            {
+                                //header.Cell().Background("#257272")
+                                // .Padding(2).Text("Código").FontColor("#fff");
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Préstamo").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Libro").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                               .Padding(2).Text("Lector").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Préstamo").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                                .Padding(2).Text("Devolución").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                               .Padding(2).Text("Dias").FontColor("#fff");
+
+                                header.Cell().Background("#257272")
+                              .Padding(2).Text("Observaciones").FontColor("#fff");
+
+                                
+                            });
+
+                            foreach (EN_Prestamo prestamo in oLista)
+                            //foreach (var item in Enumerable.Range(1, 45))
+                            {
+                                if (prestamo.Activo)
+                                {
+                                    tabla.Cell().BorderBottom(0.5f).Background("#DC3545").BorderColor("#D9D9D9")
+                                    .Padding(2).Text("Pendiente").FontSize(10).Bold().FontColor("#FFFFFF");//.BackgroundColor("#DC3545");
+                                }
+                                else
+                                {
+                                    tabla.Cell().BorderBottom(0.5f).Background("#198754").BorderColor("#D9D9D9")
+                                    .Padding(2).Text("Devuelto").FontSize(10).FontColor("#FFFFFF");//.BackgroundColor("#198754"); Si solo queremos que el background aplique al texto
+                                }
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text(prestamo.oId_Libro.Titulo).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                               .Padding(2).Text(prestamo.oId_Lector.NombreCompletoLector.ToString()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                               .Padding(2).Text(prestamo.FechaPrestamo.ToString()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                               .Padding(2).Text(prestamo.FechaDevolucion.ToString()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                                .Padding(2).Text(prestamo.DiasDePrestamo.ToString()).FontSize(10);
+
+                                tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
+                             .Padding(2).Text(prestamo.Observaciones).FontSize(10);
+
+                               
+
+                               
+                                totalPrestamo++;
+                            }
+
+
+                        });
+
+                        //col1.Item().AlignRight().Text("Total: 1500").FontSize(12);
+                        col1.Item().AlignRight().Text($"Total de Préstamos: {totalPrestamo}").FontSize(12);
+
+
+                        //col1.Item().Background(Colors.Grey.Lighten3).Padding(10)//Seccion de comentarios
+                        //.Column(column =>
+                        //{
+                        //    column.Item().Text("Comentarios").FontSize(14);
+                        //    column.Item().Text(Placeholders.LoremIpsum());
+                        //    column.Spacing(5);
+                        //});
+
+                        col1.Spacing(10);
+                    });
+
+                    page.Footer()
+                    .AlignRight()
+                    .Text(txt =>
+                    {
+                        txt.Span("Pagina ").FontSize(10);
+                        txt.CurrentPageNumber().FontSize(10);
+
+                        txt.Span(" de ").FontSize(10);
+                        txt.TotalPages().FontSize(10);
+                    });
+                    //page.Footer().Height(50).Background(Colors.Red.Medium);
+                });
+            }).GeneratePdf();
+
+            MemoryStream stream = new MemoryStream(data);
+            //return stream.
+            return stream.ToArray();
+            //return File(stream, "applicacion/pdf", "detallePrestamo.pdf");
+            //return View();
         }
     }
 }
