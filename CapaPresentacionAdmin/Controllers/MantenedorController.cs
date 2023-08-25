@@ -435,6 +435,14 @@ namespace CapaPresentacionAdmin.Controllers
             return File(pdf, "application/pdf", "Autores_" + DateTime.Now.ToString() + ".pdf");
         }
 
+        public ActionResult DescargarPDF_Libros()
+        {
+            // Llama al método de la capa de negocios para generar el PDF
+            byte[] pdf = new RN_Libro().GenerarPDF();
+            // Devolver el PDF como una descarga al usuario
+            return File(pdf, "application/pdf", "Libros_" + DateTime.Now.ToString() + ".pdf");
+        }
+
         #endregion
 
         /*--------------CATEGORIA---------------------*/

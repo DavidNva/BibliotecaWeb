@@ -80,7 +80,6 @@ namespace CapaNegocio
 
         }
 
-
         public bool Editar(EN_Libro obj, out string Mensaje)
         {
             Mensaje = string.Empty;
@@ -141,13 +140,20 @@ namespace CapaNegocio
                 return false;
             }
         }
+
         public bool GuardarDatosImagen(EN_Libro obj, out string mensaje)
         {
             return objCapaDato.GuardarDatosImagen(obj, out mensaje);
         }
+
         public bool Eliminar(int id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
+        }
+
+        public byte[] GenerarPDF()
+        {
+            return objCapaDato.GenerarPDF();
         }
         //private BD_Libro objCapaDato = new BD_Libro(); /*Instancia una clase de la capa datos */
 
