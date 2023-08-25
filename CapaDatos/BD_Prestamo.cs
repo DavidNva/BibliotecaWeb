@@ -402,19 +402,18 @@ namespace CapaDatos
 
                     });
 
+                    int totalPendientes = 0;
+                    int totalDevueltos = 0;
                     // page.Content().Background(Colors.Yellow.Medium);
                     page.Content().PaddingVertical(10).Column(col1 =>
                     {
                         int totalPrestamo = 0;
+                        
                         col1.Item().LineHorizontal(0.5f);
                         col1.Item().Table(tabla =>
                         {//Seccion de la tabla
                             tabla.ColumnsDefinition(columns =>
                             {
-                                //columns.RelativeColumn(3);
-
-                                //columns.ConstantColumn(100);
-                                //columns.RelativeColumn();
                                 columns.ConstantColumn(55);//Activo
 
                                 columns.RelativeColumn();//Libro en prestamo
@@ -465,11 +464,13 @@ namespace CapaDatos
                                 {
                                     tabla.Cell().BorderBottom(0.5f).Background("#DC3545").BorderColor("#D9D9D9")
                                     .Padding(2).Text("Pendiente").FontSize(10).Bold().FontColor("#FFFFFF");//.BackgroundColor("#DC3545");
+                                    totalPendientes++;
                                 }
                                 else
                                 {
                                     tabla.Cell().BorderBottom(0.5f).Background("#198754").BorderColor("#D9D9D9")
                                     .Padding(2).Text("Devuelto").FontSize(10).FontColor("#FFFFFF");//.BackgroundColor("#198754"); Si solo queremos que el background aplique al texto
+                                    totalDevueltos++;
                                 }
 
                                 tabla.Cell().BorderBottom(0.5f).BorderColor("#D9D9D9")
@@ -500,16 +501,22 @@ namespace CapaDatos
                         });
 
                         //col1.Item().AlignRight().Text("Total: 1500").FontSize(12);
-                        col1.Item().AlignRight().Text($"Total de Préstamos: {totalPrestamo}").FontSize(12);
+                        //col1.Item().AlignRight().Text($"Total de Préstamos: {totalPrestamo}").FontSize(12);
+                        //col1.Item().AlignRight().Text($"Total de Préstamos: {totalPendientes}").FontSize(12);
+                        //col1.Item().AlignRight().Text($"Total de Préstamos: {totalDevueltos}").FontSize(12);
 
+                        
 
-                        //col1.Item().Background(Colors.Grey.Lighten3).Padding(10)//Seccion de comentarios
-                        //.Column(column =>
-                        //{
-                        //    column.Item().Text("Comentarios").FontSize(14);
-                        //    column.Item().Text(Placeholders.LoremIpsum());
-                        //    column.Spacing(5);
-                        //});
+                        col1.Item().Background(Colors.Grey.Lighten3).Padding(10)//Seccion de comentarios
+                        .Column(column =>
+                        {
+                            //column.Item().Text("Comentarios").FontSize(14);
+                            //column.Item().Text(Placeholders.LoremIpsum());
+                            //column.Spacing(5);
+                            column.Item().AlignRight().Text($"Total de Préstamos: {totalPrestamo}").FontSize(12);
+                            column.Item().AlignRight().Text($"Pendientes: {totalPendientes} | Devueltos: {totalDevueltos}").FontSize(12);
+                            //column.Item().AlignRight().Text($"Total de Préstamos Devueltos: {totalDevueltos}").FontSize(12);
+                        });
 
                         col1.Spacing(10);
                     });
