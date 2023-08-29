@@ -1211,6 +1211,14 @@ GO
     --A UN DETALLEPRESTAMO CUYO A SU VEZ ESTA RELACIONADO CON PRESTAMO Y ESTE ACTIVO DICHO PRESTAMO. ENTONCES PARA PODER ELMINAR
     --NO DEBE ESTAR UN ID CON UN EJEMPLAR EN DETALLE PRESTAMO QUE AUN ESTE ACTIVO.
     GO
+
+select * from  libro where idLibro = 1065
+select * from DETALLEprestamo where IDEjemplar = 1108 or IDEjemplar = 1109 
+SELECT * FROM EJEMPLAR WHERE ID_Libro = 1065
+go
+
+sp_EliminarLibro 1060,'',1
+go
 create   procedure sp_EliminarLibro(
     @IdLibro int,
     @Mensaje varchar(500) output,
@@ -1223,9 +1231,12 @@ begin
     inner join Libro l on l.IDLibro = ej.ID_Libro
     inner join DetallePrestamo dp on dp.IDEjemplar = ej.IDEjemplarLibro
     inner join Prestamo p on p.IdPrestamo = dp.IdPrestamo and p.Activo = 1
-    where l.IdLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
+    where l.IdLibro = 1065 @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
     begin 
+    select *  from prestamo
         delete top(1) from Libro where IdLibro = @IdLibro
+
+        delete top(1) from Prestamo where IdPrestamo = @IdPrestamo
         --Como el ejemplar tiene una relacion con idLibro y un deletecascade se eliminará automaticamente al eliminar el libro
         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
         SET @Resultado = 1 --true
@@ -1919,6 +1930,7 @@ create procedure usp_RegistrarPrestamo(
     --@Estado bit,--Es como si dijeramos activo(El 0 significa no Prestamo activo o "DEVUELTO" y
     -- el 1 significa prestamo activo o "No devuelto")
     @Observaciones nvarchar(500),
+    @Id_Ejemplar int,--SE AGREGO ESTA COLUMNA PARA PLICAR LA ELIMINACION EN CASCADA EN CASO DE QUE SE ELIMINE EL LIBRO
     @DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
 	--@EjemplarActivo [Ejemplar_Activo] READONLY,
     @Resultado bit output,
@@ -1931,8 +1943,8 @@ begin
         set @Resultado = 1
         set @Mensaje = ''
         begin transaction registro
-        insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones )
-        values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones )
+        insert into Prestamo(Id_Lector, TotalLibro,DiasDePrestamo,Observaciones, IDEjemplar )--COLUMNA NUEVA PARA PLICAR EL DELETE CASCADE EN CASO DE QUE SE ELIMINE UN LIBRO
+        values(@Id_Lector, @TotalLibro,@DiasDePrestamo, @Observaciones, @Id_Ejemplar )
 
         set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
 
@@ -1961,7 +1973,7 @@ insert into DetallePrestamo
 values(1,1,3,3)
 select * from lector
 go
-create  procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
+create procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,---El id es Identity
     @Id_Lector int,
     @TotalLibro int, 
@@ -1970,6 +1982,7 @@ create  procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre com
     --@Estado bit,--Es como si dijeramos activo(El 0 significa no Prestamo activo o "DEVUELTO" y
     -- el 1 significa prestamo activo o "No devuelto")
     @Observaciones nvarchar(500),
+    @Id_Ejemplar int,--SE AGREGO ESTA LINEA COMO PRUEBA
     --@DetallePrestamo [EDetalle_Prestamo] READONLY,--SE USA LA ESTRUCTURA CREADA ANTERIORMENTE
 	--@EjemplarActivo [Ejemplar_Activo] READONLY,
     @Resultado bit output,

@@ -184,14 +184,17 @@ CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso an
   FechaPrestamo date default getdate() not null,
   FechaDevolucion date null,--No especificaremos nada para que por default sea null (tiene un default null)
   DiasDePrestamo int not null default 7,--Regularmente una semana 7 dias
-  Observaciones varchar(500) not null
+  Observaciones varchar(500) not null,
+  --SE AGREGO ESTA COLUMNA PARA APLICAR LA ELIMINACION EN CASCADA EN CASO DE QUE SE ELIMINE EL LIBRO
+  IDEjemplar int not null references Ejemplar(IdEjemplarLibro)  ON DELETE CASCADE --delete cascade para eliinar todo el prestamo, y detalle si se eliminar un libro, un ejemplar
+  --si se elimina un libro se eliminan en cascada sus ejemplares, si se elimina un ejemplar se elimina el prestamo y si se elimina el prestamo se elimina el detalle prestamo siguiendo una cadena de acciones
 )--No tiene referencia (Se puede eliminar)
 go
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
 	IdDetallePrestamo int identity  not null  CONSTRAINT PK_DetallePrestamo primary key,
 	IdPrestamo int  not null references Prestamo(IdPrestamo) ON DELETE CASCADE ON UPDATE CASCADE,--este debe tener un cascade delete y update !IMPORTANTE
   --Este id libro,tendrá que ser el id del ejemplar (Pero primero lo manejaremos con el id de libro)
-	IDEjemplar int references Ejemplar(IdEjemplarLibro) not null,--Posiblemente que tenga un DELETE CASCADE POR SI SE ELIMINA UN LIBRO CON SUS EJEMPLARES
+	IDEjemplar int not null references Ejemplar(IdEjemplarLibro) ,--Posiblemente que tenga un DELETE CASCADE POR SI SE ELIMINA UN LIBRO CON SUS EJEMPLARES
   --Posiblemente sea mejor el ejemplar id de ejemplar
 	CantidadEjemplares int not null,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
 	Total decimal(10,2)--total del precio del producto

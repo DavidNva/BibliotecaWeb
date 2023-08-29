@@ -16,7 +16,7 @@ using ClosedXML.Excel;
 
 namespace CapaPresentacionAdmin.Controllers
 {
-    //[Authorize] //No va a poder ingresar a ninguna de estas vistas si no se encuentra autorizado
+    [Authorize] //No va a poder ingresar a ninguna de estas vistas si no se encuentra autorizado
 
     public class HomeController : Controller
     {
@@ -25,11 +25,11 @@ namespace CapaPresentacionAdmin.Controllers
         {
             return View();/*Retorna la vista con el nombre de Index (Dentro de la carpeta vista, hay un Index*/
         }
-        //[Authorize]
-        public ActionResult Usuarios()
-        {
-            return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
-        }
+        ////[Authorize]
+        //public ActionResult Usuarios()
+        //{
+        //    return View();/*Retorna la vista con el nombre de Usuarios(Dentro de la carpeta vista, hay un home, dentro usuarios*/
+        //}
         //[Authorize]
         public ActionResult Lectores()
         {

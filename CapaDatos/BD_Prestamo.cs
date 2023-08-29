@@ -30,6 +30,9 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
                     cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
                     cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);
+                    //SE AGREGO ESTA COLUMNA PARA APLICAR LA ELIMINACION EN CASCADA EN CASO DE QUE SE ELIMINE EL LIBRO
+                    cmd.Parameters.AddWithValue("Id_Ejemplar", obj.oId_Ejemplar.IdEjemplarLibro);
+
                     cmd.Parameters.AddWithValue("DetallePrestamo", DetallePrestamo);//El data table debe tener las mismas columnas de la estructura creada
                                                                                     //en sql (las 3 creadas: IdLibro, Cantidad, Total)
 
@@ -68,7 +71,8 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("TotalLibro", obj.TotalLibro);
                     cmd.Parameters.AddWithValue("DiasDePrestamo", obj.DiasDePrestamo);
                     cmd.Parameters.AddWithValue("Observaciones", obj.Observaciones);
-                    
+                    cmd.Parameters.AddWithValue("Id_Ejemplar", obj.oId_Ejemplar.IdEjemplarLibro);
+
                     //Dos parametros de salida, un entero de resultaado y un string de mensaje
                     cmd.Parameters.Add("Resultado", SqlDbType.Int).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;

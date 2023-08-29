@@ -164,6 +164,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccesoController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MantenedorController.cs" />
     <Compile Include="Global.asax.cs">
@@ -558,6 +559,12 @@
     <Content Include="Views\Mantenedor\CategoriaPruebaSelect.cshtml" />
     <Content Include="Views\Home\Prestamos.cshtml" />
     <Content Include="Views\Home\InfoBiblioteca.cshtml" />
+    <Content Include="Views\Admin\Categoria.cshtml" />
+    <Content Include="Views\Admin\Sala.cshtml" />
+    <Content Include="Views\Admin\Editorial.cshtml" />
+    <Content Include="Views\Admin\Autor.cshtml" />
+    <Content Include="Views\Admin\Libros.cshtml" />
+    <Content Include="Views\Admin\Usuarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
