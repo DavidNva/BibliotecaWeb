@@ -1,4 +1,4 @@
-Use Biblioteca;
+Use BibliotecaWeb2;
 --El Orden de ejecucion de scripts es: 
 /*
   1. Biblioteca-DDL Y triGGERS 
@@ -17,8 +17,8 @@ go
 --EJemplo en categoria es C0001,C0002,C0003,C0004, sucesivamente
 --Esta referenciado con libro  (No se permite eliminar)
 --Categoria tiene un indice unico
---Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
-create procedure sp_RegistrarCategoria ( 
+--Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos) ahora en sp
+create procedure sp_RegistrarCategoria ( --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para categoria
     @Descripcion varchar(100), 
     @Activo bit,
     @Mensaje varchar(500) output,
@@ -46,46 +46,11 @@ begin
     else 
         SET @Mensaje = 'La categoria ya existe'
 end
-go
 --POSIBLE MODIFICACION DE sp EditarCategoria: Para no actualizar a inactivo si la categoria esta relacionada con un libro
 --O quizas la mejr opcion sea inabilitar la seleccion de activo para no dejar al usuario admin actualizar ese valo a inactivo
 --y no generar problemas de logico relacionando un libro con categoria que quizas este inactiva
 --aunque es listado de libro tambien tiene la validacion de solo listar categorias que estan si o si activas
-/*
-    
-create proc sp_EditarCategoria( --Trabajo como un booleano
-    @IdCategoria nvarchar(10),
-    @Descripcion varchar(100),--Tiene índice único
-    @Activo bit,
-    @Mensaje varchar(500) output,
-    @Resultado bit output
-)
-as
-begin 
-    SET @Resultado = 0 --false
-    IF NOT EXISTS (SELECT * FROM CATEGORIA WHERE Descripcion = @Descripcion and IDCategoria != @IdCategoria)
-    begin 
-        if not exists(Select * from categoria c inner join Libro l on l.Id_Categoria = c.IdCategoria where c.IDCategoria = @IdCategoria and @Activo = 0)
-        begin
-            update top(1) CATEGORIA set 
-            Descripcion = @Descripcion,
-            Activo = @Activo
-            where IDCategoria = @IdCategoria
-        end
-        else
-        begin
-            update top(1) CATEGORIA set Descripcion =  @Descripcion where IDCategoria = @IdCategoria
-              set @Mensaje = 'Solo se actualizó la descripcion de la categoria. No se puede actualizar a inactivo'
-           
-        end
-        set @Resultado = 1 --true
-    end 
-    else 
-    
-        set @Mensaje = 'La categoria ya existe'
-end
 go
-*/
 create  proc sp_EditarCategoria( --Trabajo como un booleano
     @IdCategoria nvarchar(10),
     @Descripcion varchar(100),--Tiene índice único
@@ -126,15 +91,14 @@ begin
     else 
         set @Mensaje = 'La categoria se encuentra relacionada con un libro'
 end
-go
 -- ----------------------------------------------------SALA------------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Sala***********************************
 -- --EJemplo EN SALA es S0001,S0002,S0003,S0004, sucesivamente
 -- --Sala tiene un indice unico para no repetirlas 
 -- --Esta referenciado con libro (No se permite eliminar)
 -- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
-
-create procedure sp_RegistrarSala ( 
+go
+create procedure sp_RegistrarSala ( --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para sala
     @Descripcion varchar(100), 
     @Activo bit,
     @Mensaje varchar(500) output,
@@ -162,8 +126,8 @@ begin
     else 
         SET @Mensaje = 'La sala ya existe'
 end
-go
 
+go
 create  proc sp_EditarSala( --Trabajo como un booleano
     @IdSala nvarchar(10),
     @Descripcion varchar(100),--Tiene índice único
@@ -205,45 +169,14 @@ begin
     else 
         set @Mensaje = 'La sala se encuentra relacionada con un libro'
 end
-GO
-
-
--- CREATE PROCEDURE sp_RegistrarSala ( @NombreSala varchar(30)) --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para sala
--- AS
--- BEGIN
---   DECLARE @CodSala VARCHAR(10), @Cod int
---   SELECT @Cod = RIGHT(MAX(IDSala),4 ) + 1 FROM Sala;--Estamos seleccionando los numeros
---     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
---       BEGIN  
---         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
---       END
---         SELECT @CodSala = CONCAT('S',RIGHT(CONCAT('0000',@Cod),4));
---         INSERT INTO Sala VALUES (@CodSala,@NombreSala)
--- END
--- go
--- --*************************** Actualizar Sala *********************************** 
--- CREATE PROCEDURE sp_ActualizarSala
--- @IDSalaSP varchar(10),
--- @SalaSP varchar(30)--Tiene indice unico
--- AS
--- BEGIN
--- IF NOT EXISTS (SELECT * FROM Sala WHERE Sala =@SalaSP and IdSala != @IdSalaSP)
--- 	UPDATE Sala SET Sala = @SalaSP WHERE IDSala = @IDSalaSP;
--- END;
--- go
--- --*************************** Eliminar Sala *********************************** 
--- CREATE PROCEDURE sp_EliminarSala
--- @IDSalaSP varchar(10)
--- AS
--- DELETE Sala WHERE IDSala = @IDSalaSP;
- go
+go
 -- ---------------------------------------------------Editorial-------------------------------------------------------------------
 -- --************************* Autogenerar Codigo Editorial*******************************
 -- --EJemplo EN editorial es ED0001,ED0002,ED0003,ED0004, sucesivamente
 -- --Editorial tiene un índice único
 -- --Esta referenciado con libro  (No se permite eliminar)
 -- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
-create procedure sp_RegistrarEditorial ( 
+create procedure sp_RegistrarEditorial ( --Generar codigo autoomaticamente e hacer demas inserciones --Hay un indice unico para editorial
     @Descripcion varchar(100),
     @Activo bit,
     @Mensaje varchar(500) output,
@@ -314,55 +247,15 @@ begin
     else 
         set @Mensaje = 'La editorial se encuentra relacionada con un libro'
 end
+
 go
-
-
-
-
--- CREATE PROCEDURE sp_RegistrarEditorial ( @NombreEditorial varchar(60)) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para editorial
--- AS
--- BEGIN
---   DECLARE @CodEditorial VARCHAR(10), @Cod int
---   SELECT @Cod = RIGHT(MAX(IDEditorial),4 ) + 1 FROM Editorial;--Estamos seleccionando los numeros
---     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
---       BEGIN  
---         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
---       END
---         SELECT @CodEditorial = CONCAT('ED',RIGHT(CONCAT('0000',@Cod),4));--Al tener dos letras, cambia el numero a recorrer a 3
---         INSERT INTO Editorial VALUES (@CodEditorial,@NombreEditorial)
--- END
--- go
--- --*************************** Actualizar Editorial*********************************** 
--- CREATE PROCEDURE sp_ActualizarEditorial
--- @IDEditorialSP varchar(10),
--- @EditorialSP varchar(60)--Tiene índice único
--- AS
--- BEGIN
--- IF NOT EXISTS (SELECT * FROM Editorial WHERE Editorial =@EditorialSP and IdEditorial != @IdEditorialSP)
--- 	UPDATE Editorial SET Editorial = @EditorialSP WHERE IDEditorial = @IDEditorialSP;
--- END;
--- go
--- --*************************** Eliminar Editorial *********************************** 
--- CREATE PROCEDURE sp_EliminarEditorial
--- @IDEditorialSP varchar(10)
--- AS
--- DELETE Editorial WHERE IDEditorial = @IDEditorialSP;
--- go
--- ---------------------------------------------------Autor------------------------------------------------------------------------
--- --************************* Autogenerar Codigo Autor *******************************
--- --Ejemplo EN autor es  A0001,A0002,A0003,A0004, sucesivamente
--- --Autor tiene un índice compuesto unico con (Nombre, Apellidos)
--- ----Esta referenciado con LibroAutor (No se puede eliminar, o afectará a todos)
--- --Tiene un trigger para autogenerar codigo(aunque en el procedimiento lo automaticemos)
-use BibliotecaWeb
-go
-create procedure sp_RegistrarAutor ( 
+create procedure sp_RegistrarAutor (--Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para Autor
     @Nombres nvarchar(100),
     @Apellidos nvarchar(100),
     @Activo bit,
     @Mensaje varchar(500) output,
     @Resultado int output
-) --Generar codigo autoomaticamente e hacer demas inserciones -Hay un indice unico para Autor
+) 
 as
 begin
     SET @Resultado = 0 --No permite repetir una misma descripcion, ni al insertar ni al actualizar
@@ -385,9 +278,9 @@ begin
     else 
         SET @Mensaje = 'La autor ya existe'
 end
-go
 
-create  proc sp_EditarAutor( --Trabajo como un booleano
+go
+create  proc sp_EditarAutor(--Trabajo como un booleano
     @IdAutor nvarchar(10),
     @Nombres nvarchar(100),--Tiene indice compuesto con Apellidos
     @Apellidos nvarchar(100),--Tiene indice compuesto con Nombre
@@ -411,8 +304,8 @@ begin
     else 
         set @Mensaje = 'La autor ya existe'
 end
-go
 
+go
 create proc sp_EliminarAutor( --Trabajo como un booleano
     @IdAutor nvarchar(10),
     @Mensaje varchar(500) output,
@@ -430,66 +323,9 @@ begin
     else 
         set @Mensaje = 'La autor se encuentra relacionada con un libro'
 end
-go
 
--- CREATE PROCEDURE sp_RegistrarAutor ( @NombreAutor varchar(40), @ApellidosAutor varchar(40)) --Hay un indice unico para el nombre completo de autor
--- AS
--- BEGIN
---   DECLARE @CodAutor VARCHAR(10), @Cod int
---   SELECT @Cod = RIGHT(MAX(IDAutor),4 ) + 1 FROM Autor;--Estamos seleccionando los numeros
---     IF @Cod IS NULL --Pero si en inicio no hay ningun dato
---       BEGIN  
---         SElECT @Cod = 1; --Entonces asignamos como primer numero = 1
---       END
---         SELECT @CodAutor = CONCAT('A',RIGHT(CONCAT('0000',@Cod),4));
---         INSERT INTO Autor VALUES (@CodAutor,@NombreAutor,@ApellidosAutor)
--- END
--- go
--- --*************************** Actualizar Autor*********************************** 
--- CREATE PROCEDURE sp_ActualizarAutor
--- @IDAutorSP varchar(10),
--- @NombreAutorSP varchar(40),--Tiene indice compuesto con Apellidos
--- @ApellidosSP varchar(40)--Tiene indice compuesto con Nombre
--- AS
--- BEGIN--EJemplo anterior
--- --IF NOT EXISTS (SELECT * FROM Editorial WHERE Editorial =@EditorialSP and IdEditorial != @IdEditorialSP)
--- IF EXISTS (SELECT *  FROM Autor WHERE IDAutor = @IdAutorSP )
---   BEGIN
--- 	UPDATE Autor SET 
---   Nombre = @NombreAutorSP,
---   Apellidos = @ApellidosSP
---    WHERE IDAutor = @IDAutorSP;
---   END
--- END;
--- go
--- --*************************** Eliminar Autor *********************************** 
--- CREATE PROCEDURE sp_EliminarAutor
--- @IDAutorSP varchar(10)
--- AS
--- DELETE Autor WHERE IDAutor = @IDAutorSP;
--- go
--- ------------------------------------------------------TipoPersona----------------------------------------------------------
--- --************************* Actualizar TipoPersona ********************************
--- --Es identity
--- --Tiene un indice unico para Descripcion
--- --Solo hay tres tipos
--- --Esta referenciado a Usuario, pero no tiene sentido que usuario tenga un delete cascade EN SU Foreign key, porque no eliminaremos un tipo
--- --quizas la actualizaremos
--- --ademas si se puede elimianr mientras hay referencia (pero estos tres no tiene sentido eliminarlos)
--- CREATE PROCEDURE sp_ActualizarTipoPersona(--Actualiza todos los campos, menos el ID
---     @IDTipoPersonaSP varchar(25),
---     @DescripcionSP varchar(25) --En este se indica la nueva descripcion para el IDTipoPersona
---   ) 
--- AS
--- BEGIN 
---   IF EXISTS (SELECT *  FROM TipoPersona WHERE IdTipoPersona = @IDTipoPersonaSP )
---     BEGIN
--- 	    UPDATE TipoPersona SET Descripcion = @DescripcionSP WHERE IdTipoPersona = @IDTipoPersonaSP;
---     END
--- END;
--- ---------------------------------------------------Usuario------------------------------------------------------------
-use BibliotecaWeb
 go
+-----------------------------------------------------Usuario------------------------------------------------------------
 -- --************************* Registrar Usuario *******************************
 --Depende de tipo persona, pero no es necesario hacer un delete cascade, porque no tendria sentido eliminar un tipo de persona (solo tenemos 3)
 --Tiene indice compuesto UNICO con (Nombre, A_Paterno, A_Materno)
@@ -502,6 +338,7 @@ go
 --Escuela de procedencia e EMAIL pueden ser NULL
 --Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key con prestamo tiene un delete en cascade)
 --PROCEDIMIENTOS PARA USUARIO
+go
 create procedure sp_RegistrarUsuario(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,---El id es Identity
     @Nombres varchar(100),--Tiene indice compuesto con Apellidos
@@ -530,9 +367,14 @@ begin
     end 
     else 
      SET @Mensaje = 'El correo del usuario ya existe'
-end 
+end
+GO
+INSERT INTO TipoPersona(Descripcion)--Es id es identity
+VALUES ('Administrador'),
+       ('Empleado');
+go
+sp_RegistrarUsuario 'David','Nava Garcia','Zacatlan','Luis Cabrera','7649726682','david@gmail.com','test123',1,1,'',1
 go 
--- sp_RegistrarUsuario 'Zaid','test3','Tepeixco','Centro','18277373','angel@gmail.com','test123',1,1,'',1
 create proc sp_EditarUsuario(
     @IdUsuario int,
     @Nombres varchar(100),--Tiene indice compuesto con Apellidos
@@ -566,6 +408,7 @@ begin
     else 
         set @Mensaje = 'El correo del usuario ya existe'
 end
+
 go
 create proc sp_EliminarUsuario( --Trabajo como un booleano
     @IdUsuario int,
@@ -580,168 +423,9 @@ begin
         set @Resultado = 1 --true
     end 
     if(@Resultado != 1)
-        set @Mensaje = 'Error: No se pudo elimnar el usuario. Intentelo de nuevo'
+        set @Mensaje = 'Error: No se pudo eliminar el usuario. Intentelo de nuevo'
 end
-GO
--- --************************* Registrar Usuario *******************************
---Depende de tipo persona, pero no es necesario hacer un delete cascade, porque no tendria sentido eliminar un tipo de persona (solo tenemos 3)
---Tiene indice compuesto UNICO con (Nombre, A_Paterno, A_Materno)
---Tiene un Check para la edad
---Tiene un DEFAULT en Ciudad = ZACATLÁN 
---Tiene un DEFAULT en Observaciones = Ninguna 
---Tiene un DEFAULT en TipoPersona = 1
---Tiene un DEFAULT en FechaCreacion = GETDATE();
---Es identity
---Escuela de procedencia e EMAIL pueden ser NULL
---Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key con prestamo tiene un delete en cascade)
--- CREATE PROCEDURE sp_RegistrarUsuario(--Hay un indice unico para el nombre completo del usuario 
---     --@IDUsuario int,---El id es Identity
---     @Nombre nvarchar(40), --Tiene indice compuesto con A_Paterno y A_Materno
---     @A_Paterno varchar(20),--Tiene indice compuesto con Nombre y A_Materno
---     @A_Materno varchar(20),--Tiene indice compuesto con A_Paterno y Nombre
---     @Edad tinyint, --Tiene un check para una edad entre 0 y 125
---     @EscuelaProcedencia nvarchar(100),--Puede ser null --Aunque para este SP SI ES NULL se agrega un TIPO DEFAULT: NINGUNA
---     --Grado varchar (10), --No agregado en DDL
---     --/* @Ciudad*/ --Está Default como --"Zacatlán"
---     @Calle nvarchar(100),
---     @Telefono varchar(20), 
---     @Email nvarchar(100) --Puede ser null
---    -- @Observaciones varchar(500) --Estará definida como default, como "Ninguna"
---     --@ID_TipoPersona int --ESTARÁ COMO DEFAULT = 1, ES DECIR, COMO LECTOR
---     --FechaCreacion date --Esta como default DEFAULT GETDATE()
---   )--TERMINAN LOS PARAMETROS
--- AS
--- BEGIN
---     IF @EscuelaProcedencia IS NULL
---       BEGIN
---         SET @EscuelaProcedencia = 'NINGUNA';
---       END
---       INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Calle, Telefono, Email)
---                    VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia,@Calle, @Telefono, @Email)--/* @Ciudad*/ --Posible Default como --"Zacatlán"
--- END
--- go
--- --************************* Registrar Usuario Indicando TipoPersona*******************************
--- CREATE PROCEDURE sp_RegistrarUsuarioAdmin(--Hay un indice unico para el nombre completo del usuario 
---     --@IDUsuario int,
---     @Nombre nvarchar(40),--Hay un indce compueto con los apellidos
---     @A_Paterno varchar(20),
---     @A_Materno varchar(20),
---     @Edad tinyint,--Tiene un check para una edad entre 0 y 125
---     @EscuelaProcedencia nvarchar(100),--Puede ser null --Aunque para este SP SI ES NULL se agrega un TIPO DEFAULT: NINGUNA
---     --Grado varchar (10), No agregado en DDL
---     @Ciudad nvarchar(60), --Estará Default como --"Zacatlán"
---     @Calle nvarchar(100),
---     @Telefono varchar(20), 
---     @Email nvarchar(100),--PUEDE SER NULL 
---     @Observaciones varchar(500), --Estará definida como default, como "Ninguna"
---     @ID_TipoPersona int,
---     @Contrasenia VARCHAR(100)
---     --FechaCreacion date --Esta como default DEFAULT GETDATE()
---   )--TERMINAN LOS PARAMETROS
--- AS
--- BEGIN
---     IF @EscuelaProcedencia IS NULL
---       BEGIN
---        SET @EscuelaProcedencia = 'NINGUNA';
---       END
---     INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email,Observaciones,ID_TipoPersona,Contrasenia)
---                  VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia,@Ciudad,@Calle, @Telefono, @Email,@Observaciones,@ID_TipoPersona,@Contrasenia)--/* @Ciudad*/ --Posible Default como --"Zacatlán"
--- END
--- go
 
-
--- --************************* Registrar Usuario Indicando TipoPersona*******************************
--- CREATE PROCEDURE sp_RegistrarUsuarioConTipoPersona(--Hay un indice unico para el nombre completo del usuario 
---     --@IDUsuario int,
---     @Nombre nvarchar(40),--Hay un indce compueto con los apellidos
---     @A_Paterno varchar(20),
---     @A_Materno varchar(20),
---     @Edad tinyint,--Tiene un check para una edad entre 0 y 125
---     @EscuelaProcedencia nvarchar(100),--Puede ser null --Aunque para este SP SI ES NULL se agrega un TIPO DEFAULT: NINGUNA
---     --Grado varchar (10), No agregado en DDL
---     @Ciudad nvarchar(60), --Estará Default como --"Zacatlán"
---     @Calle nvarchar(100),
---     @Telefono varchar(20), 
---     @Email nvarchar(100),--PUEDE SER NULL 
---     @Observaciones varchar(500), --Estará definida como default, como "Ninguna"
---     @ID_TipoPersona int 
---     --FechaCreacion date --Esta como default DEFAULT GETDATE()
---   )--TERMINAN LOS PARAMETROS
--- AS
--- BEGIN
---     IF @EscuelaProcedencia IS NULL
---       BEGIN
---        SET @EscuelaProcedencia = 'NINGUNA';
---       END
---     INSERT INTO Usuario (Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email,Observaciones,ID_TipoPersona)
---                  VALUES (@Nombre, @A_Paterno, @A_Materno, @Edad, @EscuelaProcedencia,@Ciudad,@Calle, @Telefono, @Email,@Observaciones,@ID_TipoPersona)--/* @Ciudad*/ --Posible Default como --"Zacatlán"
--- END
--- go
-
--- --*************************** Actualizar Usuario con tipo persona*********************************** 
--- CREATE PROCEDURE sp_ActualizarUsuario(
---     @IDUsuarioSP int,--No se va a actualizar el ID, esta variable se usará para identificar la actualizacion
---     @NombreUsuarioSP nvarchar(40),--Tiene indice compuesto con los apellidos
---     @A_PaternoSP varchar(20),
---     @A_MaternoSP varchar(20),
---     @EdadSP tinyint, --Tiene un check (0-125)
---     @EscuelaProcedenciaSP nvarchar(100),--Puede ser NULL
---     --Grado varchar (10),
---     @CiudadSP varchar(60), 
---     @CalleSP nvarchar(100),
---     @TelefonoSP varchar(20), 
---     @EmailSP nvarchar(100),--Puede ser NULL
---     @ObservacionesSP nvarchar(100),
---     @ID_TipoPersonaSP int, --1, 2 ó 3
---     @Contrasenia VARCHAR(100)
---     --FechaCreacion date --Esta como default DEFAULT GETDATE()
--- )
--- AS
--- BEGIN--EJemplo anterior
--- --IF NOT EXISTS (SELECT * FROM Usuario WHERE Email =@EmailSP and IdUsuario != @IdUsuarioSP)
--- IF EXISTS (SELECT *  FROM Usuario WHERE IDUsuario = @IdUsuarioSP )
---   BEGIN
--- 	UPDATE Usuario SET 
---   Nombre = @NombreUsuarioSP,
---   A_Paterno = @A_PaternoSP,
---   A_Materno = @A_MaternoSP,
---   Edad = @EdadSP,
---   EscuelaProcedencia = @EscuelaProcedenciaSP,
---     --Grado varchar (10),
---   Ciudad = @CiudadSP, 
---   Calle = @CalleSP,
---   Telefono = @TelefonoSP, 
---   Email = @EmailSP,
---   OBservaciones = @ObservacionesSP,
---   ID_TipoPersona = @ID_TipoPersonaSP,
---   Contrasenia = @Contrasenia
---   WHERE IDUsuario = @IDUsuarioSP;
---   END
--- END;
--- go
--- --*************************** Eliminar Usuario *********************************** 
--- CREATE PROCEDURE sp_EliminarUsuario
--- @IDUsuarioSP varchar(10)
--- AS
--- DELETE Usuario WHERE IDUsuario = @IDUsuarioSP;
--- go
--- --************************* Registrar LECTOR *******************************
-
---Tiene indice compuesto UNICO con (Nombre, A_Paterno, A_Materno)
---Tiene un Check para la edad
---Tiene un DEFAULT en Ciudad = ZACATLÁN 
---Tiene un DEFAULT en Observaciones = Ninguna 
---Tiene un DEFAULT en TipoPersona = 1
---Tiene un DEFAULT en FechaCreacion = GETDATE();
---Es identity
---Escuela de procedencia e EMAIL pueden ser NULL
---Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key con prestamo tiene un delete en cascade)
---PROCEDIMIENTOS PARA Lector
-sp_RegistrarLector 'Teresa2','Garcia G',31,1,'ITSSNP','8vo semestre','Zacatlan','Jose clemente orozco','786584939','teresa2@gmail.com','test123','',1
-go
-exec sp_RegistrarLector 'Maria2','Magdalena',73,0,'NINGUNA','NO APLICA','BUENOS AIRES JOPALA','JOSE CLEMENTE OROZCO','9876364734','mag2@gmail.com','test123','',1
-go
-select * from lector
 go  
 create procedure sp_RegistrarLector(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,---El id es Identity
@@ -801,157 +485,6 @@ go
 --         INSERT INTO Ejemplar VALUES (@CodEjemplar,@NumEjemplar,@ID_Libro_EJ)
 -- END
 -- go
--- --*************************** Actualizar Ejemplar*********************************** 
--- CREATE PROCEDURE sp_ActualizarEjemplar(
--- @IDEjemplarSP varchar(10),
--- @NumEjemplarSP int,
--- @ID_Libro_EJSP varchar(25)
--- )
--- AS
--- BEGIN
--- IF NOT EXISTS (SELECT * FROM Ejemplar WHERE ID_Libro =@ID_Libro_EJSP and IdEJemplar != @IDEjemplarSP)
--- 	UPDATE Ejemplar SET
---   NumEjemplar = @NumEjemplarSP,
---   ID_Libro = @ID_Libro_EJSP
---   WHERE IDEjemplar = @IDEjemplarSP;
--- END;
--- go
--- --*************************** Eliminar Ejemplar *********************************** 
--- CREATE PROCEDURE sp_EliminarEjemplar
--- @IDEjemplarSP varchar(10)
--- AS
--- DELETE Ejemplar WHERE IDEjemplar = @IDEjemplarSP;
--- go
-
--- --------------------------------------------------Prestamo------------------------------------------------------------
--- go
--- --************************* Registrar prestamo ********************************
--- --Es identity
--- --Depende de usuario  (foreign key: delete cascade)
--- --Depende de prestamo (foreign key: delete cascade)
--- --Como no tiene referencias (nadie depende de prestamo), pues se puede eliminar
--- --Tiene un DEFAULT  en FechaPrestamo = GetDate();
--- --Tiene un DEFAULT  en Devuelto = 0; --Es decir devuelte = false
--- --Tiene un DEFAULT  en FechaDevolucion = NULL; En teoria al insertar pues no puede haber un fecha en que ya lo devolvió
--- --Tiene un TRIGGER PARA reducir 1 a NumEjemplar de la tabla ejemplar: Esto para que al insertar 
--- --automaticamente se reste uno a numeros ejemplares, esto por cada ejemplar (se puede insertar y aplica el trigger para muchos valores
--- -- mientras no queramos insertar al mismo tiempo dos mismos ejemplares)
--- --Tiene otro TRIGGER para actualizar prestamo, si se actualizar (falta corregir errores)
--- CREATE  PROCEDURE sp_RegistrarPrestamo (
---    --@IDPrestamo int,--Es identity
---    @ID_Usuario int,
---    @ID_Ejemplar varchar(10),
---    --@FechaPrestamo date,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
---    @FechaMaxDev date,
---    --@Devuelto bit,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
---    --@FechaDevolucion date,--No especificaremos nada para que por default sea null
---    @Observaciones varchar(500) 
---    ) 
--- AS
--- BEGIN
---   INSERT INTO Prestamo (ID_Usuario,ID_Ejemplar,FechaMaxDev, Observaciones) 
---                 VALUES (@ID_Usuario,@ID_Ejemplar,@FechaMaxDev,@Observaciones)
--- END
--- go
--- --*************************** Actualizar Prestamo Completo*********************************** 
--- CREATE PROCEDURE sp_ActualizarPrestamo(
---    @IDPrestamoSP varchar(50),--Variable base para actualizar
---    @ID_UsuarioSP int,
---    @ID_EjemplarSP varchar(10),
---    @FechaPrestamoSP date,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
---    @FechaMaxDevSP date,
---    @DevueltoSP bit,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
---    @FechaDevolucionSP date,--No especificaremos nada para que por default sea null
---    @ObservacionesSP varchar(500) 
---   ) 
--- AS
--- BEGIN
---   IF EXISTS (SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoSP )
---     IF @DevueltoSP = 1
---     BEGIN
--- 	   UPDATE Prestamo SET 
---        ID_Usuario = @ID_UsuarioSP,
---        ID_Ejemplar = @ID_EjemplarSP,
---        FechaPrestamo = @FechaPrestamoSP,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
---        FechaMaxDev = @FechaMaxDevSP,
---        Devuelto = @DevueltoSP,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
---        FechaDevolucion = @FechaDevolucionSP,--No especificaremos nada para que por default sea null
---        Observaciones = @ObservacionesSP 
---      WHERE IDPrestamo = @IDPrestamoSP;
---     END
---  ELSE --(SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP)--(SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP AND Devuelto = 1)
---     BEGIN
--- 	   UPDATE Prestamo SET 
---        ID_Usuario = @ID_UsuarioSP,
---        ID_Ejemplar = @ID_EjemplarSP,
---        FechaPrestamo = @FechaPrestamoSP,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
---        FechaMaxDev = @FechaMaxDevSP,
---        Devuelto = @DevueltoSP,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
---        FechaDevolucion = NULL,--No especificaremos nada para que por default sea null
---        Observaciones = @ObservacionesSP  
---      WHERE IDPrestamo = @IDPrestamoSP;
---     END
--- END;
--- go
--- --actualizar prestamo completo sin ifs
--- CREATE PROCEDURE sp_ActualizarPrestamoCompleto(
---    @IDPrestamoSP int,--Variable base para actualizar
---    @ID_UsuarioSP int,
---    @ID_EjemplarSP varchar(10),
---    @FechaPrestamoSP date,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
---    @FechaMaxDevSP date,
---    @DevueltoSP bit,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
---    @FechaDevolucionSP date,--No especificaremos nada para que por default sea null
---    @ObservacionesSP varchar(500) 
---   ) 
--- AS
--- BEGIN
---   IF EXISTS (SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoSP )
---     BEGIN
--- 	   UPDATE Prestamo SET 
---        ID_Usuario = @ID_UsuarioSP,
---        ID_Ejemplar = @ID_EjemplarSP,
---        FechaPrestamo = @FechaPrestamoSP,--Estará asignada automáticamente con el CONSTRAINT DEFAULT -- DF_Prestamo_FechaPrestamo
---        FechaMaxDev = @FechaMaxDevSP,
---        Devuelto = @DevueltoSP,--1 es igual a si, y 0 es igual a no . Asigando por default como 0, 
---        FechaDevolucion = @FechaDevolucionSP,--No especificaremos nada para que por default sea null
---        Observaciones = @ObservacionesSP 
---      WHERE IDPrestamo = @IDPrestamoSP;
---     END
--- END
--- go
--- --*************************** Actualizar Prestamo Devuelto con la fecha*********************************** 
--- CREATE PROCEDURE sp_ActualizarPrestamoDevYFecha( --Servira cuando se devuelva un libro, donde obviamente debemos ingresar la fechaDev
--- @IDPrestamoDSP varchar(10),
--- @DevueltoSiNoSP bit,--Por default tiene 0
--- @FechaDevolucionDSP date --Por default es null
--- )
--- AS
--- BEGIN
---   IF EXISTS (SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP)
---     IF @DevueltoSiNoSP = 1
---     BEGIN
--- 	   UPDATE Prestamo SET 
---      Devuelto = @DevueltoSiNoSP,
---      FechaDevolucion = @FechaDevolucionDSP 
---      WHERE IDPrestamo = @IDPrestamoDSP;
---     END
---  ELSE --(SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP)--(SELECT *  FROM Prestamo WHERE IDPrestamo = @IdPrestamoDSP AND Devuelto = 1)
---     BEGIN
--- 	   UPDATE Prestamo SET 
---      Devuelto = @DevueltoSiNoSP,
---      FechaDevolucion = NULL 
---      WHERE IDPrestamo = @IDPrestamoDSP;
---     END
--- END;
--- go
-
--- --*************************** Eliminar Prestamo *********************************** 
--- CREATE PROCEDURE sp_EliminarPrestamo
--- @IDPrestamoSP varchar(10)
--- AS
--- DELETE Prestamo WHERE IDPrestamo = @IDPrestamoSP;
--- go
 -- ---------------------------------------------------Libro Autor------------------------------------------------------------
 -- --************************* Autogenerar Codigo LibroAutor*******************************
 -- --Tiene un trigger para autogenerar codigo
@@ -1001,25 +534,7 @@ go
 -- AS
 -- DELETE LibroAutor WHERE IDLibroAutor = @IDLibroAutorSP;
 -- go
--- ------------------------------------------------------Libro----------------------------------------------------------
--- --************************* Registrar Libro ********************************
--- --Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
--- --Tiene un DEFAULT en Volumen = 1
--- --Tiene un DEFAULT en Sala = S0001 (Sala General)
--- --Depende de Sala 
--- --Depende de Categoria
--- --Depende de Editorial
--- --Como estas tres no se permite eliminar, no es necesarios declararlas con delete cascade
--- --IMPORTANTE: Entender porque unas si se pueden eliminar y otras no:
--- /*            No podemos eliminar libro si el libroAutor no fuera cascade 
---               No podemos eliminar libro si el ejemplar no fuera cascade
---               Ahora, aunque el ejemplar fuera cascade (como esta referenciado a prestamo
---               pues tambien debe ser cascade en la foreign key de prestamo) de lo contrario
---               no podriamos eliminar el libro.
---           Se podria decir que 
---               Libro esta referenciado a ejemplar, y ejemplar esta referenciado a prestamo
---               Por eso para poder eliminar libro, las foreign key de estos debe ser cascade
--- */
+
 GO
 create proc sp_EditarLector(
     @IdLector int,
@@ -1077,41 +592,30 @@ begin
         set @Resultado = 1 --true
     end 
     if(@Resultado != 1)
-        set @Mensaje = 'Error: No se pudo elimnar el lector. Intentelo de nuevo'
+        set @Mensaje = 'Error: No se pudo eliminar el lector. Intentelo de nuevo'
 end
 
 go
---PROCEDIMIENTOS PARA LIBRO
--- create ALTER procedure sp_RegistrarLibro(
---     @Codigo varchar(25),--Es asignado por administrador al insertar
---     @Titulo nvarchar(130),
---     @Paginas int,
---     --Llaves foraneas
---     @IDCategoria nvarchar(10),
---     @IDEditorial nvarchar(10),
---     @IDSala nvarchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)
---     @Ejemplares int,
---     @AñoEdicion varchar(5),
---     @Volumen int,
---     @Observaciones varchar(500), --Definido como default: EN BUEN ESTADO
---     @Activo bit,
---     @Mensaje varchar(500) output,
---     @Resultado int output
---     )
--- as
--- begin
---     SET @Resultado = 0 --No permite repetir un mismo correo, ni al insertar ni al actualizar
---     IF NOT EXISTS (SELECT * FROM Libro WHERE Codigo = @Codigo)
---     begin 
---         insert into Libro(Codigo,Titulo,Paginas,Id_Categoria, Id_Editorial,Id_Sala, Ejemplares, AñoEdicion,Volumen,Observaciones, Activo) values 
---         (@Codigo, @Titulo,@Paginas, @IdCategoria, @IdEditorial, @IdSala, @Ejemplares, @AñoEdicion,@Volumen, @Observaciones, @Activo)
---         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
---         SET @Resultado = scope_identity() 
---     end 
---     else 
---      SET @Mensaje = 'El codigo del libro ya existe'
--- end 
--- go
+-- ------------------------------------------------------Libro----------------------------------------------------------
+-- --************************* Registrar Libro ********************************
+-- --Tiene un DEFAULT en Observaciones = EN PERFECTO ESTADO
+-- --Tiene un DEFAULT en Volumen = 1
+-- --Tiene un DEFAULT en Sala = S0001 (Sala General)
+-- --Depende de Sala 
+-- --Depende de Categoria
+-- --Depende de Editorial
+-- --Como estas tres no se permite eliminar, no es necesarios declararlas con delete cascade
+-- --IMPORTANTE: Entender porque unas si se pueden eliminar y otras no:
+-- /*            No podemos eliminar libro si el libroAutor no fuera cascade 
+--               No podemos eliminar libro si el ejemplar no fuera cascade
+--               Ahora, aunque el ejemplar fuera cascade (como esta referenciado a prestamo
+--               pues tambien debe ser cascade en la foreign key de prestamo) de lo contrario
+--               no podriamos eliminar el libro.
+--               Se podria decir que 
+--               Libro esta referenciado a ejemplar, y ejemplar esta referenciado a prestamo
+--               Por eso para poder eliminar libro, las foreign key de estos debe ser cascade
+-- */
+go
 create procedure sp_RegistrarLibro(--Nuevo sp que registra igual el libro con su ejemplar  la vez
     @Codigo varchar(25),--Es asignado por administrador al insertar
     @Titulo nvarchar(130),
@@ -1198,28 +702,17 @@ begin
     end 
     else 
      SET @Mensaje = 'El código del libro ya existe'
-end 
+end
+
 go
-SELECT * FROM LIBRO
-select * from detalleprestamo
-select * from ejemplar
-GO
 --PARA QUE ESTO FUNCIONE BIEN, ENTONCES EL DETALLEPRESTAMO EN SU COLUMNA ACTIVO
     --CUANDO EL ADMIN ACTUALICE UN PRESTAMO DE ACTIVO A INACTIVO (ES DECIR QUE VA A DEVOLVER EL LIBRO Y YA NO VA ESTAR EN PRESTAMO)
     --EL ACTIVO DE PRESTAMO SE ACTUALIZA A 0 Y ENTONCES AUTOMAICAMENTE TAMBIEN EL ACTIVO DE DETALLE PRESTAMO DEBE SER 0
     --CON ESO VALIDAREMOS ESTA SELECCION PARA ELIMINAR UN LIBRO NO DEBE HABER UN LIBRO RELACIONADO CON EJEMPLAR CUYO EJEMPLAR ESTE RELACIONADO 
     --A UN DETALLEPRESTAMO CUYO A SU VEZ ESTA RELACIONADO CON PRESTAMO Y ESTE ACTIVO DICHO PRESTAMO. ENTONCES PARA PODER ELMINAR
     --NO DEBE ESTAR UN ID CON UN EJEMPLAR EN DETALLE PRESTAMO QUE AUN ESTE ACTIVO.
-    GO
-
-select * from  libro where idLibro = 1065
-select * from DETALLEprestamo where IDEjemplar = 1108 or IDEjemplar = 1109 
-SELECT * FROM EJEMPLAR WHERE ID_Libro = 1065
 go
-
-sp_EliminarLibro 1060,'',1
-go
-create   procedure sp_EliminarLibro(
+create procedure sp_EliminarLibro(
     @IdLibro int,
     @Mensaje varchar(500) output,
     @Resultado int output
@@ -1231,12 +724,11 @@ begin
     inner join Libro l on l.IDLibro = ej.ID_Libro
     inner join DetallePrestamo dp on dp.IDEjemplar = ej.IDEjemplarLibro
     inner join Prestamo p on p.IdPrestamo = dp.IdPrestamo and p.Activo = 1
-    where l.IdLibro = 1065 @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
+    where l.IdLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
     begin 
-    select *  from prestamo
         delete top(1) from Libro where IdLibro = @IdLibro
 
-        delete top(1) from Prestamo where IdPrestamo = @IdPrestamo
+        -- delete top(1) from Prestamo where IdPrestamo = @IdPrestamo
         --Como el ejemplar tiene una relacion con idLibro y un deletecascade se eliminará automaticamente al eliminar el libro
         --La función SCOPE_IDENTITY() devuelve el último ID generado para cualquier tabla de la sesión activa y en el ámbito actual.
         SET @Resultado = 1 --true
@@ -1290,228 +782,10 @@ begin
     END CATCH
 
 end 
-go
-
--- create  proc sp_OperacionEjemplarLibro( --servirá para validar que vamos a agregar un ejemplar mas a un Libro registrado
---     --@IdLector int,
---     @IdLibro int, 
--- 	--@IdEjemplar int,
---     @Sumar bit, --si sumar aplica, recibe el valor de 1 y si no aplica recibe el valor de 0
---     @Mensaje varchar(500) output,
---     @Resultado bit output
--- )
--- as
--- begin
---     set @Resultado = 1
---     set @Mensaje = '' 
---     --obtener el Ejemplares actual  del Libro de acuerdo al que estamos solicitando
---     declare @EjemplaresLibro int = (select Ejemplares from Libro where IdLibro =  @IdLibro)
---     BEGIN TRY --capturador de errores
---         BEGIN TRANSACTION OPERACION 
---         if(@Sumar = 1)
---         begin 
---             update Libro set Ejemplares = Ejemplares + 1 where IdLibro = @IdLibro
---             insert into Ejemplar(ID_Libro, Activo)
---             values(@IdLibro,1)
---         end 
---         else --si la suma no es igual a 1, entonces se va a restar
---         --es decir que si es diferente de 1, el Lector lo que esta haciendo es eliminar de la bandeja de carrito este Libro
---         begin --resta 1 a la cantidad de carrito de acuerdo al idLector y el idLibro 
---             IF NOT EXISTS (select * FROM Ejemplar ej 
---             INNER JOIN Libro l ON l.IDLibro = ej.ID_Libro AND ej.Activo = 1
---             WHERE l.IDLibro = @IdLibro)--No podemos eliminar un Libro si ya esta incluido en una venta
---             begin 
---                 SET @Mensaje = 'No se pudo eliminar: Los ejemplares del libro están en préstamo'
---             end
---             else 
---             BEGIN
---             update Libro set Ejemplares = Ejemplares - 1 where IdLibro = @IdLibro --y actualiza el Ejemplares con un - 1 
---             --Elimina el primer ejemplar de la siguiente consulta siempre y cuando el ejemplar este activo, es decir no este en prestamo
-
---             --antes de eliminar y restar a ejemplares, quizas primero debemos comprobar que exista registro a eliminar, es decir, 
---             -- comprobar la siguiente consulta  y ya comprobada de que si hay registro, entonces pasar a eliminar
---                 DELETE top(1) ej FROM Ejemplar ej
---                 INNER JOIN Libro l ON ej.ID_Libro = l.IDLibro AND ej.Activo = 1
---                 WHERE l.IDLibro = @IdLibro
---             END
-            
---         end 
---         --todo lo anterior lo ejecuta temporalmente, pero cuando llega a esta linea lo qu hace es guardar los cambios ya definitivos
---         COMMIT TRANSACTION OPERACION --indica que toda operacion que se haya realizado se va a guardar los cambios
---     END TRY 
---     BEGIN CATCH --en el casi de que exista un error en el proceso
---         set @Resultado = 0 --manda un result de 0, envia el mensaje
---         set @Mensaje = ERROR_MESSAGE()
---         ROLLBACK TRANSACTION OPERCION -- entonces regresa a como estaba antes, como si no hubieramos hecho nada
---     END CATCH
-
--- end 
 
 go
--- CREATE PROCEDURE sp_RegistrarLibro (
---     @IDLibro varchar(25),--Es asignado por administrador al insertar
---     @Titulo nvarchar(130),
---     @Ubicacion varchar(10),
---     @NumEdicion varchar(60),
---     @AñoEdicion varchar(5),
---     @Volumen tinyint,--Tiene un DEFAULT en Volumen = 1
---     @NumPaginas int,
---    -- @Observaciones varchar(500), --Definido como default: EN PERFECTO ESTADO
---     --Llaves foraneas
---     @ID_Sala varchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)
---     @ID_Categoria varchar(10),
---     @ID_Editorial varchar(10)
---    ) 
--- AS
--- BEGIN
---   INSERT INTO Libro(IDLibro, Titulo, Ubicacion, NumEdicion, AñoEdicion, Volumen, NumPaginas,
---                         ID_Sala, ID_Categoria, ID_Editorial)
---                 VALUES (@IDLibro, @Titulo, @Ubicacion, @NumEdicion, @AñoEdicion, @Volumen, @NumPaginas,
---                         @ID_Sala, @ID_Categoria, @ID_Editorial)
--- END
--- go
 
--- --**************************Registrar libro con todos los campos **********************
--- CREATE PROCEDURE sp_RegistrarLibroCompleto (
---     @IDLibro varchar(25),--Es asignado por administrador al insertar
---     @Titulo nvarchar(130),
---     @Ubicacion varchar(10),
---     @NumEdicion varchar(60),
---     @AñoEdicion varchar(5),
---     @Volumen tinyint,--Tiene un DEFAULT en Volumen = 1
---     @NumPaginas int,
---     @Observaciones varchar(500), --Definido como default: EN PERFECTO ESTADO
---     --Llaves foraneas
---     @ID_Sala varchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)
---     @ID_Categoria varchar(10),
---     @ID_Editorial varchar(10)
---    ) 
--- AS
--- BEGIN
---   INSERT INTO Libro(IDLibro, Titulo, Ubicacion, NumEdicion, AñoEdicion, Volumen, NumPaginas,Observaciones,
---                         ID_Sala, ID_Categoria, ID_Editorial)
---                 VALUES (@IDLibro, @Titulo, @Ubicacion, @NumEdicion, @AñoEdicion, @Volumen, @NumPaginas, @Observaciones,
---                         @ID_Sala, @ID_Categoria, @ID_Editorial)
--- END
--- go
-
-
--- --*************************** Actualizar Libro Completo*********************************** 
--- CREATE PROCEDURE sp_ActualizarLibro(--Actualiza todos los campos, menos el ID
---     @IDLibroSP varchar(25),
---     @TituloSP nvarchar(130),
---     @UbicacionSP varchar(10),
---     @NumEdicionSP varchar(60),
---     @AñoEdicionSP varchar(5),
---     @VolumenSP tinyint,--Tiene un DEFAULT en Volumen = 1
---     @NumPaginasSP int,
---     @Observaciones varchar(500), --Definido como default: EN PERFECTO ESTADO
---     --Llaves foraneas
---     @ID_SalaSP varchar(10),--Tiene un DEFAULT en Sala = S0001 (Sala General)--Aunque en procedimiento si es un parametro se debe colocar si  o si
---     @ID_Categoria varchar(10),
---     @ID_Editorial varchar(10) 
---   ) 
--- AS
--- BEGIN --EJemplo anterior
---  --IF NOT EXISTS (SELECT * FROM Editorial WHERE Editorial =@EditorialSP and IdEditorial != @IdEditorialSP)
---   IF EXISTS (SELECT *  FROM Libro WHERE IDLibro = @IdLibroSP )
---     BEGIN
--- 	    UPDATE Libro SET 
---        Titulo = @TituloSP,
---        Ubicacion = @UbicacionSP,
---        NumEdicion = @NumEdicionSP,
---        AñoEdicion = @AñoEdicionSP,
---        Volumen = @VolumenSP,
---        NumPaginas = @NumPaginasSP,
---        Observaciones = @Observaciones, --Definido como default: EN PERFECTO ESTADO
---     --Llaves foraneas
---        ID_Sala = @ID_SalaSP,
---        ID_Categoria = @ID_Categoria,
---        ID_Editorial = @ID_Editorial 
---       WHERE IDLibro = @IDLibroSP;
---     END
--- END;
--- go
--- --*************************** Actualizar CodigoLibro *********************************** 
--- CREATE PROCEDURE sp_ActualizarCodigoLibro(--Actualiza todos los campos, menos el ID
---     @IDLibro_CodigoSP varchar(25),--En este se indica el codigo actual del libro para identificar la actualizacion
---     @IDLibroActualizarSP varchar(25) --En este se indica el nuevo codigo o ID para el libro
---   ) 
--- AS
--- BEGIN 
---   IF EXISTS (SELECT *  FROM Libro WHERE IDLibro = @IdLibro_CodigoSP )
---     BEGIN
--- 	    UPDATE Libro SET IDLibro = @IDLibroActualizarSP WHERE IDLibro = @IDLibro_CodigoSP;
---     END
--- END;
--- go
--- --*************************** Eliminar Libro *********************************** 
--- CREATE PROCEDURE sp_EliminarLibro
--- @IDLibroSP varchar(10)
--- AS
--- DELETE Libro WHERE IDLibro = @IDLibroSP;
--- GO
--- -----------Procedimientos almacenados para vistas, busqueda, logins y demas en los formularios de Aplicacion---------------------------------------------------------
--- --Login
--- CREATE PROC sp_Logueo 
--- @Usuario varchar(50),
--- @pass varchar(40)
--- as  
--- SELECT * FROM V_TablaLogin WHERE Usuario = @Usuario and Pass = @pass; 
--- GO
--- -------------------------------------------Formulario Libro ---------------------------------------------------------------
--- -----Listas para comboBox de sistema: Form libro
--- CREATE PROC sp_ListarSalas
--- AS 
--- SELECT * FROM Sala ORDER BY IDSala asc
--- go
-
--- CREATE PROC sp_ListarCategorias 
--- AS 
--- SELECT * FROM Categoria ORDER BY IDCategoria asc
-
--- go
--- CREATE PROC sp_ListarEditorial
--- AS 
--- SELECT IDEditorial AS Codigo, Editorial FROM Editorial ORDER BY IDEditorial DESC;
-
--- go
--- CREATE PROC sp_BuscarListadoEditorial--PARA BUSCAR usuarios al registrar prestamos (new)
--- @ID VARCHAR(40),
--- @Editorial VARCHAR(40)
--- AS
--- SELECT * FROM V_ListadoEditoriales WHERE Codigo LIKE '%' + @ID + '%' 
---                               OR Editorial LIKE '%' + @Editorial + '%';
--- go
--- --Consultas para los 3 botones iniciales de formulario
--- CREATE PROC sp_ConsultarLibrosCompletos -- Para administrador
--- AS 
--- SELECT IDLibro as Codigo, Titulo,Ubicacion,NumEdicion AS Edicion, AñoEdicion as Año, Volumen as Vol, NumPaginas as Paginas,Observaciones,
--- ID_Sala AS Sala,ID_Categoria as Categoria,ID_Editorial as Editorial, Editorial as Editoriales FROM Libro 
--- INNER JOIN Editorial ON Editorial.IDEditorial = Libro.ID_Editorial
--- ORDER BY IDLibro;
--- go --SELECT TOP 15 * FROM Libro ORDER BY IDLibro ASC
-
--- CREATE PROC sp_ConsultarLibrosColumImportantes -- Para lector y demas
--- AS 
--- SELECT * FROM V_LibroColumPrincipales;
--- go
--- CREATE PROC sp_ConsultarUsuariosLibros -- Para administrador y bibliotecario
--- AS 
--- SELECT * FROM V_UsuarioInicio
--- GO
-
--- CREATE PROC sp_ConsultarPrestamosLibros --
--- AS 
--- SELECT * FROM V_PrestamoInicio; --Administrador
--- GO
--- CREATE PROC sp_BuscarPrestamosPeriodoInicio
--- @fromDate VARCHAR(40),
--- @toDate VARCHAR(40)
--- AS
--- SELECT  * FROM V_PrestamoInicio WHERE [Fecha Préstamo]  BETWEEN @fromDate and @toDate;
--- go
--- -----------------Busqueda de libro ---------
+-- ----------------------------------------------------Busqueda de libro ----------------------------------
 -- CREATE PROC sp_BuscarLibro
 -- @Titulo VARCHAR(100)
 -- AS
@@ -1721,10 +995,7 @@ go
 -- GO
 
 
---PROCEDIMIENTOS ALMACENADOS PARA EL DASHBOARD
-go
-select * from detallePrestamo
-go
+-------------------------------------- PROCEDIMIENTOS ALMACENADOS PARA EL DASHBOARD -----------------------------------
 create proc sp_ReporteDashboard --Para el reporte de dashboard
 as 
 begin
@@ -1734,19 +1005,8 @@ select
     (select count(*) from Libro)[TotalLibro],
     (select isnull(sum(Ejemplares), 0) from libro)[TotalEjemplares]
 end
-go
 
-
-select * from prestamo
-
-select * from Detalleprestamo
-
---
-go
-SELECT * FROM LIBRO
-GO
-sp_ReportePrestamos '01/06/2023', '27/07/2023',''
-GO  
+go 
 create  proc sp_ReportePrestamos(
     @fechaInicio varchar(40),
     @fechaFin varchar(40),
@@ -1770,20 +1030,7 @@ begin
     si lo esta indicando, lo use con el @idTransaccion*/
 end
 go
---Agregar al carrito
--- create proc sp_ExisteCarrito( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
---     @IdLector int, 
---     @IdLibroEjemplar int, 
---     @Resultado bit output
--- )
--- as 
--- begin 
---     if exists(select * from carrito where IdLector = @IdLector and IdEjemplarLibro = @IdLibroEjemplar)
---         set @Resultado = 1
---     else 
---         set @Resultado = 0
--- end 
--- go 
+--------------------------------- Agregar al carrito -----------------------------------------------
 go
 create proc sp_ExisteCarrito( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
     @IdLector int, 
@@ -1852,9 +1099,7 @@ begin
 
 end 
 go
-select * from fn_obtenerCarritoLector(20)
-go
----------------------------------------FUNCION PARA OBTENER CARRITO CLIENTE 
+---------------------------------------FUNCION PARA OBTENER CARRITO CLIENTE ---------------------------
 create function fn_obtenerCarritoLector(
     @idLector int 
 )
@@ -1872,12 +1117,7 @@ return (
 		WHERE c.IdLector = @idLector
 		) AS tbl
 	WHERE tbl.RowNum = 1
-	--select l.IdLibro,l.Codigo, ej.IDEjemplarLibro[DesEjemplar],l.Titulo, l.Ejemplares, c.Cantidad, l.RutaImagen, l.NombreImagen 
-    --from carrito c
-    --inner join Libro l on l.IdLibro = c.IdLibro
-    ----inner join Categoria ct on ct.IdCategoria = l.Id_Categoria
-    --inner join Ejemplar ej on ej.Id_libro = l.IdLibro
-    --where c.IdLector = @idLector
+	
 )
 
 go
@@ -1904,12 +1144,23 @@ begin
     END CATCH
 end
 
-
-select * from Prestamo
-
-select * from usuario
 go
 ------------------------------------------------------- Para Prestamos -------------------------------------------------
+-- --------------------------------------------------Prestamo------------------------------------------------------------
+-- go
+-- --************************* Registrar prestamo ********************************
+-- --Es identity
+-- --Depende de usuario  (foreign key: delete cascade)
+-- --Depende de prestamo (foreign key: delete cascade)
+-- --Como no tiene referencias (nadie depende de prestamo), pues se puede eliminar
+-- --Tiene un DEFAULT  en FechaPrestamo = GetDate();
+-- --Tiene un DEFAULT  en Devuelto = 0; --Es decir devuelte = false
+-- --Tiene un DEFAULT  en FechaDevolucion = NULL; En teoria al insertar pues no puede haber un fecha en que ya lo devolvió
+-- --Tiene un TRIGGER PARA reducir 1 a NumEjemplar de la tabla ejemplar: Esto para que al insertar 
+-- --automaticamente se reste uno a numeros ejemplares, esto por cada ejemplar (se puede insertar y aplica el trigger para muchos valores
+-- -- mientras no queramos insertar al mismo tiempo dos mismos ejemplares)
+-- --Tiene otro TRIGGER para actualizar prestamo, si se actualizar (falta corregir errores)
+
 --creacion de estructura tipo tabla de detallePrestamo
 CREATE TYPE [dbo].[EDetalle_Prestamo] AS TABLE(
     [IdEjemplar] int null,
@@ -1964,14 +1215,7 @@ begin
         rollback transaction registro 
     end catch 
 end
-go
-sp_RegistrarPrestamo2 20,1,7,'NINGU',1,''
-go
-select * from Prestamo
-select * from DetallePrestamo
-insert into DetallePrestamo 
-values(1,1,3,3)
-select * from lector
+
 go
 create procedure sp_RegistrarPrestamo2(--Hay un indice unico para el nombre completo del usuario 
     --@IDUsuario int,---El id es Identity
@@ -2003,12 +1247,6 @@ begin
 
         set @idPrestamo = SCOPE_IDENTITY()--obtiene el ultimo id que se esta registrando
 
-        -- insert into DetallePrestamo(IdPrestamo, IDEjemplar, CantidadEjemplares, Total)
-        -- select @idPrestamo, IdEjemplar, CantidadEjemplares, Total from @DetallePrestamo
-
-		--update Ejemplar set Activo = 0 where IDEjemplarLibro = (select IdEjemplar from @EjemplarActivo)
-
-        --DELETE FROM CARRITO WHERE IdLector = @Id_Lector
         commit transaction registro 
     end try 
     begin catch --en el caso de algun error, reestablece todo
@@ -2018,8 +1256,6 @@ begin
     end catch 
 end 
 --EDITAR PRESTAMO 2
-go
-exec sp_EditarPrestamo (10, 20, 1, 1,'26/07/23','30/07/23',7,'LIBRO NO DEVUELTO','',1)
 go
 create procedure sp_EditarPrestamo
 (
@@ -2066,6 +1302,7 @@ begin
     else 
         SET @Mensaje = 'El préstamo no pudo ser actualizado'
 end 
+
 go
 create procedure sp_FinalizarPrestamo --EditarPrestamo2
 (
@@ -2111,7 +1348,6 @@ begin
 end 
 
 go
-go
 create proc sp_EliminarPrestamo( --Trabajo como un booleano
     @IdPrestamo int,
     @IdEjemplarLibro int,
@@ -2133,9 +1369,7 @@ begin
     if(@Resultado != 1)
         set @Mensaje = 'Error: No se pudo elimnar el préstamo. Intentelo de nuevo'
 end
-go
 
-select * from fn_ListarPrestamos(1006)
 go
 create FUNCTION fn_ListarPrestamos(
     @idLector int
@@ -2150,6 +1384,7 @@ RETURN
     INNER JOIN Prestamo p ON p.IdPrestamo = DP.IdPrestamo 
     where p.Id_Lector = @idLector order by DP.IdDetallePrestamo DESC
 )
+
 go
 create proc sp_ActualizarEjemplarActivo(
     @IdLector int, 
@@ -2171,67 +1406,9 @@ begin
     END CATCH
 end
 go
---create proc sp_ExisteEjemplarInactivo( --devuelve si existe ya un Libro dentro del carrito, validando que no se repita un Libro ya agregado
---    @IdLector int, 
---    @IdLibro int, 
---	@IdEjemplarLibro int, 
---    @Resultado bit output
---)
---as 
---begin 
---    if exists(select IdCarrito, IdLector, l.IdLibro, Cantidad, IDEjemplarLibro, ej.Activo
---			FROM carrito c
---			INNER JOIN Libro l ON l.IdLibro = c.IdLibro
---			inner join ejemplar ej on ej.ID_Libro = c.IdLibro  and ej.Activo = 0
---			WHERE c.IdLector = @IdLector and l.IdLibro = @IdLibro and IDEjemplarLibro = @IdEjemplarLibro)
---        set @Resultado = 1
---    else 
---        set @Resultado = 0
---end 
 
 
-
-insert libro(Codigo, Titulo, Paginas, ID_Categoria, ID_Editorial, ID_Sala, Ejemplares, AñoEdicion, Volumen, RutaImagen, NombreImagen, Observaciones)
-VALUES('6BIELI2837_Rfle093','Muñeca Billie Eilish',450,'C0002','ED0004','S0001',3,'2020',1,'C:\Users\David Nava\Pictures\Fotos_Biblioteca','7.jpg','NINGUNA')
-
-
-insert Ejemplar(ID_Libro) VALUEs (15)
-
-update ejemplar set activo = 1 where id_libro = 3
-update libro set ejemplares = 3
-
-select * from libro
-    delete libro where IDLibro BETWEEN 16 and 20
-    select * from ejemplar
-
-UPDATE LIBRO SET Titulo='Billie en el Atardecer' where IDLibro = 15
-
-
-GO
-sp_ActualizarEjemplarActivo 1006,12,1
-
-
-
-update ejemplar set activo = 1
-
-update libro set Activo = 0 where idlibro = 4
-
-delete carrito
-delete detalleprestamo
-delete prestamo
-
-select * from ejemplar
-
-select * from Carrito
-select * from prestamo
-select * from detallePrestamo
-
-select * from libro 
-select * from fn_obtenerCarritoLector(20)
-
-delete carrito where idlibro = 1
-
-
+select * from usuario
 select * from prestamo
 select * from DetallePrestamo
 select * from libro

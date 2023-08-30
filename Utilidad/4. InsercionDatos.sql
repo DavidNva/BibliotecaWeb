@@ -148,6 +148,7 @@ VALUES('DAVID', 'NAVA','GARCIA',20,'ITSSNP','ANGEL WENCESLAO CABRERA','764129184
       ('LUIS', 'CABRERA','LOBATO',35,'LUIS CABRERA LOBATO','JOSE MARIA MORELOS','7641291840','luiscabreralobato@gmail.com',2,'luiscl02'),--Las observaciones por default es NINGUNA 
       ('JUAN ADOLFO', 'LOPEZ','CASTILLA',21,'LUIS CABRERA LOBATO','RUIZ  CORTINEZ','7971171350','juangutierrezsoto@gmail.com',2,'adolfo03');--La fecha de creacion por default es: GETDATE();
 go 
+-- sp_RegistrarUsuario 'Zaid','test3','Tepeixco','Centro','18277373','angel@gmail.com','test123',1,1,'',1
 INSERT INTO Usuario(Nombre, A_Paterno, A_Materno, Edad, EscuelaProcedencia, Ciudad, Calle, Telefono, Email)
 VALUES('DIANA', 'NAVA','JUAREZ',17,'CENTRO ESCOLAR','ZACATLÁN','MIGUEL HIDALGO','123456789','diananava@gmail.com'),--El tipo de Persona por default es 1 = Lector,
       ('ANGEL', 'SANDOVAL','GARCIA',39,null,'CHIGNAHUAPAN','2 DE ABRIL','123456789',null),--La escuela y el Email pueden ser Null

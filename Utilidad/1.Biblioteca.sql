@@ -6,49 +6,34 @@ USE MASTER;
   3. Procedimientos Almacenados
   4. Inserciones  
 */
-CREATE DATABASE BibliotecaWeb;
+CREATE DATABASE BibliotecaWeb2;
 go
-USE BibliotecaWeb;
+USE BibliotecaWeb2;
 go
 --Creacion de tablas y relaciones
-
--- CREATE TABLE Categoria(*
---     IDCategoria varchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     Categoria nvarchar(60) not null,--Tiene indice unico
---     );--Esta referenciado con libro (No se permite eliminar)
--- go
-CREATE TABLE Categoria(--Tiene un trigger para autogenerar codigo
+go
+CREATE TABLE Categoria(--Tiene un trigger para autogenerar codigo (Ahora se hace desde el sp)
 	IdCategoria  nvarchar(10)  not null CONSTRAINT PK_Categoria PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
 	Activo bit default 1 not null,
 	FechaRegistro datetime default getdate()
 )
 go
-CREATE TABLE Sala(--Tiene un trigger para autogenerar codigo
+CREATE TABLE Sala(--Tiene un trigger para autogenerar codigo (Ahora se hace desde el sp)
 	IdSala  nvarchar(10)  not null CONSTRAINT PK_Sala PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
 	Activo bit default 1 not null,--Esta referenciado con libro (No se permite eliminar)
 	FechaRegistro datetime default getdate()
 )
 go
-CREATE TABLE Editorial(--Tiene un trigger para autogenerar codigo
+CREATE TABLE Editorial(--Tiene un trigger para autogenerar codigo (Ahora se hace desde el sp)
 	IdEditorial  nvarchar(10)  not null CONSTRAINT PK_Editorial PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Descripcion nvarchar(100) not null,--Tiene un indice único
 	Activo bit default 1 not null,--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
 	FechaRegistro datetime default getdate() 
 )
 go
--- CREATE TABLE Sala(
---     IDSala varchar(10)  not null  CONSTRAINT PK_Sala PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     Sala varchar(40) not null,--Tiene indica unico
---     );--Esta referenciado con libro (No se permite eliminar)
--- go
--- CREATE TABLE Editorial(
---     IDEditorial varchar(10)  not null CONSTRAINT PK_Editorial PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     Editorial nvarchar(60) not null, --Tiene indice unico
---     );--Esta referenciado con libro (No se permite eliminar) (ESTOS  3 a menos que no esten referenciados si se pueden eliminar)
--- go
-CREATE TABLE Autor(--Tiene un trigger para autogenerar codigo
+CREATE TABLE Autor(--Tiene un trigger para autogenerar codigo (Ahora se hace desde el sp)
 	IdAutor  nvarchar(10)  not null CONSTRAINT PK_Autor PRIMARY KEY,--Esta referenciado con libro (No se permite eliminar)
 	Nombres nvarchar(100) not null,--Tiene indice compuesto con Apellidos
   Apellidos varchar(100) not null,--Tiene indice compuesto con Nombre
@@ -58,17 +43,7 @@ CREATE TABLE Autor(--Tiene un trigger para autogenerar codigo
  --LA UNICA FORMA DE ELIMINAR A UN AUTOR, UNA SALA, UNA CATEGORIA, UN EDITORIAL ES QUE NO ESTEN REFERENCIADAS A NINGUNA TABLA
  --Por ejemplo si solo creamos una autor como prueba, pues mientras no lo referenciemos, si se puede eliminar
 go
-CREATE TABLE LibroAutor(
-    IDLibroAutor varchar(10)  not null CONSTRAINT PK_LibroAutor PRIMARY KEY,--Tiene un trigger para autogenerar codigo
-    --Llaves foraneas
-    ID_Libro int not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
-    REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE,
-    ID_Autor nvarchar(10) not null CONSTRAINT FK_Autor FOREIGN KEY(ID_Autor) 
-    REFERENCES Autor(IDAutor),
-    Activo bit default 1 not null,
-	  FechaRegistro datetime default getdate() 
-);--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
-    go
+
     /*
       La tabla LibroAutor 
       Tiene como foreig key a ID_Libro: 
@@ -77,8 +52,14 @@ CREATE TABLE LibroAutor(
       hace algun cambio en libro o se elimina (ya que no tendria sentido tener un LibroAutor,
       estando referenciando a un libro que no existe)
     */
-go
 
+go
+CREATE TABLE TipoPersona(
+    IdTipoPersona  int identity (1,1)  CONSTRAINT PK_TipoPersona PRIMARY KEY,
+    Descripcion varchar(50)--Solo hay tres tipos: Lector, Empleado y Administrador
+)--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
+
+go
 CREATE TABLE Usuario(
 	IdUsuario int not null CONSTRAINT PK_Usuario PRIMARY KEY identity,
   Nombres nvarchar(100) not null,
@@ -94,17 +75,9 @@ CREATE TABLE Usuario(
 	Activo bit default 1 not null,
 	FechaRegistro datetime default getdate()
 )
-select * from lector  
-select IDLector,Nombres,Apellidos,Edad, Genero, Escuela, GradoGrupo, Ciudad, Calle, Telefono, Correo,Clave,Reestablecer from Lector
 
-insert into Lector(Nombres, Apellidos, Edad, Genero,Escuela,GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave, Activo)
-values ('Angel David','Nava Garcia Lector', 21, 1,'Instituto Tecnologico Superior de la Sierra Norte de Puebla','Sexto Semestre','Zacatlan', 'Josefa Ortiz', '768273817','david@gmail.com','test123',0)
-
-insert into Lector(Nombres, Apellidos, Edad, Genero,Escuela,GradoGrupo, Ciudad, Calle, Telefono, Correo, Clave)
-values ('Guadalupe','Garcia Lector', 21, 0,'Secundaria Benito Juarez','3ro de Secundaria','Puebla', 'Josefa Ortiz', '2229879873','guadalupe@gmail.com','test123')
-
---RECORDAR QUE DEBEMOS CREAR DE NUEVO ESTA TABLA CON EL REESTABLECER EN DEFAULT 0
-CREATE  TABLE Lector(
+go
+CREATE  TABLE Lector(--RECORDAR QUE DEBEMOS CREAR DE NUEVO ESTA TABLA CON EL REESTABLECER EN DEFAULT 0
 	IdLector int not null CONSTRAINT PK_Lector PRIMARY KEY identity,
   Nombres nvarchar(100) not null,
   Apellidos varchar(100) not null,
@@ -121,30 +94,6 @@ CREATE  TABLE Lector(
 	Activo bit default 1,
 	FechaRegistro datetime default getdate()
 )--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
-
--- CREATE TABLE Usuario(*
---     IDUsuario int identity (1,1)  not null CONSTRAINT PK_Usuario PRIMARY KEY,
---     Nombre nvarchar(40) not null,
---     A_Paterno varchar(30) not null,
---     A_Materno varchar(30) not null,
---     Edad tinyint not null,--Tiene un check (0-125)
---     EscuelaProcedencia nvarchar(100) null, --Si usamos el SP: Su default es: NINGUNA
---     --Grado varchar (10),
---     Ciudad nvarchar(60) not null, --Default como --"Zacatlán"
---     Calle nvarchar(100) not null,
---     Telefono varchar(20) not null, 
---     Email nvarchar(100) null,
---     Observaciones varchar(500) null, --Estará definida como default, como "NINGUNA"
---     ID_TipoPersona int not null CONSTRAINT FK_TipoPersona FOREIGN KEY(ID_TipoPersona) 
---     REFERENCES TipoPersona(IdTipoPersona) DEFAULT 1,--El DEFAULT id 1, es para tipo lectores:
---     Contrasenia varchar(30) DEFAULT '321',
---     FechaCreacion date not null DEFAULT GETDATE()
---     );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
--- go
-CREATE TABLE TipoPersona(
-    IdTipoPersona  int identity (1,1)  CONSTRAINT PK_TipoPersona PRIMARY KEY,
-    Descripcion varchar(50)--Solo hay tres tipos: Lector, Empleado y Administrador
-)--Esta referenciado con usuario (no haemos un delete cascade porque no tendria sentido eliminar uno de estos tres tipos de persona)
 go
 
 CREATE TABLE Libro(
@@ -170,8 +119,39 @@ CREATE TABLE Libro(
 	  Activo bit default 1 not null,
 	  FechaRegistro datetime default getdate()
     );--Esta referenciado con ejemplar y libroLutor (si se puede eliminar ya que estos como foreign key son delete y update cascade)
-go
 
+go
+CREATE TABLE LibroAutor(
+    IDLibroAutor varchar(10)  not null CONSTRAINT PK_LibroAutor PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+    --Llaves foraneas
+    ID_Libro int not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
+    REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE,
+    ID_Autor nvarchar(10) not null CONSTRAINT FK_Autor FOREIGN KEY(ID_Autor) 
+    REFERENCES Autor(IDAutor),
+    Activo bit default 1 not null,
+	  FechaRegistro datetime default getdate() 
+);--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
+
+go
+CREATE TABLE Ejemplar(
+    IDEjemplarLibro int identity not null CONSTRAINT PK_EjemplarLibro PRIMARY KEY,--Tiene un trigger para autogenerar codigo
+    -- NumEjemplar int not null,
+    --Llave foranea
+    ID_Libro int not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
+    REFERENCES Libro(IdLibro) ON DELETE CASCADE ON UPDATE CASCADE, --Tiene un indice unico: ID_Libro,
+    Activo bit default 1 not null
+    );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
+    -- /*
+--       Ocurre lo mismo con Ejemplar
+--       La tabla Ejemplar
+--       Tiene como foreig key a ID_Libro: 
+--       En este caso como a libro si lo podemos eliminar y actualizar, pues esta
+--       foreign key va a ser de tipo delete cascade y update cascade por si se
+--       hace algun cambio en libro o se elimina (Ya que no tiene sentido tener un ejemplar
+--       de un libro que no existe)
+--     */
+
+go
 CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso anterior)*/
 	IdPrestamo int identity (1,1)  not null CONSTRAINT PK_Prestamo primary key, --Es  IDENTITY
 	ID_Lector int not null CONSTRAINT FK_Lector FOREIGN KEY(ID_Lector) 
@@ -190,6 +170,14 @@ CREATE TABLE Prestamo(/*Arrelgar este prestamo, ya que es de venta (Del curso an
   --si se elimina un libro se eliminan en cascada sus ejemplares, si se elimina un ejemplar se elimina el prestamo y si se elimina el prestamo se elimina el detalle prestamo siguiendo una cadena de acciones
 )--No tiene referencia (Se puede eliminar)
 go
+--     /*
+--       La tabla Prestamo
+--       Tiene como foreig key a ID_Lector: 
+--       En este caso como al ID usuario si lo podemos eliminar  pues esta
+--       foreign key va a ser de tipo delete cascade solamente por si
+--       se elimina un usuario (ya que no tendria sentido estar haciendo un prestamo
+--       a un usuario que no existe)
+--     */
 CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es detalle venta del curso anterior)
 	IdDetallePrestamo int identity  not null  CONSTRAINT PK_DetallePrestamo primary key,
 	IdPrestamo int  not null references Prestamo(IdPrestamo) ON DELETE CASCADE ON UPDATE CASCADE,--este debe tener un cascade delete y update !IMPORTANTE
@@ -198,8 +186,8 @@ CREATE TABLE DetallePrestamo(--Areglar este detallePrestamo (Ya que este es deta
   --Posiblemente sea mejor el ejemplar id de ejemplar
 	CantidadEjemplares int not null,--Cuantos ejemplares de un libro se prestaron (Regularmente solo 1)
 	Total decimal(10,2)--total del precio del producto
-)
-go
+)--No tiene referencia (Se puede eliminar)
+
 /*
 
  ID_Libro int not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
@@ -211,31 +199,7 @@ go
 --     NombrePortada nvarchar(200)  null,
 --     Imagen binary  null;*/
 -- go
--- CREATE TABLE Autor(
---     IDAutor varchar(10)  not null CONSTRAINT PK_Autor PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     Nombre nvarchar(40) not null,--Tiene indice compuesto con Apellidos
---     Apellidos nvarchar(40) not null --Tiene indice compuesto con Nombre
---     );----Esta referenciado con Libro autor (No se puede eliminar, o afectará a todos)
---  --LA UNICA FORMA DE ELIMINAR A UN AUTOR, UNA SALA, UNA CATEGORIA, UN EDITORIAL ES QUE NO ESTEN REFERENCIADAS A NINGUNA TABLA
---  --Por ejemplo si solo creamos una autor como prueba, pues mientras no lo referenciemos, si se puede eliminar
--- go
--- CREATE TABLE LibroAutor(
---     IDLibroAutor varchar(10)  not null CONSTRAINT PK_LibroAutor PRIMARY KEY,--Tiene un trigger para autogenerar codigo
---     --Llaves foraneas
---     ID_Libro varchar(25) not null CONSTRAINT FK_Libro FOREIGN KEY(ID_Libro) 
---     REFERENCES Libro(IDLibro) ON DELETE CASCADE ON UPDATE CASCADE,
---     ID_Autor varchar(10) not null CONSTRAINT FK_Autor FOREIGN KEY(ID_Autor) 
---     REFERENCES Autor(IDAutor) 
---     );--LibroAutor no esta referenciado a otra tabla (al igual que prestamo se puede eliminar)
---     /*
---       La tabla LibroAutor 
---       Tiene como foreig key a ID_Libro: 
---       En este caso como a libro si lo podemos eliminar y actualizar, pues esta
---       foreign key va a ser de tipo delete cascade y update cascade por si se
---       hace algun cambio en libro o se elimina (ya que no tendria sentido tener un LibroAutor,
---       estando referenciando a un libro que no existe)
---     */
--- go
+go
 CREATE TABLE Carrito(
 	IdCarrito int primary key identity,
 	IdLector int references Lector(IdLector),
@@ -246,49 +210,6 @@ CREATE TABLE Carrito(
 )
 go
 
-CREATE TABLE Ejemplar(
-    IDEjemplarLibro int identity not null CONSTRAINT PK_EjemplarLibro PRIMARY KEY,--Tiene un trigger para autogenerar codigo
-    -- NumEjemplar int not null,
-    --Llave foranea
-    ID_Libro int not null CONSTRAINT FK_Ejemplar_Libro FOREIGN KEY(ID_Libro) 
-    REFERENCES Libro(IdLibro) ON DELETE CASCADE ON UPDATE CASCADE, --Tiene un indice unico: ID_Libro,
-    Activo bit default 1 not null
-    );--Esta referenciado con Prestamo (Si se puede eliminar, para ello su foreign key en prestamo tiene un delete en cascade)
-    -- /*
---       Ocurre lo mismo con Ejemplar
---       La tabla Ejemplar
---       Tiene como foreig key a ID_Libro: 
---       En este caso como a libro si lo podemos eliminar y actualizar, pues esta
---       foreign key va a ser de tipo delete cascade y update cascade por si se
---       hace algun cambio en libro o se elimina (Ya que no tiene sentido tener un ejemplar
---       de un libro que no existe)
---     */
--- go
--- CREATE TABLE Prestamo(
-    
---     IDPrestamo int identity (1,1)  not null CONSTRAINT PK_Prestamo PRIMARY KEY, --Es  IDENTITY
---     --Llaves foraneas
---     ID_Usuario int not null CONSTRAINT FK_Usuario FOREIGN KEY(ID_Usuario) 
---     REFERENCES Usuario(IDUsuario) ON DELETE CASCADE,
---     ID_Ejemplar varchar(10) not null CONSTRAINT FK_Ejemplar FOREIGN KEY(ID_Ejemplar) 
---     REFERENCES Ejemplar(IDEjemplar) ON DELETE CASCADE,
---     -------------------------------------------------
---     --Cantidad tinyint not null,
---     FechaPrestamo date not null,--Tiene un DEFAULT: GetDate();
---     FechaMaxDev date not null,
---     Devuelto bit not null,--1 es igual a si, y 0 es igual a no . Asigando por default = 0, 
---     FechaDevolucion date null,--No especificaremos nada para que por default sea null (tiene un default null)
---     Observaciones varchar(500) not null
---     );--No tiene referencia (Se puede eliminar)
---     /*
---       La tabla Prestamo
---       Tiene como foreig key a ID_Usuario: 
---       En este caso como al ID usuario si lo podemos eliminar  pues esta
---       foreign key va a ser de tipo delete cascade solamente por si
---       se elimina un usuario (ya que no tendria sentido estar haciendo un prestamo
---       a un usuario que no existe)
---     */
--- go
 -- CREATE TABLE HLibrosActualizados(
 --     IDLibrosActualizados int identity(1,1) CONSTRAINT PK_LibrosActualizados PRIMARY KEY,
 --     TipoAccion varchar(20) not null,
@@ -635,3 +556,4 @@ CREATE TABLE Ejemplar(
 -- SELECT * FROM Prestamo;
 -- SELECT * FROM Categoria;
 -- SELECT * FROM HLibrosActualizados; 
+select * from usuario
