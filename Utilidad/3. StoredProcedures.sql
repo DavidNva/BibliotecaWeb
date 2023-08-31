@@ -369,12 +369,6 @@ begin
      SET @Mensaje = 'El correo del usuario ya existe'
 end
 GO
-INSERT INTO TipoPersona(Descripcion)--Es id es identity
-VALUES ('Administrador'),
-       ('Empleado');
-go
-sp_RegistrarUsuario 'David','Nava Garcia','Zacatlan','Luis Cabrera','7649726682','david@gmail.com','test123',1,1,'',1
-go 
 create proc sp_EditarUsuario(
     @IdUsuario int,
     @Nombres varchar(100),--Tiene indice compuesto con Apellidos
