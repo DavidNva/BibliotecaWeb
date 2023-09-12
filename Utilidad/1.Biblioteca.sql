@@ -6,9 +6,9 @@ USE MASTER;
   3. Procedimientos Almacenados
   4. Inserciones  
 */
-CREATE DATABASE BibliotecaWeb2;
+CREATE DATABASE BibliotecaWeb4;
 go
-USE BibliotecaWeb2;
+USE BibliotecaWeb4;
 go
 --Creacion de tablas y relaciones
 go
